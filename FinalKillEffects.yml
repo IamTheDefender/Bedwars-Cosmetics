@@ -1,0 +1,39 @@
+FinalKillEffects:
+  None:
+    Material: "BARRIER"
+    Price: 0
+
+  Squid-Missile:
+    Material: "MONSTER_EGG"
+    Data: 10
+    Price: 5000
+
+  Firework:
+    Material: "FIREWORK"
+    Price: 5000
+
+  Lighting-Strike:
+    Material: "STRING"
+    Price: 5000
+
+  Heart-Aura:
+    Material: "DIAMOND"
+    Price: 5000
+
+  Burning-Shoes:
+    Material: "IRON_BOOTS"
+    Price: 5000
+
+  Rekt:
+    Material: "SIGN"
+    Price: 5000
+
+  Batcrux:
+    Material: "MONSTER_EGG"
+    Data: 1
+    Price: 5000
+
+  Tornado:
+    Material: "GLASS"
+    Price: 5000
+

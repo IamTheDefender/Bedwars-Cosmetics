@@ -1,0 +1,7 @@
+name: Bedwars1058-Cosmetics
+version: '1.0'
+main: me.defender.Main
+api-version: 1.8.8
+authors: [ IamTheDefender ]
+description: Cosmetics addon for bedwars1058
+softdepend: [BedWars1058, BedWarsProxy]

@@ -1,0 +1,8 @@
+IslandTopper:
+  None:
+    Material: "BARRIER"
+    Price: 0
+  Example:
+    Material: "DIAMOND"
+    Price: 5000
+    File: "example.schematic"

@@ -1,0 +1,53 @@
+VictoryDances:
+   None:
+     Price: 0
+     Material: "BARRIER"
+   
+   Anvil-Rain:
+     Price: 5000
+     Material: "ANVIL"
+   
+   Yee-Haw:
+     Price: 5000
+     Material: "SADDLE"
+     
+   Fireworks:
+     Price: 5000
+     Material: "FIREWORK"
+     
+   Cold-Snap:
+     Price: 5000
+     Material: "PACKED_ICE"
+     
+   Rainbow-Dolly:
+     Price: 10000
+     Material: "WOOL"
+     
+   Night-Shift:
+     Price: 10000
+     Material: "IRON_HOE"
+     
+   Wither-Rider:
+     Price: 10000
+     Material: "SKULL_ITEM"
+     
+   Raining-Pigs:
+     Price: 15000
+     Material: "COOKED_BEEF"
+     
+   Haunted:
+     Price: 20000
+     Material: "NETHER_BRICK_ITEM"
+     
+   Floating-Lantern:
+     Price: 25000
+     Material: "SEA_LANTERN"
+     
+   Toy-Stick:
+     Price: 25000
+     Material: "STICK"
+     
+   Dragon-Rider:
+     Price: 100000
+     Material: "DRAGON_EGG"
+               

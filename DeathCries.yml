@@ -1,0 +1,143 @@
+# By "Pitch1" I meant volume #
+DeathCries:
+  None:
+    Price: 0
+    Material: "BARRIER"
+
+  Bazinga:
+    Sound: "BLAZE_DEATH"
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2I4N2QyMjUyY2FjMWFhMTVkZjMyNTk5OGI4ZWM4MmVmOTEwOWI2YzU2NzYxMGFmYWMwZWNkYTUxM2Y2MSJ9fX0="
+    Pitch1: 1
+    Pitch2: 1
+
+  Enderman:
+    Sound: "ENDERMAN_DEATH"
+    Material: "EYE_OF_ENDER"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 5000
+
+  Pig:
+    Sound: "PIG_DEATH"
+    Material: "RAW_BEEF"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 5000
+
+  Bat:
+    Sound: "BAT_DEATH"
+    Material: "MONSTER_EGG"
+    Data: 65
+    Pitch1: 1
+    Pitch2: 1
+    Price: 5000
+
+  Skeleton:
+    Sound: "SKELETON_DEATH"
+    Material: "MONSTER_EGG"
+    Data: 51
+    Pitch1: 1
+    Pitch2: 1
+    Price: 5000
+
+  Wolf:
+    Sound: "WOLF_HIT"
+    Material: "MONSTER_EGG"
+    Data: 95
+    Pitch1: 1
+    Pitch2: 1
+    Price: 5000
+
+  Burp:
+    Sound: "BURP"
+    Material: "COOKED_BEEF"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Firework:
+    Sound: "Firework_launch"
+    Material: "FIREWORK"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Splash:
+    Sound: "Splash"
+    Material: "WATER_BUCKET"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Sad-Puppy:
+    Sound: "WOLF_DEATH"
+    Material: "BONE"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Sad-Moo:
+    Sound: "COW_IDLE"
+    Material: "MUTTON"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Plop:
+    Sound: "CHICKEN_EGG_POP"
+    Material: "EGG"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Ding:
+    Sound: "SUCCESSFUL_HIT"
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmI1MDQ5MzVhYzRhNWQ5MzRhNzgyOGMxN2QzYWYyZDdiOTczMDY5NWU1YTVmYWMxODlhNzRhZDFlNzY5NDBhYyJ9fX0="
+    Pitch1: 1
+    Pitch2: 1
+    Price: 10000
+
+  Fireball:
+    Sound: "GHAST_FIREBALL"
+    Material: "FIREBALL"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 15000
+
+  Explode:
+    Sound: "EXPLODE"
+    Material: "TNT"
+    Slot: 29
+    Pitch1: 1
+    Pitch2: 1
+    Price: 15000
+    Page: 1
+
+  Zombie:
+    Sound: "ENDERMAN_SCREAM"
+    Material: "MONSTER_EGG"
+    Data: 54
+    Pitch1: 0.5
+    Pitch2: 0.10
+    Price: 15000
+
+  Breath:
+    Sound: "BLAZE_BREATH"
+    Material: "BOWL"
+    Pitch1: 0.5
+    Pitch2: 0.10
+    Price: 15000
+
+  Click:
+    Sound: "CLICK"
+    Material: "WOOD_BUTTON"
+    Pitch1: 1
+    Pitch2: 1
+    Price: 15000
+
+  Creepy:
+    Sound: "AMBIENCE_CAVE"
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGQ0N2RiNzIxOTI3NDE0OTVlMTU3ZjRhYmZjMmFlMTIwMmQyOTI1MGVhMDA0N2E1MmZjODIwNDA4OWUxOGUxMCJ9fX0="
+    Pitch1: 2
+    Pitch2: 2
+    Price: 15000

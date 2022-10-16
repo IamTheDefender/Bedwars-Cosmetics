@@ -1,0 +1,98 @@
+# You can use Head-Value and remove Material if you want to #
+# use custom heads (need base64 value in Head-Value field) #
+ProjectileTrails:
+   None:
+     Price: 0
+     Material: "BARRIER"
+     
+   Slime:
+     Price: 5000
+     Material: "BARRIER"
+     Particle: "SLIME"
+     
+   Ender:
+     Price: 5000
+     Material: "EYE_OF_ENDER"
+     Particle: "END_ROD"
+     
+   Lava:
+     Price: 5000
+     Material: "LAVA_BUCKET"
+     Particle: "LAVA"
+     
+   Potion:
+     Price: 5000
+     Material: "GLASS_BOTTLE"
+     Particle: "SPELL"
+     
+   Water:
+     Price: 5000
+     Material: "WATER_BUCKET"
+     Particle: "DRIP_WATER"
+     
+   Black-Smoke:
+     Price: 5000
+     Material: "FURNACE"
+     Particle: "SMOKE_LARGE"
+          
+   White-Smoke:
+     Price: 5000
+     Material: "SNOW_BLOCK"
+     Particle: "SMOKE_NORMAL"
+          
+   Note:
+     Price: 10000
+     Material: "NOTE_BLOCK"
+     Particle: "NOTE"
+     
+   Blue-Dust:
+     Price: 10000
+     Material: "INK_SACK"
+     Data: 4
+     Color: "BLUE"
+     Particle: "REDSTONE"
+     
+   Red-Dust:
+     Price: 10000
+     Material: "REDSTONE"
+     Particle: "REDSTONE"
+     
+   Purple-Dust:
+     Price: 10000
+     Material: "INK_SACK"
+     Data: 5
+     Color: "PURPLE"
+     Particle: "REDSTONE"
+     
+   Fire:
+     Price: 10000
+     Material: "FLINT"
+     Particle: "FLAME"
+     
+   Magic:
+     Price: 10000
+     Material: "CAULDRON_ITEM"
+     Particle: "CRIT_MAGIC"
+     
+   Firework:
+     Price: 10000
+     Material: "FIREWORK"
+     Particle: "FIREWORKS_SPARK"
+     
+   Angry-Villager:
+     Price: 10000
+     Material: "IRON_SWORD"
+     Particle: "VILLAGER_ANGRY"
+     
+   Happy-Villager:
+     Price: 10000
+     Material: "GOLD_INGOT"
+     Particle: "VILLAGER_HAPPY"
+  
+   Portal:
+     Price: 10000
+     Material: "OBSIDIAN"
+     Particle: "PORTAL"
+     
+     
+     
