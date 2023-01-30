@@ -1,0 +1,41 @@
+
+
+package me.defender.cosmetics.api.categories.victorydances;
+
+import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
+import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.enums.CosmeticsType;
+import me.defender.cosmetics.api.enums.FieldsType;
+import me.defender.cosmetics.api.enums.RarityType;
+import me.defender.cosmetics.api.events.VictoryDancesExecuteEvent;
+import me.defender.cosmetics.api.utils.StartupUtils;
+import me.defender.cosmetics.api.utils.DebugUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
+import java.util.UUID;
+
+public class VictoryDanceHandler implements Listener {
+    @EventHandler
+    public void onGameEnd(GameEndEvent e) {
+        for (UUID uuid : e.getWinners()) {
+             Player p = Bukkit.getPlayer(uuid);
+            String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.VictoryDances);
+            VictoryDancesExecuteEvent event = new VictoryDancesExecuteEvent(p);
+            Bukkit.getPluginManager().callEvent(event);
+
+            if(event.isCancelled())
+                return;
+
+            DebugUtil.addMessage("Executing " + selected + " Victory Dance for " + p.getDisplayName());
+            for(VictoryDance victoryDance : StartupUtils.victoryDancesList){
+                if(selected.equals(victoryDance.getIdentifier())){
+                    if(victoryDance.getField(FieldsType.RARITY, p) == RarityType.NONE) return;
+                    victoryDance.execute(p);
+                }
+            }
+        }
+    }
+}

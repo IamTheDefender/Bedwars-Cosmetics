@@ -1,0 +1,10 @@
+Debug: false
+BackItemInCosmeticsMenu: true
+mysql:
+  enable: false
+  host: "localhost"
+  port: "3306"
+  database: "name"
+  username: "root"
+  password: "none"
+

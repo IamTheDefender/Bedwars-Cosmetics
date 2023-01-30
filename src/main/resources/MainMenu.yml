@@ -1,0 +1,52 @@
+# DO NOT EDIT IF YOU DON'T KNOW WHAT YOU ARE DOING!
+# DO NOT CHANGE ANY FIELD NAMES OR ELSE PLUGIN MAY BREAK!
+Main-Menu:
+  Sprays:
+    Material: "PAPER"
+    Slot: 15
+
+  Projectile-Trails:
+    Material: "ARROW"
+    Slot: 9
+
+  FinalKill-Effects:
+    Material: "IRON_SWORD"
+    Slot: 13
+
+  Kill-Messages:
+    Material: "SIGN"
+    Slot: 29
+
+  Glyphs:
+    Material: "DIAMOND"
+    Slot: 31
+
+  Bed-Destroys:
+    Material: "BED"
+    Slot: 33
+
+  WoodSkins:
+    Material: "WOOD"
+    Data: 5
+    Slot: 35
+
+  Back:
+    Material: "ARROW"
+    Slot: 49
+    #this can be used for custom command, custom-command: "back %player%"
+
+  Victory-Dances:
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGM5ZjhlMTAwYWYyMDBlMmM0YjdkOGQ3N2I5MWJlNTYyZGEwMTM2YzBiMGNhZmE4MWIzN2JkYTM0MTM1ZGYxIn19fQ=="
+    Slot: 11
+
+  Island-Toppers:
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzc1NjU5YTdiMWQwZDljMjY4YzcwZDliOTJlODE2ZmNkMjhlMzFhNTg4OTYzZDRhMDUwY2VlODVlYzk0MjI0MCJ9fX0="
+    Slot: 17
+
+  ShopKeeperSkins:
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhOGVmMjQ1OGEyYjEwMjYwYjg3NTY1NThmNzY3OWJjYjdlZjY5MWQ0MWY1MzRlZmVhMmJhNzUxMDczMTVjYyJ9fX0="
+    Slot: 27
+
+  Death-Cries:
+    Head-Value: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjM3MWU0ZTFjZjZhMWEzNmZkYWUyNzEzN2ZkOWI4NzQ4ZTYxNjkyOTk5MjVmOWFmMmJlMzAxZTU0Mjk4YzczIn19fQ=="
+    Slot: 22
