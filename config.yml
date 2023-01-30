@@ -1,9 +1,0 @@
-Use-Name: false # use names instead of uuid's to save data.
-MySQL:
-  Enabled: false
-  IP: "mysqlserverip"
-  Port: "3306"
-  Database-Name: "name"
-  Username: "root"
-  Password: "none"
-
