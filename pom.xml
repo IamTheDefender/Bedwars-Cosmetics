@@ -13,7 +13,7 @@
 
     <description>This addon adds a set of various cosmetics to your bedwars server</description>
     <properties>
-        <java.version>19</java.version>
+        <java.version>18</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
