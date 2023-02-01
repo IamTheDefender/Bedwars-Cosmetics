@@ -13,7 +13,7 @@
 
     <description>This addon adds a set of various cosmetics to your bedwars server</description>
     <properties>
-        <java.version>18</java.version>
+        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -140,7 +140,7 @@
         <dependency>
             <groupId>com.github.hakan-krgn.hCore</groupId>
             <artifactId>bukkit-primary</artifactId>
-            <version>0.6.6</version>
+            <version>0.6.9.6</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
