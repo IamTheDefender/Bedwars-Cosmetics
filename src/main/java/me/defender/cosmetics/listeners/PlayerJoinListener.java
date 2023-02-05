@@ -22,22 +22,35 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class PlayerJoinListener implements Listener
-{
+public class PlayerJoinListener implements Listener {
 
     public PlayerJoinListener() {
         Cosmetics plugin = Cosmetics.getPlugin(Cosmetics.class);
     }
-    
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         BwcAPI api = new BwcAPI();
 
         // Saving for MySQL is different
-        if(api.isMySQL()){
+        if (api.isMySQL()) {
             PlayerData playerData = new PlayerData(event.getPlayer().getUniqueId());
             Utility.playerDataList.put(event.getPlayer().getUniqueId(), playerData);
-
+            if (!playerData.exists()) {
+                playerData.setBedDestroy(BedDestroy.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setDeathCry(DeathCry.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setFinalKillEffect(FinalKillEffect.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setGlyph(Glyph.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setIslandTopper(IslandTopper.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setKillMessage(KillMessage.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setProjectileTrail(ProjectileTrail.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setShopkeeperSkin(ShopKeeperSkin.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setSpray(Spray.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setVictoryDance(VictoryDance.getDefault(event.getPlayer()).getIdentifier());
+                playerData.setWoodSkin(WoodSkin.getDefault(event.getPlayer()).getIdentifier());
+                playerData.createData();
+            }
+            Utility.playerDataList.put(event.getPlayer().getUniqueId(), playerData);
             PlayerOwnedData playerOwnedData = new PlayerOwnedData(event.getPlayer().getUniqueId());
             Utility.playerOwnedDataList.put(event.getPlayer().getUniqueId(), playerOwnedData);
             playerOwnedData.updateOwned();
