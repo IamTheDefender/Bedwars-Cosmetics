@@ -14,6 +14,7 @@ import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.menus.MainMenu;
 import me.defender.cosmetics.api.utils.Utility;
 import me.defender.cosmetics.menus.CategoryMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -76,13 +77,18 @@ public class MainCommand {
             args = "menu"
     )
     public void menuCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            if (Utility.isInArena(p))
-                return;
-            new MainMenu(p).open(p);
-        } else {
-            sender.sendMessage(ChatColor.RED + "You need to be in-game!");
+        try {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                if (Utility.isInArena(p))
+                    return;
+                new MainMenu(p).open(p);
+            } else {
+                sender.sendMessage(ChatColor.RED + "You need to be in-game!");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Bukkit.getLogger().severe("Send this to the developer!");
         }
     }
 

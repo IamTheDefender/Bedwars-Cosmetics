@@ -213,7 +213,7 @@ public class CategoryMenu extends InventoryGui {
                 api.setSelectedCosmetic(p, type, id);
                 XSound.ENTITY_VILLAGER_YES.play(p);
                 HCore.getInventoryByPlayer(p).open(p);
-            } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) < price) {
+            } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
                 if(isOnlyForCheck) return 1;
                 CosmeticPurchaseEvent event = new CosmeticPurchaseEvent(p, type);
                 Bukkit.getServer().getPluginManager().callEvent(event);

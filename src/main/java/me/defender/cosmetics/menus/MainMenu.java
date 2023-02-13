@@ -1,5 +1,6 @@
 package me.defender.cosmetics.menus;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import me.defender.cosmetics.api.utils.MainMenuUtils;
@@ -12,6 +13,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MainMenu extends InventoryGui {
 
@@ -35,7 +37,7 @@ public class MainMenu extends InventoryGui {
             List<String> lores = MainMenuUtils.formatLore(lore, player);
 
             if(material != null){
-                super.setItem(slot, HCore.itemBuilder(Material.valueOf(material)).lores(true, lores).durability(data).name(true, itemName).build(), (e) -> {
+                super.setItem(slot, HCore.itemBuilder(Objects.requireNonNull(XMaterial.matchXMaterial(material).get().parseMaterial())).lores(true, lores).durability(data).name(true, itemName).build(), (e) -> {
                     MainMenuUtils.openMenus((Player) e.getWhoClicked(), name);
                 });
             }
