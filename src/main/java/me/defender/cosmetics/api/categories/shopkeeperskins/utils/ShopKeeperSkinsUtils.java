@@ -10,6 +10,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.HologramTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
@@ -30,7 +31,8 @@ public class ShopKeeperSkinsUtils {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
-        npc.data().setPersistent("nameplateVisible", false);
+        npc.getOrAddTrait(LookClose.class).lookClose(true);
+        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
         npc.spawn(loc);
 
     }
@@ -49,7 +51,7 @@ public class ShopKeeperSkinsUtils {
         npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
         npc.getTrait(SkinTrait.class).setTexture(value, sign);
         npc.getTrait(LookClose.class).lookClose(true);
-        npc.data().setPersistent("nameplate-visible", false);
+        npc.getOrAddTrait(HologramTrait.class).clear();
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
         // Upgrade NPC
@@ -58,7 +60,7 @@ public class ShopKeeperSkinsUtils {
         npc1.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
         npc1.getTrait(SkinTrait.class).setTexture(value, sign);
         npc1.getTrait(LookClose.class).lookClose(true);
-        npc1.data().setPersistent("nameplate-visible", false);
+        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
         npc1.spawn(loc1);
         npc1.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
 

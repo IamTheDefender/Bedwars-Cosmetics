@@ -25,8 +25,14 @@ public class StringUtils {
         return new ArrayList<>(lores);
     }
     public static String replaceHyphensAndCaptalizeFirstLetter(String str) {
+        if(str == null){
+            return "&cDISABLED";
+        }
         StringBuilder result = new StringBuilder();
         boolean capitalizeNext = true;
+        if(str == null){
+            return str;
+        }
         for (char c : str.toCharArray()) {
             if (c == '-') {
                 result.append(' ');

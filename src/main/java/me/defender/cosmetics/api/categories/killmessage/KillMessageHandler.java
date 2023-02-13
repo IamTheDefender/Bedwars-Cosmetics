@@ -41,49 +41,35 @@ public class KillMessageHandler implements Listener
         // Get the final kill flag based on the kill cause
         boolean isFinalKill = e.getCause().isFinalKill();
 
-        // Get the players in the arena
-        List<Player> players = e.getArena().getWorld().getPlayers();
         String selected = new BwcAPI().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage);
 
         // Send the appropriate kill message to all players in the arena
         switch (e.getCause()) {
             case PVP:
-                if(KillMessageUtils.exists(selected, "PvP")) {
-                    e.setMessage(player -> "");
-                    for (Player p : players) {
-                        KillMessageUtils.sendKillMessage(p, e.getVictim().getDisplayName(),
-                                e.getKiller(), isFinalKill, color3, color2, "PvP", null, false, null, null);
-                    }
+                if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected)) {
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getName(),
+                            e.getKiller(), isFinalKill, color3, color2, "PvP"));
                 }
                 break;
             case EXPLOSION:
             case EXPLOSION_FINAL_KILL:
-                if(KillMessageUtils.exists(selected, "PvP")) {
-                    e.setMessage(player -> "");
-                    for (Player p : players) {
-                        KillMessageUtils.sendKillMessage(p, e.getVictim().getDisplayName(),
-                                e.getKiller(), isFinalKill, color3, color2, "Explosion", "", false, null, null);
-                    }
+                if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected) && !KillMessageUtils.isNone(selected)) {
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                            e.getKiller(), isFinalKill, color3, color2, "Explosion"));
                 }
                 break;
             case PLAYER_SHOOT:
             case PLAYER_SHOOT_FINAL_KILL:
-                if(KillMessageUtils.exists(selected, "PvP")) {
-                    e.setMessage(player -> "");
-                    for (Player p : players) {
-                        KillMessageUtils.sendKillMessage(p, e.getVictim().getDisplayName(),
-                                e.getKiller(), isFinalKill, color3, color2, "Shoot", "", false, null, null);
-                    }
+                if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected)) {
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                            e.getKiller(), isFinalKill, color3, color2, "Shoot"));
                 }
                 break;
             case VOID:
             case VOID_FINAL_KILL:
-                if(KillMessageUtils.exists(selected, "PvP")) {
-                    e.setMessage(player -> "");
-                    for (Player p : players) {
-                        KillMessageUtils.sendKillMessage(p, e.getVictim().getDisplayName(),
-                                e.getKiller(), isFinalKill, color3, color2, "Void", "", false, null, null);
-                    }
+                if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected)) {
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                            e.getKiller(), isFinalKill, color3, color2, "Void"));
                 }
                 break;
         }

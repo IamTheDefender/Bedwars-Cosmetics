@@ -129,7 +129,13 @@ public class StartupUtils
      * in the folder and remove the temp.zip.
      */
     public static void downloadGlyphs() {
-        final File folder = new File(Utility.plugin().getDataFolder().getPath() + "/Glyphs");
+
+        File folder = new File(Utility.plugin().getDataFolder().getPath() + "/Glyphs");
+        String[] filesInFolder = folder.list();
+        if(filesInFolder.length == 0){
+            return;
+        }
+
         if (!folder.exists()) {
             folder.mkdirs();
         }
