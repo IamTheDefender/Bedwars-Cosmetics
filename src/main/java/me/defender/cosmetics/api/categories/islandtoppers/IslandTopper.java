@@ -25,16 +25,19 @@ import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class IslandTopper extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
+    /**
+     * Display the topper
+     *
+     * @param player the player to display the topper
+     * @param topperLocation the location to display the topper
+     * @param selected the selected topper
+     */
     public abstract void execute(Player player, Location topperLocation, String selected);
 
+    /**
+     * Register the topper.
+     * This method should be called when the plugin is enabled.
+     */
     public void register(){
         // save to config
         String category = "island-topper";
@@ -61,6 +64,12 @@ public abstract class IslandTopper extends Cosmetics {
         StartupUtils.islandTopperList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "island-topper";
         String configPath = category + "." + getIdentifier() + ".";
@@ -81,6 +90,11 @@ public abstract class IslandTopper extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default topper
+     * @param player the player to get the default topper
+     * @return the default topper
+     */
     public static @NotNull IslandTopper getDefault(Player player){
         for(IslandTopper islandTopper : StartupUtils.islandTopperList){
             if(islandTopper.getField(FieldsType.RARITY, player) == RarityType.NONE){

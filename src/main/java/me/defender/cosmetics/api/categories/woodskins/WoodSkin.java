@@ -23,19 +23,15 @@ import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class WoodSkin extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
 
     private final String category = "wood-skins";
     ConfigManager config = ConfigUtils.getWoodSkins();
     ConfigType type = ConfigType.WOOD_SKINS;
 
+    /**
+     * Register the wood skin
+     * This method should be called when the plugin is enabled.
+     */
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -60,6 +56,12 @@ public abstract class WoodSkin extends Cosmetics {
         StartupUtils.woodSkinsList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -79,9 +81,17 @@ public abstract class WoodSkin extends Cosmetics {
         }
     }
 
+    /**
+     * Get the wood skin's item
+     * @return the item
+     */
     public abstract ItemStack woodSkin();
 
-
+    /**
+     * Get default wood skin
+     * @param player the player to get the default wood skin
+     * @return the default wood skin
+     */
     public static @NotNull WoodSkin getDefault(Player player){
         for(WoodSkin woodSkin : StartupUtils.woodSkinsList){
             if(XMaterial.OAK_PLANKS.isSimilar(woodSkin.getItem())){

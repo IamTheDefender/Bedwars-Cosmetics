@@ -23,19 +23,16 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class ShopKeeperSkin extends Cosmetics {
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
 
 
     private final String category = "shopkeeper-skins";
     ConfigManager config = ConfigUtils.getShopKeeperSkins();
     ConfigType type = ConfigType.SHOP_KEEPER_SKINS;
 
+    /**
+     * Register the shopkeeper skin
+     * This method should be called when the plugin is enabled.
+     */
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -60,6 +57,12 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         StartupUtils.shopKeeperSkinList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -79,8 +82,20 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         }
     }
 
+    /**
+     * Display the shopkeeper skin to the player
+     *
+     * @param player the player to display the shopkeeper skin
+     * @param shopLocation the location of the shopkeeper
+     * @param upgradeLocation the location of the upgrade shopkeeper
+     */
     public abstract void execute(Player player, Location shopLocation, Location upgradeLocation);
 
+    /**
+     * Get the default shopkeeper skin
+     * @param player the player to get the default shopkeeper skin
+     * @return the default shopkeeper skin
+     */
     public static @NotNull ShopKeeperSkin getDefault(Player player){
         for(ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList){
             if(shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE){

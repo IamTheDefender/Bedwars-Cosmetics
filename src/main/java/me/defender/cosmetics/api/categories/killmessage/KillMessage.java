@@ -24,19 +24,14 @@ import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class KillMessage extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
-
     private final String category = "kill-message";
     ConfigManager config = ConfigUtils.getKillMessages();
     ConfigType type = ConfigType.KILL_MESSAGES;
 
+    /**
+     * Register the kill message
+     * This method should be called when the plugin is enabled.
+     */
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -70,6 +65,12 @@ public abstract class KillMessage extends Cosmetics {
                         "&e                                   &l&nCHAT MESSAGES:", "" ,"%message%", "", "&a▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"));
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -89,9 +90,21 @@ public abstract class KillMessage extends Cosmetics {
         }
     }
 
+    /**
+     * Display the kill message
+     *
+     * @param player the player to display the kill message
+     * @param killCause the kill cause
+     * @return the kill message
+     */
     public abstract String execute(Player player, PlayerKillEvent.PlayerKillCause killCause);
 
 
+    /**
+     * Get default kill message
+     * @param player the player to get the default kill message
+     * @return the default kill message
+     */
     public static @NotNull KillMessage getDefault(Player player){
         for(KillMessage killMessage : StartupUtils.killMessageList){
             if(killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE){
