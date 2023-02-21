@@ -24,18 +24,82 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.get;
 import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound;
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
+/**
+ * Bed destroy effect.
+ * All bed destroy effects must extend this class.
+ */
 public abstract class BedDestroy extends Cosmetics {
 
+    /**
+     * Get the item stack associated with this bed destroy effect.
+     * This item stack will be used to display the effect in the shop.
+     *
+     * @return item stack associated with this bed destroy effect.
+     */
     public abstract ItemStack getItem();
+
+    /**
+     * Get the base64 texture of the head.
+     * This is only used if the item stack is a player head.
+     *
+     * @return base64 texture of the head.
+     */
     public abstract String base64();
+
+    /**
+     * Get the identifier of this bed destroy effect.
+     * This identifier will be used to save the effect in the config.
+     *
+     * @return identifier of this bed destroy effect.
+     */
     public abstract String getIdentifier();
+
+    /**
+     * Get the display name of this bed destroy effect.
+     * This display name will be used when displaying the effect in the shop.
+     *
+     * @return display name of this bed destroy effect.
+     */
     public abstract String getDisplayName();
+
+    /**
+     * Get the lore of this bed destroy effect.
+     * This lore will be used when displaying the effect in the shop.
+     *
+     * @return lore of this bed destroy effect.
+     */
     public abstract List<String> getLore();
+
+    /**
+     * Get the price of this bed destroy effect.
+     * This price will be used when displaying the effect in the shop.
+     *
+     * @return price of this bed destroy effect.
+     */
     public abstract int getPrice();
+
+    /**
+     * Get the rarity of this bed destroy effect.
+     * This rarity will be used when displaying the effect in the shop.
+     *
+     * @return rarity of this bed destroy effect.
+     */
     public abstract RarityType getRarity();
 
+    /**
+     * Execute the bed destroy effect.
+     * This method will be called when a bed is destroyed.
+     *
+     * @param player player who destroyed the bed.
+     * @param bedLocation location of the bed.
+     * @param victimTeam team of the player who destroyed the bed.
+     */
     public abstract void execute(Player player, Location bedLocation, ITeam victimTeam);
 
+    /**
+     * Register the bed destroy effect.
+     * This method should be called when the plugin is enabled.
+     */
     public void register(){
         // save to config
         String category = "bed-destroy";
@@ -63,6 +127,14 @@ public abstract class BedDestroy extends Cosmetics {
         StartupUtils.bedDestroyList.add(this);
     }
 
+    /**
+     * Get the field of this bed destroy effect.
+     * This method will be used to get the field of this bed destroy effect.
+     *
+     * @param fields field to get.
+     * @param p player who is viewing the effect.
+     * @return field of this bed destroy effect.
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "bed-destroy";
         String configPath = category + "." + getIdentifier() + ".";
@@ -83,6 +155,13 @@ public abstract class BedDestroy extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default bed destroy effect.
+     * This method will be used to get the default bed destroy effect.
+     *
+     * @param player player who is viewing the effect.
+     * @return default bed destroy effect.
+     */
     public static @NotNull BedDestroy getDefault(Player player){
         for(BedDestroy bedDestroy : StartupUtils.bedDestroyList){
             if(bedDestroy.getField(FieldsType.RARITY, player) == RarityType.NONE){
