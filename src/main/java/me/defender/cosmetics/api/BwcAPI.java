@@ -14,12 +14,21 @@ import static me.defender.cosmetics.api.utils.Utility.plugin;
 public class BwcAPI {
     private final Boolean enabledMySQL = plugin().getConfig().getBoolean("mysql.enable");
 
-
-
+    /**
+     * Check if MySQL is enabled.
+     * @return true if enabled.
+     */
     public Boolean isMySQL() {
         return enabledMySQL;
     }
 
+    /**
+     * Get the selected cosmetic for a player.
+     * @param p   Player.
+     * @param cos Cosmetic type.
+     *
+     * @return    String.
+     */
     public String getSelectedCosmetic(Player p, CosmeticsType cos){
         if(p == null){
             return null;
@@ -52,6 +61,12 @@ public class BwcAPI {
         return "User not found!";
     }
 
+    /**
+     * Set the selected cosmetic for a player.
+     * @param p     Player.
+     * @param cos   Cosmetic type.
+     * @param value Cosmetic value.
+     */
     public void setSelectedCosmetic(Player p, CosmeticsType cos, String value){
         PlayerData playerData = Utility.playerDataList.get(p.getUniqueId());
         switch (cos){
@@ -92,15 +107,27 @@ public class BwcAPI {
         Utility.playerDataList.replace(p.getUniqueId(), playerData);
     }
 
+    /**
+     * Get the vault economy.
+     * @return the vault economy.
+     */
     public Economy getEco(){
         final RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         return rsp.getProvider();
     }
 
+    /**
+     * Get the BedWars API.
+     * @return the BedWars API.
+     */
     public BedWars getBwAPI(){
         return Bukkit.getServicesManager().getRegistration(BedWars.class).getProvider();
     }
 
+    /**
+     * Check if the plugin is running on a proxy.
+     * @return true if running on a proxy.
+     */
     public Boolean isProxy(){
         return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null;
     }
