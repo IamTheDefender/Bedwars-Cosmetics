@@ -11,10 +11,10 @@ import java.util.List;
 public abstract class Cosmetics {
 
     /**
-     * Get the item stack associated with this bed destroy effect.
-     * This item stack will be used to display the effect in the shop.
+     * Get the item stack associated with this cosmetic.
+     * This item stack will be used to display the cosmetic in the shop.
      *
-     * @return item stack associated with this bed destroy effect.
+     * @return item stack associated with this cosmetic.
      */
     public abstract ItemStack getItem();
 
@@ -27,42 +27,47 @@ public abstract class Cosmetics {
     public abstract String base64();
 
     /**
-     * Get the identifier of this bed destroy effect.
-     * This identifier will be used to save the effect in the config.
+     * Get the identifier of this cosmetic.
+     * This identifier will be used to save the cosmetic in the config.
      *
-     * @return identifier of this bed destroy effect.
+     * @return identifier of this cosmetic.
      */
     public abstract String getIdentifier();
 
     /**
-     * Get the display name of this bed destroy effect.
-     * This display name will be used when displaying the effect in the shop.
+     * Get the display name of this cosmetic.
+     * This display name will be used when displaying the cosmetic in the shop.
      *
-     * @return display name of this bed destroy effect.
+     * @return display name of this cosmetic.
      */
     public abstract String getDisplayName();
 
     /**
-     * Get the lore of this bed destroy effect.
-     * This lore will be used when displaying the effect in the shop.
+     * Get the lore of this cosmetic.
+     * This lore will be used when displaying the cosmetic in the shop.
      *
-     * @return lore of this bed destroy effect.
+     * @return lore of this cosmetic.
      */
     public abstract List<String> getLore();
 
     /**
-     * Get the price of this bed destroy effect.
-     * This price will be used when displaying the effect in the shop.
+     * Get the price of this cosmetic.
+     * This price will be used when displaying the cosmetic in the shop.
      *
-     * @return price of this bed destroy effect.
+     * @return price of this cosmetic.
      */
     public abstract int getPrice();
 
     /**
-     * Get the rarity of this bed destroy effect.
-     * This rarity will be used when displaying the effect in the shop.
+     * Get the rarity of this cosmetic.
+     * This rarity will be used when displaying the cosmetic in the shop.
      *
-     * @return rarity of this bed destroy effect.
+     * @return rarity of this cosmetic.
      */
     public abstract RarityType getRarity();
+
+    /**
+     * Register this cosmetic.
+     */
+    public abstract void register();
 }
