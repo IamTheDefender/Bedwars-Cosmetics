@@ -22,20 +22,15 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class ProjectileTrail extends Cosmetics {
-
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
-
     private final String category = "projectile-trails";
     ConfigManager config = ConfigUtils.getProjectileTrails();
     ConfigType type = ConfigType.PROJECTILE_TRAILS;
 
+    /**
+     * Register the projectile trail
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -61,6 +56,12 @@ public abstract class ProjectileTrail extends Cosmetics {
         StartupUtils.projectileTrailList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -80,8 +81,19 @@ public abstract class ProjectileTrail extends Cosmetics {
         }
     }
 
+    /**
+     * Show the projectile trail to the player
+     *
+     * @param player the player to show the projectile trail
+     * @return the message to send to the player
+     */
     public abstract String execute(Player player);
 
+    /**
+     * Get the default projectile trail
+     * @param player the player to get the default projectile trail
+     * @return the default projectile trail
+     */
     public static @NotNull ProjectileTrail getDefault(Player player){
         for(ProjectileTrail projectileTrail : StartupUtils.projectileTrailList){
             if(projectileTrail.getField(FieldsType.RARITY, player) == RarityType.NONE){

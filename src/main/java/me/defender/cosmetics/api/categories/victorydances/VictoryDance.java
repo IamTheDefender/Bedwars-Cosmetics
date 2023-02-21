@@ -25,19 +25,16 @@ import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class VictoryDance extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
 
     private final String category = "victory-dance";
     ConfigManager config = ConfigUtils.getVictoryDances();
     ConfigType type = ConfigType.VICTORY_DANCES;
 
+    /**
+     * Register the victory dance
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -62,6 +59,12 @@ public abstract class VictoryDance extends Cosmetics {
         StartupUtils.victoryDancesList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -81,9 +84,18 @@ public abstract class VictoryDance extends Cosmetics {
         }
     }
 
+    /**
+     * Play the victory dance
+     * @param winner the winner of the game
+     */
     public abstract void execute(Player winner);
 
 
+    /**
+     * Get the default victory dance
+     * @param player the player to get the default victory dance
+     * @return the default victory dance
+     */
     public static @NotNull VictoryDance getDefault(@Nullable Player player){
         try {
             for (VictoryDance victoryDance : StartupUtils.victoryDancesList) {
