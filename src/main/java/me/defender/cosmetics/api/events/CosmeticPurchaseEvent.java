@@ -34,10 +34,18 @@ public class CosmeticPurchaseEvent extends Event implements Cancellable {
         return isCancelled;
     }
 
+    /**
+     * Get the player that purchased the cosmetic.
+     * @return Player
+     */
     public Player getPlayer(){
         return player;
     }
 
+    /**
+     * Get the category of the cosmetic.
+     * @return CosmeticsType
+     */
     public CosmeticsType getCategory(){
         return category;
     }

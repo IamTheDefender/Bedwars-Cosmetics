@@ -21,11 +21,18 @@ public class VictoryDancesExecuteEvent extends Event implements Cancellable {
         this.selected = new BwcAPI().getSelectedCosmetic(winner, CosmeticsType.VictoryDances);
     }
 
-
+    /**
+     * Get the player that won the game.
+     * @return Player
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Get the selected victory dance.
+     * @return String
+     */
     public String getSelected() {
         return selected;
     }
