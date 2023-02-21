@@ -32,6 +32,7 @@ public abstract class KillMessage extends Cosmetics {
      * Register the kill message
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";

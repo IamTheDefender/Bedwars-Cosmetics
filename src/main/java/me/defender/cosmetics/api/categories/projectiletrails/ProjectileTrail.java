@@ -30,6 +30,7 @@ public abstract class ProjectileTrail extends Cosmetics {
      * Register the projectile trail
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";

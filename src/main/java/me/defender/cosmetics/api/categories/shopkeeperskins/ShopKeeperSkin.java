@@ -33,6 +33,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      * Register the shopkeeper skin
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";

@@ -38,6 +38,7 @@ public abstract class IslandTopper extends Cosmetics {
      * Register the topper.
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String category = "island-topper";

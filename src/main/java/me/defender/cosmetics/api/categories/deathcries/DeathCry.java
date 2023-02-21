@@ -42,6 +42,7 @@ public abstract class DeathCry extends Cosmetics {
      * Register the death cry
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String category = "death-cry";

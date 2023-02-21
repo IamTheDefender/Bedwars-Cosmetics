@@ -36,6 +36,7 @@ public abstract class Glyph extends Cosmetics {
      * Register the glyph.
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String category = "glyph";

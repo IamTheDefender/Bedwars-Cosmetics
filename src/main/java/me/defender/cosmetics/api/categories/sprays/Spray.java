@@ -31,6 +31,7 @@ public abstract class Spray extends Cosmetics {
      * Register the spray
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";

@@ -32,6 +32,7 @@ public abstract class WoodSkin extends Cosmetics {
      * Register the wood skin
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";

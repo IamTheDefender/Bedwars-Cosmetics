@@ -36,6 +36,7 @@ public abstract class FinalKillEffect extends Cosmetics {
      * Register the final kill effect.
      * This method should be called when the plugin is enabled.
      */
+    @Override
     public void register(){
         // save to config
         String category = "finalkill-effect";
