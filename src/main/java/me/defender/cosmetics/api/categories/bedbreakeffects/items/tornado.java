@@ -17,42 +17,47 @@ import org.bukkit.util.Vector;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Bed destroy effect.
+ * Spawns a tornado at the location of bed.
+ */
 public class tornado extends BedDestroy {
+    /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
         return new ItemStack(Material.STRING);
     }
-
+    /** {@inheritDoc} */
     @Override
     public String base64() {
         return null;
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getIdentifier() {
         return "tornado";
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return "Tornado";
     }
-
+    /** {@inheritDoc} */
     @Override
     public List<String> getLore() {
         return Arrays.asList("&7Spawns a tornado at the","&7location of bed.");
     }
-
+    /** {@inheritDoc} */
     @Override
     public int getPrice() {
         return 5000;
     }
-
+    /** {@inheritDoc} */
     @Override
     public RarityType getRarity() {
         return RarityType.COMMON;
     }
-
+    /** {@inheritDoc} */
     @Override
     public void execute(Player player, Location bedLocation, ITeam victimTeam) {
         player.playSound(bedLocation, XSound.ENTITY_GENERIC_EXPLODE.parseSound(), 1.0f, 1.0f);

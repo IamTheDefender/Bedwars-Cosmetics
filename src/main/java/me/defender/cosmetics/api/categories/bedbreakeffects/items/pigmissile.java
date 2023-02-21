@@ -21,42 +21,47 @@ import org.bukkit.util.Vector;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Bed destroy effect.
+ * Spawns a flying pig that you can ride!
+ */
 public class pigmissile extends BedDestroy {
+    /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
         return XMaterial.COOKED_BEEF.parseItem();
     }
-
+    /** {@inheritDoc} */
     @Override
     public String base64() {
         return null;
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getIdentifier() {
         return "pig-missile";
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return "Pig Missile";
     }
-
+    /** {@inheritDoc} */
     @Override
     public List<String> getLore() {
         return Arrays.asList("&7Spawns a flying pig that", "&7you can ride!");
     }
-
+    /** {@inheritDoc} */
     @Override
     public int getPrice() {
         return 5000;
     }
-
+    /** {@inheritDoc} */
     @Override
     public RarityType getRarity() {
         return RarityType.COMMON;
     }
-
+    /** {@inheritDoc} */
     @Override
     public void execute(Player player, Location bedLocation, ITeam victimTeam) {
         final Pig pig = (Pig)player.getWorld().spawnEntity(bedLocation, EntityType.PIG);

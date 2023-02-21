@@ -21,42 +21,47 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Bed destroy effect.
+ * Spawns five Ghosts that will haunt other players!
+ */
 public class ghost extends BedDestroy {
+    /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
         return XMaterial.ENDER_PEARL.parseItem();
     }
-
+    /** {@inheritDoc} */
     @Override
     public String base64() {
         return null;
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getIdentifier() {
         return "ghost";
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return "Ghost";
     }
-
+    /** {@inheritDoc} */
     @Override
     public List<String> getLore() {
         return Arrays.asList("&7Spawns five Ghosts that will", "&7haunt other players!");
     }
-
+    /** {@inheritDoc} */
     @Override
     public int getPrice() {
         return 10000;
     }
-
+    /** {@inheritDoc} */
     @Override
     public RarityType getRarity() {
         return RarityType.RARE;
     }
-
+    /** {@inheritDoc} */
     @Override
     public void execute(Player player, Location bedLocation, ITeam victimTeam) {
         List<Entity> standsAndBats = new ArrayList<>();

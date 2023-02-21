@@ -17,42 +17,47 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Bed destroy effect.
+ * This effect spawns many bed bugs near the bed location.
+ */
 public class bedbugs extends BedDestroy {
+    /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
         return XMaterial.ENDERMITE_SPAWN_EGG.parseItem();
     }
-
+    /** {@inheritDoc} */
     @Override
     public String base64() {
         return null;
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getIdentifier() {
         return "bed-bugs";
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return "Bed Bugs";
     }
-
+    /** {@inheritDoc} */
     @Override
     public List<String> getLore() {
         return Arrays.asList("&7Spawns many bed bugs near", "&7the bed location!");
     }
-
+    /** {@inheritDoc} */
     @Override
     public int getPrice() {
         return 10000;
     }
-
+    /** {@inheritDoc} */
     @Override
     public RarityType getRarity() {
         return RarityType.RARE;
     }
-
+    /** {@inheritDoc} */
     @Override
     public void execute(Player player, Location bedLocation, ITeam victimTeam) {
         List<Endermite> endermites = new ArrayList<>();

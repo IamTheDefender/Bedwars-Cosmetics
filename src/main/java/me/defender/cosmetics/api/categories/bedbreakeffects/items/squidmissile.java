@@ -21,43 +21,47 @@ import org.bukkit.util.Vector;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Bed destroy effect.
+ * Spawns a squid that will go flying!
+ */
 public class squidmissile extends BedDestroy {
-
+    /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
         return XMaterial.SQUID_SPAWN_EGG.parseItem();
     }
-
+    /** {@inheritDoc} */
     @Override
     public String base64() {
         return null;
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getIdentifier() {
         return "squid-missile";
     }
-
+    /** {@inheritDoc} */
     @Override
     public String getDisplayName() {
         return "Squid Missile";
     }
-
+    /** {@inheritDoc} */
     @Override
     public List<String> getLore() {
         return Arrays.asList("&7Spawns a squid that will", "&7go flying!");
     }
-
+    /** {@inheritDoc} */
     @Override
     public int getPrice() {
         return 5000;
     }
-
+    /** {@inheritDoc} */
     @Override
     public RarityType getRarity() {
         return RarityType.COMMON;
     }
-
+    /** {@inheritDoc} */
     @Override
     public void execute(Player player, Location bedLocation, ITeam victimTeam) {
          Squid squid = (Squid) player.getWorld().spawnEntity(bedLocation, EntityType.SQUID);
