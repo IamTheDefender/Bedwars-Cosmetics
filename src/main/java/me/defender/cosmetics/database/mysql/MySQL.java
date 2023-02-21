@@ -12,6 +12,7 @@ import java.sql.Statement;
 public class MySQL {
 
     public HikariDataSource dataSource;
+    public Connection connection;
     private final JavaPlugin plugin;
 
     public MySQL(JavaPlugin plugin){
@@ -40,6 +41,11 @@ public class MySQL {
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
             dataSource = new HikariDataSource(config);
+            try {
+                connection = dataSource.getConnection();
+            } catch (SQLException e) {
+                Bukkit.getLogger().severe("There was an issue while getting connection for the database! error: " + e.getMessage());
+            }
         }
     }
 
@@ -47,7 +53,7 @@ public class MySQL {
 
     public void createTable(){
         if(dataSource != null){
-            try (Connection connection = dataSource.getConnection()) {
+            try {
                 Statement statement = connection.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS cosmetics_player_data (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
@@ -81,5 +87,9 @@ public class MySQL {
                 Bukkit.getLogger().severe("Failed to create player-data table: " + e.getMessage());
             }
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }

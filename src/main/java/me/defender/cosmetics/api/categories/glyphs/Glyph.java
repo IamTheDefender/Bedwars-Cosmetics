@@ -24,16 +24,19 @@ import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class Glyph extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
+    /**
+     * Executes the display of the glyph
+     *
+     * @param player the player to display the glyph
+     * @param location the location to display the glyph
+     */
     public abstract void execute(Player player, Location location);
 
+    /**
+     * Register the glyph.
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String category = "glyph";
@@ -61,6 +64,12 @@ public abstract class Glyph extends Cosmetics {
         StartupUtils.glyphsList.add(this);
     }
 
+    /**
+     * Get the field of the glyph
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "glyph";
         String configPath = category + "." + getIdentifier() + ".";
@@ -81,6 +90,11 @@ public abstract class Glyph extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default glyph
+     * @param player the player to get the default glyph
+     * @return the default glyph
+     */
     public static @NotNull Glyph getDefault(Player player){
         for(Glyph glyph : StartupUtils.glyphsList){
             if(glyph.getField(FieldsType.RARITY, player) == RarityType.NONE){

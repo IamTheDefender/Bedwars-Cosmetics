@@ -13,6 +13,7 @@ public class SQLite {
 
     private final JavaPlugin plugin;
     public HikariDataSource dataSource;
+    public Connection connection;
     public SQLite(JavaPlugin plugin){
         this.plugin = plugin;
         connect();
@@ -32,6 +33,11 @@ public class SQLite {
             config.setMaximumPoolSize(100);
             config.setPoolName("COSMETICS-SQLITE");
             dataSource = new HikariDataSource(config);
+            try {
+                connection = dataSource.getConnection();
+            } catch (SQLException e) {
+                Bukkit.getLogger().severe("There was an error getting the connection for database! error: " + e.getMessage());
+            }
         }
     }
 
@@ -73,5 +79,7 @@ public class SQLite {
         }
     }
 
-
+    public Connection getConnection() {
+        return connection;
+    }
 }

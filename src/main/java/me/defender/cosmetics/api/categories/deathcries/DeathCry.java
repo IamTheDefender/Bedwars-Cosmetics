@@ -24,18 +24,25 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class DeathCry extends Cosmetics {
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
 
+    /**
+     * @return the sound of the death cry
+     */
     public abstract XSound getSound();
+    /**
+     * @return the pitch of the sound
+     */
     public abstract float getPitch();
+    /**
+     * @return the volume of the sound
+     */
     public abstract float getVolume();
 
+    /**
+     * Register the death cry
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String category = "death-cry";
@@ -69,7 +76,12 @@ public abstract class DeathCry extends Cosmetics {
         StartupUtils.deathCryList.add(this);
     }
 
-
+    /**
+     * Get the field of the death cry
+     * @param fields the field to get
+     * @param p the player to get the field for
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "death-cry";
         String configPath = category + "." + getIdentifier() + ".";
@@ -96,6 +108,11 @@ public abstract class DeathCry extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default death cry
+     * @param player the player to get the default death cry for
+     * @return the default death cry
+     */
     public static @NotNull DeathCry getDefault(Player player){
         for(DeathCry deathCry : StartupUtils.deathCryList){
             if(deathCry.getField(FieldsType.RARITY, player) == RarityType.NONE){

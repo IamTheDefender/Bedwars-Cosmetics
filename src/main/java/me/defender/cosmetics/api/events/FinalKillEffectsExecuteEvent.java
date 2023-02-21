@@ -21,20 +21,34 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
         this.arena = arena;
         this.selected = selected;
        }
-
-
+    /**
+     * Get the Arena.
+     * @return IArena
+     */
     public IArena getArena() {
         return arena;
     }
 
+    /**
+     * Get the selected final kill effect.
+     * @return String
+     */
     public String getSelected(){
         return selected;
     }
 
+    /**
+     * Get the victim.
+     * @return Player
+     */
     public Player getVictim() {
         return victim;
     }
 
+    /**
+     * Get the killer.
+     * @return Player
+     */
     public Player getKiller() {
         return killer;
     }

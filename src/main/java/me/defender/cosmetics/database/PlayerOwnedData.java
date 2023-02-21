@@ -42,11 +42,7 @@ public class PlayerOwnedData{
 
     public PlayerOwnedData (UUID uuid) {
         this.uuid = uuid;
-        try {
-            this.connection = Cosmetics.getDB().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        this.connection = Cosmetics.dbConnection;
         load();
     }
 

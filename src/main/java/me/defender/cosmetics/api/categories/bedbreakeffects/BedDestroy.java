@@ -24,18 +24,27 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.get;
 import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound;
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
+/**
+ * Bed destroy effect.
+ * All bed destroy effects must extend this class.
+ */
 public abstract class BedDestroy extends Cosmetics {
 
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
+    /**
+     * Execute the bed destroy effect.
+     * This method will be called when a bed is destroyed.
+     *
+     * @param player player who destroyed the bed.
+     * @param bedLocation location of the bed.
+     * @param victimTeam team of the player who destroyed the bed.
+     */
     public abstract void execute(Player player, Location bedLocation, ITeam victimTeam);
 
+    /**
+     * Register the bed destroy effect.
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String category = "bed-destroy";
@@ -63,6 +72,14 @@ public abstract class BedDestroy extends Cosmetics {
         StartupUtils.bedDestroyList.add(this);
     }
 
+    /**
+     * Get the field of this bed destroy effect.
+     * This method will be used to get the field of this bed destroy effect.
+     *
+     * @param fields field to get.
+     * @param p player who is viewing the effect.
+     * @return field of this bed destroy effect.
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "bed-destroy";
         String configPath = category + "." + getIdentifier() + ".";
@@ -83,6 +100,13 @@ public abstract class BedDestroy extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default bed destroy effect.
+     * This method will be used to get the default bed destroy effect.
+     *
+     * @param player player who is viewing the effect.
+     * @return default bed destroy effect.
+     */
     public static @NotNull BedDestroy getDefault(Player player){
         for(BedDestroy bedDestroy : StartupUtils.bedDestroyList){
             if(bedDestroy.getField(FieldsType.RARITY, player) == RarityType.NONE){

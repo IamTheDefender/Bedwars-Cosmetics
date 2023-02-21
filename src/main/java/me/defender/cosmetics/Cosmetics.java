@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ public class Cosmetics extends JavaPlugin
 {
     public MainMenuData menuData;
     public static HikariDataSource db;
-
+    public static Connection dbConnection;
     public boolean forcedDisable = false;
 
     @Override
@@ -64,10 +65,14 @@ public class Cosmetics extends JavaPlugin
         getLogger().info("Configuration file successfully loaded.");
         if(new BwcAPI().isMySQL()){
             getLogger().info("Loading MySQL database..");
-            db = new MySQL(this).dataSource;
+            MySQL mySQL = new MySQL(this);
+            db = mySQL.dataSource;
+            dbConnection = mySQL.getConnection();
         }else{
             getLogger().info("Loading SQLite database..");
-            db = new SQLite(this).dataSource;
+            SQLite sqLite = new SQLite(this);
+            db = sqLite.dataSource;
+            dbConnection = sqLite.getConnection();
         }
 
         // Load all the list

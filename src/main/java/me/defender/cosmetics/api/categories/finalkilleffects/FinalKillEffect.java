@@ -22,16 +22,21 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class FinalKillEffect extends Cosmetics {
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
+    /**
+     * Execute the final kill effect
+     * This method should be called when a player kills another player.
+     * And the victim has no bed left.
+     *
+     * @param killer player who killed the victim.
+     * @param victim player who was killed.
+     */
     public abstract void execute(Player killer, Player victim);
 
+    /**
+     * Register the final kill effect.
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String category = "finalkill-effect";
@@ -59,6 +64,12 @@ public abstract class FinalKillEffect extends Cosmetics {
         StartupUtils.finalKillList.add(this);
     }
 
+    /**
+     * Get the field of the final kill effect.
+     * @param fields the field you want to get.
+     * @param p the player who is viewing the final kill effect.
+     * @return the field of the final kill effect.
+     */
     public Object getField(FieldsType fields, Player p){
         String category = "finalkill-effect";
         String configPath = category + "." + getIdentifier() + ".";
@@ -79,6 +90,11 @@ public abstract class FinalKillEffect extends Cosmetics {
         }
     }
 
+    /**
+     * Get the default final kill effect.
+     * @param player the player who is viewing the final kill effect.
+     * @return the default final kill effect.
+     */
     public static @NotNull FinalKillEffect getDefault(Player player){
         for(FinalKillEffect finalKillEffect : StartupUtils.finalKillList){
             if(finalKillEffect.getField(FieldsType.RARITY, player) == RarityType.NONE){

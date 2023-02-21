@@ -25,18 +25,18 @@ public class PlayerData {
     private String finalKillEffect;
     private String islandTopper;
     private String deathCry;
-    private final HikariDataSource dataSource;
+    private final Connection connection;
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
-        dataSource = Cosmetics.getDB();
+        connection = Cosmetics.dbConnection;
         load();
     }
 
 
 
     public void load() {
-        try (Connection connection = dataSource.getConnection()) {
+        try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM cosmetics_player_data WHERE uuid = ?");
             statement.setString(1, uuid.toString());
             ResultSet result = statement.executeQuery();
@@ -64,7 +64,7 @@ public class PlayerData {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try {
-            PreparedStatement statement = dataSource.getConnection().prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
             statement.setString(2, bedDestroy);
             statement.setString(3, woodSkin);
@@ -85,7 +85,7 @@ public class PlayerData {
     }
 
     public void save() {
-        try (Connection connection = dataSource.getConnection()) {
+        try {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE cosmetics_player_data SET bed_destroy = ?, wood_skin = ?, victory_dance = ?, shopkeeper_skin = ?, glyph = ?, spray = ?, projectile_trail = ?, kill_message = ?, final_kill_effect = ?, island_topper = ?, death_cry = ? WHERE uuid = ?");
             statement.setString(1, bedDestroy);

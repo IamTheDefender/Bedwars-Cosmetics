@@ -23,20 +23,15 @@ import static me.defender.cosmetics.api.configuration.ConfigUtils.saveIfNotFound
 import static me.defender.cosmetics.api.utils.Utility.saveIfNotExistsLang;
 
 public abstract class Spray extends Cosmetics {
-
-    public abstract ItemStack getItem();
-    public abstract String base64();
-    public abstract String getIdentifier();
-    public abstract String getDisplayName();
-    public abstract List<String> getLore();
-    public abstract int getPrice();
-    public abstract RarityType getRarity();
-
-
     private final String category = "sprays";
     ConfigManager config = ConfigUtils.getSprays();
     ConfigType type = ConfigType.SPRAYS;
 
+    /**
+     * Register the spray
+     * This method should be called when the plugin is enabled.
+     */
+    @Override
     public void register(){
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
@@ -61,6 +56,12 @@ public abstract class Spray extends Cosmetics {
         StartupUtils.sprayList.add(this);
     }
 
+    /**
+     * Get the topper's field
+     * @param fields the field to get
+     * @param p the player to get the field
+     * @return the field
+     */
     public Object getField(FieldsType fields, Player p){
         String configPath = category + "." + getIdentifier() + ".";
 
@@ -80,8 +81,19 @@ public abstract class Spray extends Cosmetics {
         }
     }
 
+    /**
+     * Use the spray
+     *
+     * @param player the player to use the spray
+     * @param frame the frame to use the spray
+     */
     public abstract void execute(Player player, ItemFrame frame);
 
+    /**
+     * Get the default spray
+     * @param player the player to get the default spray
+     * @return the default spray
+     */
     public static @NotNull Spray getDefault(Player player){
         for(Spray spray : StartupUtils.sprayList){
             if(spray.getField(FieldsType.RARITY, player) == RarityType.NONE){
