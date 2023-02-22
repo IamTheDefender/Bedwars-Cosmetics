@@ -9,6 +9,7 @@ import me.defender.cosmetics.api.utils.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.utils.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,7 +40,10 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         String configPath = category + "." + getIdentifier() + ".";
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
-        assert XMaterial.PLAYER_HEAD.parseItem() != null;
+        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+            Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
+            return;
+        }
         if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{

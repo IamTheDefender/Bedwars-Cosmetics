@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ShopKeeperHandler implements Listener
@@ -57,7 +58,7 @@ public class ShopKeeperHandler implements Listener
                                 .forEach(Entity::remove);
 
                         // Choose random player from the team
-                        Player player = team.getMembers().get(ThreadLocalRandom.current().nextInt(team.getSize()));
+                        Player player = team.getMembers().get(new Random().nextInt(team.getSize()));
                         String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
 
                         // Spawn new NPCs
