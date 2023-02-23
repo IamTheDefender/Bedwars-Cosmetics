@@ -47,7 +47,6 @@ public abstract class BedDestroy extends Cosmetics {
      */
     @Override
     public void register(){
-        // save to config
         String category = "bed-destroy";
         String configPath = category + "." + getIdentifier() + ".";
         ConfigType type = ConfigType.BED_DESTROYS;
