@@ -10,6 +10,7 @@ import me.defender.cosmetics.api.utils.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.utils.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
