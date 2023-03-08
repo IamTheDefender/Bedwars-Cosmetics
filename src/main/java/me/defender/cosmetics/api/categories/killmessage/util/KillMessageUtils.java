@@ -85,7 +85,7 @@ public class KillMessageUtils {
         if (messages.isEmpty()) return;
         String message = messages.get(ThreadLocalRandom.current().nextInt(messages.size()));
         message = message.replace("{victim}", victimColor + victim);
-        message = message.replace("{killer}", killerColor + killer.getDisplayName());
+        message = message.replace("{killer}", killerColor + killer.getName());
 
         if (finalKill) {
             message += " &b&lFINAL KILL!";
