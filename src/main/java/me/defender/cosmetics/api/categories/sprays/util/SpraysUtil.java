@@ -3,7 +3,10 @@
 package me.defender.cosmetics.api.categories.sprays.util;
 
 import com.cryptomorin.xseries.XSound;
+import com.cryptomorin.xseries.particles.XParticle;
 import com.hakan.core.HCore;
+import com.hakan.core.particle.Particle;
+import com.hakan.core.particle.type.ParticleType;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -20,6 +23,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.util.HashMap;
@@ -66,7 +70,7 @@ public class SpraysUtil
                         f.setRotation(Rotation.NONE);
                         Sound sound = GSound.ENTITY_SILVERFISH_HURT.parseSound();
                         p.playSound(f.getLocation(), sound, 1f, 1f);
-                        p.playEffect(f.getLocation(), Effect.FLYING_GLYPH, 15);
+                        HCore.playParticle(f.getLocation(), new Particle(ParticleType.FIREWORKS_SPARK, 4, f.getLocation().toVector()));
                         for (final Entity en : f.getNearbyEntities(1.0, 1.0, 1.0)) {
                             if (en.getType() == EntityType.ARMOR_STAND && en.hasMetadata("HOLO_ITEM_FRAME")) {
                                 en.remove();
