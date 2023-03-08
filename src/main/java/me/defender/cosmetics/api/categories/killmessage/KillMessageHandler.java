@@ -54,21 +54,21 @@ public class KillMessageHandler implements Listener
             case EXPLOSION:
             case EXPLOSION_FINAL_KILL:
                 if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected) && !KillMessageUtils.isNone(selected)) {
-                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getName(),
                             e.getKiller(), isFinalKill, color3, color2, "Explosion"));
                 }
                 break;
             case PLAYER_SHOOT:
             case PLAYER_SHOOT_FINAL_KILL:
                 if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected)) {
-                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getName(),
                             e.getKiller(), isFinalKill, color3, color2, "Shoot"));
                 }
                 break;
             case VOID:
             case VOID_FINAL_KILL:
                 if(KillMessageUtils.exists(selected, "PvP") && !KillMessageUtils.isNone(selected)) {
-                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getDisplayName(),
+                    e.setMessage(player -> KillMessageUtils.sendKillMessage(player, e.getVictim().getName(),
                             e.getKiller(), isFinalKill, color3, color2, "Void"));
                 }
                 break;
