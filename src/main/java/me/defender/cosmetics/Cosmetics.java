@@ -4,15 +4,16 @@ package me.defender.cosmetics;
 
 import com.hakan.core.HCore;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.categories.victorydances.VictoryDance;
-import me.defender.cosmetics.api.utils.StartupUtils;
+import me.defender.cosmetics.api.category.victorydances.VictoryDance;
+import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
-import me.defender.cosmetics.api.utils.MainMenuUtils;
+import me.defender.cosmetics.api.util.MainMenuUtils;
 import me.defender.cosmetics.api.configuration.DefaultsUtils;
-import me.defender.cosmetics.api.utils.Utility;
+import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.command.MainCommand;
-import me.defender.cosmetics.config.*;
+import me.defender.cosmetics.config.MainMenuData;
 import me.defender.cosmetics.database.PlayerData;
 import me.defender.cosmetics.database.PlayerOwnedData;
 import me.defender.cosmetics.database.mysql.MySQL;
@@ -32,14 +33,15 @@ public class Cosmetics extends JavaPlugin
 {
     public MainMenuData menuData;
     public static HikariDataSource db;
+    @Getter
     public static Connection dbConnection;
     public boolean forcedDisable = false;
 
     @Override
     public void onEnable() {
         if(!StartupUtils.checkDependencies()){
-            getServer().getPluginManager().disablePlugin(this);
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
+            getServer().getPluginManager().disablePlugin(this);
             forcedDisable = true;
             return;
         }

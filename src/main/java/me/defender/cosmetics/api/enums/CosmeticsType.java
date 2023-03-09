@@ -6,7 +6,7 @@ import me.defender.cosmetics.api.configuration.ConfigUtils;
 
 import java.util.List;
 
-import static me.defender.cosmetics.api.utils.StartupUtils.*;
+import static me.defender.cosmetics.api.util.StartupUtils.*;
 
 public enum CosmeticsType {
     FinalKillEffects("Final Kill Effect", ConfigUtils.getFinalKillEffects(), finalKillList, "finalkill-effect", "finalkilleffect"),

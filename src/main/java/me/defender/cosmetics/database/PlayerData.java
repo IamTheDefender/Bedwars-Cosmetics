@@ -29,7 +29,7 @@ public class PlayerData {
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
-        connection = Cosmetics.dbConnection;
+        connection = Cosmetics.getDbConnection();
         load();
     }
 

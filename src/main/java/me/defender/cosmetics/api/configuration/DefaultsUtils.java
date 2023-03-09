@@ -1,7 +1,7 @@
 package me.defender.cosmetics.api.configuration;
 
 import me.defender.cosmetics.api.enums.ConfigType;
-import me.defender.cosmetics.api.utils.Utility;
+import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.InputStream;
