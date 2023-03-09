@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.utils.SkullUtil;
+import me.defender.cosmetics.api.util.SkullUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;

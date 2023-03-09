@@ -2,14 +2,14 @@ package me.defender.cosmetics.api;
 
 import com.andrei1058.bedwars.api.BedWars;
 import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.utils.Utility;
+import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.database.PlayerData;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import static me.defender.cosmetics.api.utils.Utility.plugin;
+import static me.defender.cosmetics.api.util.Utility.plugin;
 
 public class BwcAPI {
     private final Boolean enabledMySQL = plugin().getConfig().getBoolean("mysql.enable");

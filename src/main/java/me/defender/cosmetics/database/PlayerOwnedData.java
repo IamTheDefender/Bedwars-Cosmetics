@@ -1,21 +1,20 @@
 package me.defender.cosmetics.database;
 
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.categories.bedbreakeffects.BedDestroy;
-import me.defender.cosmetics.api.categories.deathcries.DeathCry;
-import me.defender.cosmetics.api.categories.finalkilleffects.FinalKillEffect;
-import me.defender.cosmetics.api.categories.glyphs.Glyph;
-import me.defender.cosmetics.api.categories.islandtoppers.IslandTopper;
-import me.defender.cosmetics.api.categories.killmessage.KillMessage;
-import me.defender.cosmetics.api.categories.projectiletrails.ProjectileTrail;
-import me.defender.cosmetics.api.categories.shopkeeperskins.ShopKeeperSkin;
-import me.defender.cosmetics.api.categories.sprays.Spray;
-import me.defender.cosmetics.api.categories.victorydances.VictoryDance;
-import me.defender.cosmetics.api.categories.woodskins.WoodSkin;
+import me.defender.cosmetics.api.category.bedbreakeffects.BedDestroy;
+import me.defender.cosmetics.api.category.deathcries.DeathCry;
+import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
+import me.defender.cosmetics.api.category.glyphs.Glyph;
+import me.defender.cosmetics.api.category.islandtoppers.IslandTopper;
+import me.defender.cosmetics.api.category.killmessage.KillMessage;
+import me.defender.cosmetics.api.category.projectiletrails.ProjectileTrail;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
+import me.defender.cosmetics.api.category.sprays.Spray;
+import me.defender.cosmetics.api.category.victorydances.VictoryDance;
+import me.defender.cosmetics.api.category.woodskins.WoodSkin;
 import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.utils.StartupUtils;
+import me.defender.cosmetics.api.util.StartupUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
