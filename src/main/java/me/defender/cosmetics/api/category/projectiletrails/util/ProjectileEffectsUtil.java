@@ -1,5 +1,6 @@
 package me.defender.cosmetics.api.category.projectiletrails.util;
 
+import com.cryptomorin.xseries.particles.XParticle;
 import com.hakan.core.HCore;
 ;import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;

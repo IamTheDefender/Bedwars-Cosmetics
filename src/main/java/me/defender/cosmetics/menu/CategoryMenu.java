@@ -1,5 +1,6 @@
 package me.defender.cosmetics.menu;
 
+import com.andrei1058.bedwars.BedWars;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
@@ -22,10 +23,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,10 +80,14 @@ public class CategoryMenu extends InventoryGui {
             List<String> lore1 = new ArrayList<>(lore);
             if(stack != null) {
                 String colorCode = "&a";
-                if(onClick(player, cosmeticsType, price, id, true) == 2){
+                int returnValue = onClick(player, cosmeticsType, price, id, true);
+                if(returnValue == 2){
                     colorCode = "&c";
                 }
-                item = new ClickableItem(HCore.itemBuilder(stack).name(true, colorCode + formattedName).lores(true, lore1).build(), (e) -> {
+                if(returnValue == 0){
+                    stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
+                }
+                item = new ClickableItem(HCore.itemBuilder(stack).addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES).name(true, colorCode + formattedName).lores(true, lore1).build(), (e) -> {
                     if(e.getClick() == ClickType.RIGHT){
                         previewClick(player, cosmeticsType, id, price);
                     }else if (e.getClick() == ClickType.LEFT){

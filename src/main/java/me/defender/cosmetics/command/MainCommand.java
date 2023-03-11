@@ -1,6 +1,12 @@
 package me.defender.cosmetics.command;
 
 import com.andrei1058.bedwars.api.server.ISetupSession;
+import com.andrei1058.bedwars.shop.ShopCache;
+import com.andrei1058.bedwars.shop.ShopManager;
+import com.andrei1058.bedwars.shop.main.ShopIndex;
+import com.andrei1058.bedwars.shop.quickbuy.PlayerQuickBuyCache;
+import com.andrei1058.bedwars.shop.quickbuy.QuickBuyElement;
+import com.hakan.core.HCore;
 import com.hakan.core.command.executors.basecommand.BaseCommand;
 import com.hakan.core.command.executors.subcommand.SubCommand;
 import com.hakan.core.ui.inventory.InventoryGui;
@@ -19,6 +25,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.metadata.FixedMetadataValue;
+
+import java.util.List;
 
 @BaseCommand(
         name = "bwc",
@@ -56,6 +66,65 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
         }
     }
+
+    @SubCommand(
+            args = "quickbuy",
+            permission = "bwcosmetics.quickbuy",
+            permissionMessage = "§cYou don't have permission to do that!"
+    )
+    public void quickbuyCommand(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            p.sendMessage(ColorUtil.colored("&cThis command currently doesn't work! use at your own risk."));
+            new PlayerQuickBuyCache(p);
+            new ShopCache(p.getUniqueId());
+            ShopManager.shop.open(p, PlayerQuickBuyCache.getQuickBuyCache(p.getUniqueId()), true);
+            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Utility.plugin(), true));
+            HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
+                if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
+                    event.getPlayer().removeMetadata("bwc_quickbuy", Utility.plugin());
+                    PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
+                    PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
+                    ShopCache.getShopCache(event.getPlayer().getUniqueId()).destroy();
+                }
+            }));
+        }else {
+            sender.sendMessage(ChatColor.RED + "You need to be in-game!");
+        }
+    }
+
+    @SubCommand(
+            args = "set",
+            permission = "bwcosmetics.admin",
+            permissionMessage = "§cYou don't have permission to do that!"
+    )
+    public void setCommand(CommandSender sender, String[] args) {
+        List<String> availableArgs = List.of("FinalKillEffects", "ProjectileTrails", "BedBreakEffects", "Glyphs", "DeathCries", "VictoryDances", "WoodSkins", "Sprays", "KillMessage", "ShopKeeperSkin", "IslandTopper");
+
+        if (args.length < 4) {
+            sender.sendMessage(ChatColor.RED + "Usage: /bwc set <arg> <cosmeticID> <player>");
+            return;
+        }
+
+        String arg = args[1];
+        String cosmeticID = args[2];
+        String playerName = args[3];
+
+        Player player = Bukkit.getPlayer(playerName);
+        if (player == null || !player.isOnline()) {
+            sender.sendMessage(ChatColor.RED + "Invalid or offline player: " + playerName);
+            return;
+        }
+        if (!availableArgs.contains(arg)) {
+            sender.sendMessage(ChatColor.RED + "Invalid argument: " + String.join(", ", availableArgs));
+            return;
+        }
+        new BwcAPI().setSelectedCosmetic(player, CosmeticsType.valueOf(arg), cosmeticID);
+        sender.sendMessage(ColorUtil.colored("&aSuccess! Note, this command will not check if cosmeticsID is valid!"));
+
+    }
+
+
 
     @SubCommand(
             args = "reload",
