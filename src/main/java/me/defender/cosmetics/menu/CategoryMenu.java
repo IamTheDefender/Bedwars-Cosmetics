@@ -191,15 +191,25 @@ public class CategoryMenu extends InventoryGui {
 
     public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price){
         String selected = new BwcAPI().getSelectedCosmetic(p, type);
-
         if(selected.equals(unformattedName)){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.selected"));
-        }if(p.hasPermission(type.getPermissionFormat() + "." + unformattedName)){
+        }
+
+        if(p.hasPermission(type.getPermissionFormat() + "." + unformattedName)){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.click-to-select"));
         }
+
+        if(type.getConfig().getString(type.getSectionKey() + "." + unformattedName + ".purchase-able") != null){
+            boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + unformattedName + ".purchase-able");
+            if(!purchaseAble){
+                return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.not-purchase-able"));
+            }
+        }
+
         if(new BwcAPI().getEco().getBalance(p) >= price){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.click-to-purchase"));
         }
+
         return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.no-coins"));
     }
 
@@ -211,12 +221,21 @@ public class CategoryMenu extends InventoryGui {
         Permission perm = VaultUtils.getPermissions();
         // If the player did not have the item selected.
         if(!selected.equals(id)) {
+            // Select
             if (p.hasPermission(permissionFormat + "." + id)) {
-                if(isOnlyForCheck) return 0;
+                if (isOnlyForCheck) return 0;
                 api.setSelectedCosmetic(p, type, id);
                 XSound.ENTITY_VILLAGER_YES.play(p);
                 HCore.getInventoryByPlayer(p).open(p);
-            } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
+
+                // Can't purchase, cuz locked
+            } else if(type.getConfig().getString(type.getSectionKey() + "." + id + ".purchase-able") != null){
+                boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able");
+                if(!purchaseAble){
+                    XSound.ENTITY_VILLAGER_NO.play(p);
+                }
+                // Purchase
+        } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
                 if(isOnlyForCheck) return 1;
                 CosmeticPurchaseEvent event = new CosmeticPurchaseEvent(p, type);
                 Bukkit.getServer().getPluginManager().callEvent(event);
@@ -230,6 +249,7 @@ public class CategoryMenu extends InventoryGui {
                 eco.withdrawPlayer(p, price);
                 p.playSound(p.getLocation(), XSound.ENTITY_VILLAGER_YES.parseSound(), 1.0f, 1.0f);
                 HCore.getInventoryByPlayer(p).open(p);
+                // Don't have money and is purchasable
             } else {
                 if(isOnlyForCheck) return 2;
                 p.playSound(p.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);

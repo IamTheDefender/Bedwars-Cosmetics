@@ -62,6 +62,7 @@ public class Cosmetics extends JavaPlugin
         ConfigUtils.getVictoryDances().save();
         ConfigUtils.getWoodSkins().save();
         ConfigUtils.getMainConfig().save();
+        ConfigUtils.addExtrasToLang();
         this.menuData = new MainMenuData(this);
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
