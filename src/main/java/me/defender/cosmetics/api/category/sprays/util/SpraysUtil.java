@@ -2,6 +2,7 @@
 
 package me.defender.cosmetics.api.category.sprays.util;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
@@ -63,7 +64,9 @@ public class SpraysUtil
                         Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the URL for the " + Spray + " Check if the URL in Sprays.yml is valid!");
                     }else {
                         view.addRenderer(renderer);
-                        final ItemStack map = new ItemStack(Material.MAP, 1, view.getId());
+                        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
+                        map.setDurability(view.getId());
+                        map.setAmount(1);
                         f.setItem(map);
                         f.setRotation(Rotation.NONE);
                         Sound sound = GSound.ENTITY_SILVERFISH_HURT.parseSound();
@@ -83,7 +86,9 @@ public class SpraysUtil
                         Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + Spray + " Check if the File in Sprays.yml is valid!");
                     }else {
                         view.addRenderer(renderer);
-                        final ItemStack map = new ItemStack(Material.MAP, 1, view.getId());
+                        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
+                        map.setDurability(view.getId());
+                        map.setAmount(1);
                         f.setItem(map);
                         f.setRotation(Rotation.NONE);
                         p.playEffect(f.getLocation(), Effect.FLYING_GLYPH, 10);

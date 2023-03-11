@@ -1,5 +1,6 @@
 package me.defender.cosmetics.api.category.killmessage.util;
 
+import com.andrei1058.bedwars.api.language.Messages;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.killmessage.KillMessage;
@@ -8,6 +9,7 @@ import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -95,7 +97,7 @@ public class KillMessageUtils {
 
 
     /**
-     * Sends a kill message or preview message to a player based on the type of death.
+     * Sends a kill message to a player based on the type of death.
      *
      * @param player            The player to send the message to
      * @param victim            The name of the victim
@@ -104,6 +106,7 @@ public class KillMessageUtils {
      * @param victimColor       The color to use for the victim's name
      * @param killerColor       The color to use for the killer's name
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
+     * @param oldMessage        The old message will be used if list is empty
      */
     public static String sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
         String selectedMessage = new BwcAPI().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
@@ -113,11 +116,10 @@ public class KillMessageUtils {
                 if (killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE) return null;
             }
         }
-        if (messages.isEmpty()) return "Message is empty";
+        if (messages.isEmpty()) return "Message is empty!";
         String message = messages.get(ThreadLocalRandom.current().nextInt(messages.size()));
         message = message.replace("{victim}", victimColor + victim);
         message = message.replace("{killer}", killerColor + killer.getName());
-
         if (finalKill) {
             message += " &b&lFINAL KILL!";
         }
