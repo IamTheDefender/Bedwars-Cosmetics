@@ -2,8 +2,10 @@ package me.defender.cosmetics.api.configuration;
 
 
 import me.defender.cosmetics.api.enums.ConfigType;
+import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.util.Utility;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -70,6 +72,13 @@ public class ConfigUtils {
             get(configType).set(path, data);
             get(configType).save();
             get(configType).reload();
+        }
+    }
+
+    public static void addSlotsList(){
+        for (CosmeticsType cosmeticsType : CosmeticsType.values()){
+            cosmeticsType.getConfig().getYml().addDefault("slots", Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34));
+            cosmeticsType.getConfig().save();
         }
     }
 

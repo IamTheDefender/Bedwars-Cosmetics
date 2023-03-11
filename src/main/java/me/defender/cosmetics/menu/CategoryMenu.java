@@ -43,7 +43,10 @@ public class CategoryMenu extends InventoryGui {
         this.config = type.getConfig();
         this.cosmeticsType = type;
         title = type.getFormatedName();
-        slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
+        slots = config.getYml().getIntegerList("slots");
+        if(slots.isEmpty()){
+            slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
+        }
     }
 
     @Override

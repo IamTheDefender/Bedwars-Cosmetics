@@ -63,7 +63,7 @@ public class Cosmetics extends JavaPlugin
         ConfigUtils.getWoodSkins().save();
         ConfigUtils.getMainConfig().save();
         this.menuData = new MainMenuData(this);
-
+        ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
         if(new BwcAPI().isMySQL()){
             getLogger().info("Loading MySQL database..");
