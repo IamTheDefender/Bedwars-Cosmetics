@@ -36,6 +36,7 @@ public class Cosmetics extends JavaPlugin
     @Getter
     public static Connection dbConnection;
     public boolean forcedDisable = false;
+    static boolean placeholderAPI;
 
     @Override
     public void onEnable() {
@@ -144,6 +145,13 @@ public class Cosmetics extends JavaPlugin
         }
     }
 
+    public static boolean isPlaceholderAPI() {
+        return placeholderAPI;
+    }
+
+    public static void setPlaceholderAPI(boolean placeholderAPI) {
+        Cosmetics.placeholderAPI = placeholderAPI;
+    }
 }
 
 

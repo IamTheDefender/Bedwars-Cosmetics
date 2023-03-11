@@ -190,6 +190,7 @@ public class StartupUtils
         if(isPluginEnabled("PlaceholderAPI")){
             log.info("Found PlaceholderAPI, loading placeholders!");
             new Placeholders(Utility.plugin()).register();
+            Cosmetics.setPlaceholderAPI(true);
         }
         return true;
     }

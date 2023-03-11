@@ -2,6 +2,7 @@ package me.defender.cosmetics.api.category.killmessage.util;
 
 import com.andrei1058.bedwars.api.language.Messages;
 import com.hakan.core.utils.ColorUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.killmessage.KillMessage;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -120,6 +121,7 @@ public class KillMessageUtils {
         String message = messages.get(ThreadLocalRandom.current().nextInt(messages.size()));
         message = message.replace("{victim}", victimColor + victim);
         message = message.replace("{killer}", killerColor + killer.getName());
+        message = PlaceholderAPI.setPlaceholders(killer, message);
         if (finalKill) {
             message += " &b&lFINAL KILL!";
         }
