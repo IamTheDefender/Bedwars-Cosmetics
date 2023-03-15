@@ -77,7 +77,8 @@ public class ConfigUtils {
 
     public static void addSlotsList(){
         for (CosmeticsType cosmeticsType : CosmeticsType.values()){
-            cosmeticsType.getConfig().getYml().addDefault("slots", Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34));
+            cosmeticsType.getConfig().getYml().addDefault("slots", Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34).toString());
+
             cosmeticsType.getConfig().save();
         }
     }

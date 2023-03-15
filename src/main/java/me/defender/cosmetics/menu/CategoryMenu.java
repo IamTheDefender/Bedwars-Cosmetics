@@ -46,7 +46,13 @@ public class CategoryMenu extends InventoryGui {
         this.config = type.getConfig();
         this.cosmeticsType = type;
         title = type.getFormatedName();
-        slots = config.getYml().getIntegerList("slots");
+        String list = config.getString("slots");
+        list = list.replace("[", "").replace("]", "");
+        List<Integer> integerList = new ArrayList<>();
+        for (String s : list.split("\\s*,\\s*")) {
+            integerList.add(Integer.parseInt(s));
+        }
+        slots = integerList;
         if(slots.isEmpty()){
             slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
         }
@@ -84,7 +90,7 @@ public class CategoryMenu extends InventoryGui {
                 if(returnValue == 2){
                     colorCode = "&c";
                 }
-                if(returnValue == 0){
+                if(returnValue == -2 ){ // <- Selected
                     stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
                 }
                 item = new ClickableItem(HCore.itemBuilder(stack).addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES).name(true, colorCode + formattedName).lores(true, lore1).build(), (e) -> {
@@ -262,7 +268,7 @@ public class CategoryMenu extends InventoryGui {
                 p.playSound(p.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
             }
         }
-        return -1;
+        return -2;
     }
 
     public void previewClick(Player player, CosmeticsType type, String id, int price){
