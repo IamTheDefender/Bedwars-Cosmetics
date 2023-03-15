@@ -237,7 +237,6 @@ public class StartupUtils
         new pigmissile().register();
         new squidmissile().register();
         new theif().register();
-        new eggexplosion().register();
 
         //Items From Config
         new DeathCryItems().registerConfigItems();
