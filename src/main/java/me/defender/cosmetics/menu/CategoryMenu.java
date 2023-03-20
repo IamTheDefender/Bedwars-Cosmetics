@@ -1,6 +1,7 @@
 package me.defender.cosmetics.menu;
 
 import com.andrei1058.bedwars.BedWars;
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
@@ -135,6 +136,7 @@ public class CategoryMenu extends InventoryGui {
 
     public void addItemsAccordingToRarity(Map<ClickableItem, RarityType> rarityMap){
         List<ClickableItem> noneItems = new ArrayList<>();
+        List<ClickableItem> randomItems = new ArrayList<>();
         List<ClickableItem> commonItems = new ArrayList<>();
         List<ClickableItem> rareItems = new ArrayList<>();
         List<ClickableItem> epicItems = new ArrayList<>();
@@ -146,6 +148,9 @@ public class CategoryMenu extends InventoryGui {
             switch (rarity) {
                 case NONE:
                     noneItems.add(item);
+                    break;
+                case RANDOM:
+                    randomItems.add(item);
                     break;
                 case COMMON:
                     commonItems.add(item);
@@ -162,6 +167,7 @@ public class CategoryMenu extends InventoryGui {
             }
         }
         noneItems.sort(Comparator.comparing((ClickableItem item) -> ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName())));
+        randomItems.sort(Comparator.comparing((ClickableItem item) -> ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName())));
         commonItems.sort(Comparator.comparing((ClickableItem item) -> ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName())));
         rareItems.sort(Comparator.comparing((ClickableItem item) -> ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName())));
         epicItems.sort(Comparator.comparing((ClickableItem item) -> ChatColor.stripColor(item.getItem().getItemMeta().getDisplayName())));
@@ -170,6 +176,12 @@ public class CategoryMenu extends InventoryGui {
 
 
         for (ClickableItem clickableItem : noneItems) {
+            if(!isFull(toInventory())) {
+                super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
+            }
+        }
+
+        for (ClickableItem clickableItem : randomItems) {
             if(!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }

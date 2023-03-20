@@ -129,13 +129,7 @@ public class StartupUtils
      * in the folder and remove the temp.zip.
      */
     public static void downloadGlyphs() {
-
         File folder = new File(Utility.plugin().getDataFolder().getPath() + "/Glyphs");
-        String[] filesInFolder = folder.list();
-        if(filesInFolder.length == 0){
-            return;
-        }
-
         if (!folder.exists()) {
             folder.mkdirs();
         }
@@ -143,6 +137,10 @@ public class StartupUtils
         final File tempFile = new File(temp);
         if (tempFile.exists()) {
             tempFile.delete();
+        }
+        String[] filesInFolder = folder.list();
+        if(filesInFolder != null && filesInFolder.length == 0){
+            return;
         }
         try {
             Cosmetics.downloadFile(new URL("https://dl.dropboxusercontent.com/s/ione3f01k1la6e8/Glyphs.zip"), temp);
@@ -237,6 +235,7 @@ public class StartupUtils
         new pigmissile().register();
         new squidmissile().register();
         new theif().register();
+        new random().register();
 
         //Items From Config
         new DeathCryItems().registerConfigItems();

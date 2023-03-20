@@ -145,8 +145,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.hakan-krgn.hCore</groupId>
-            <artifactId>bukkit-primary</artifactId>
-            <version>0.6.9.6</version>
+            <artifactId>hCore-bukkit</artifactId>
+            <version>0.7.0.3</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

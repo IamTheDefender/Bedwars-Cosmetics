@@ -1,8 +1,11 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.items;
 
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.enums.CosmeticsType;
+import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
+import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.StringUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
@@ -11,7 +14,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ShopKeeperItems {
 
@@ -62,7 +67,17 @@ public class ShopKeeperItems {
 
                 @Override
                 public void execute(Player player, Location shopLocation, Location upgradeLocation) {
-                    ShopKeeperSkinsUtils.spawnShopKeeperNPC(player,shopLocation, upgradeLocation);
+                    if (getField(FieldsType.RARITY, player) == RarityType.RANDOM){
+                        List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
+                        for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
+                            if(player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())){
+                                shopKeeperSkins.add(shopKeeperSkin);
+                            }
+                        }
+                        shopKeeperSkins.get(new Random().nextInt(shopKeeperSkins.size())).execute(player, shopLocation, upgradeLocation);
+                        return;
+                    }
+                    ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation);
                 }
             };
             shopKeeperSkin.register();

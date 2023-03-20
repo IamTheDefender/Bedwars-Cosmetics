@@ -5,6 +5,11 @@ shopkeeper-skins:
     item: "BARRIER:0"
     entity-type: "VILLAGER"
     rarity: NONE
+
+  random:
+    price: 0
+    item: "ENDER_CHEST:0"
+    rarity: RANDOM
     
   skeleton:
     price: 5000
