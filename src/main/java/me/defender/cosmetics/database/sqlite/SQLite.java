@@ -24,6 +24,11 @@ public class SQLite {
     public void connect(){
         if(dataSource == null){
             String jdbcUrl = "jdbc:sqlite:" + plugin.getDataFolder().getPath() + "/playerData.db";
+            try{
+                Class.forName("org.sqlite.JDBC");
+            }catch (ClassNotFoundException e) {
+               Bukkit.getLogger().severe("SQLite class not found! SQLite is not supported!");
+            }
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(jdbcUrl);
             config.setUsername("");
