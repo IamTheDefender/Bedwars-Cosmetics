@@ -107,10 +107,10 @@ public class KillMessageUtils {
      * @param victimColor       The color to use for the victim's name
      * @param killerColor       The color to use for the killer's name
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
-     * @param oldMessage        The old message will be used if list is empty
      */
     public static String sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
         String selectedMessage = new BwcAPI().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        if(victim.equalsIgnoreCase(killer.getName())) type = "Void";
         List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");;
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {
@@ -123,7 +123,7 @@ public class KillMessageUtils {
         message = message.replace("{killer}", killerColor + killer.getName());
         message = PlaceholderAPI.setPlaceholders(killer, message);
         if (finalKill) {
-            message += " &b&lFINAL KILL!";
+            message += " " + ConfigUtils.getMainConfig().getString("Final-Kill-Suffix");
         }
         return ColorUtil.colored(message);
     }

@@ -1,5 +1,6 @@
 Debug: false
 BackItemInCosmeticsMenu: true
+Final-Kill-Suffix: "&b&lFINAL KILL!"
 mysql:
   enable: false
   host: "localhost"
