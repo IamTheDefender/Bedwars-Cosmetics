@@ -2,6 +2,9 @@
 
 package me.defender.cosmetics.api.util;
 
+import com.hakan.core.command.executors.placeholder.Placeholder;
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.menu.CategoryMenu;
@@ -99,39 +102,85 @@ public class MainMenuUtils {
     }
 
     public static void openMenus(Player p, String name){
-        switch (name){
+        String title = null;
+        Boolean placeholder = Cosmetics.isPlaceholderAPI();
+        switch (name) {
             case "Sprays":
-                new CategoryMenu(CosmeticsType.Sprays).open(p);
+                title = CosmeticsType.Sprays.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                 }
+                new CategoryMenu(CosmeticsType.Sprays, title).open(p);
                 break;
             case "Projectile-Trails":
-                new CategoryMenu(CosmeticsType.ProjectileTrails).open(p);
+                title = CosmeticsType.ProjectileTrails.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.ProjectileTrails, title).open(p);
                 break;
             case "FinalKill-Effects":
-                new CategoryMenu(CosmeticsType.FinalKillEffects).open(p);;
+                title = CosmeticsType.FinalKillEffects.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);;
                 break;
             case "Kill-Messages":
-                new CategoryMenu(CosmeticsType.KillMessage).open(p);
+                title = CosmeticsType.KillMessage.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.KillMessage,title).open(p);
                 break;
             case "Glyphs":
-                new CategoryMenu(CosmeticsType.Glyphs).open(p);
+                title = CosmeticsType.Glyphs.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.Glyphs, title).open(p);
                 break;
             case "Bed-Destroys":
-                new CategoryMenu(CosmeticsType.BedBreakEffects).open(p);
+                title = CosmeticsType.BedBreakEffects.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.BedBreakEffects, title).open(p);
                 break;
             case "WoodSkins":
-                new CategoryMenu(CosmeticsType.WoodSkins).open(p);
+                title = CosmeticsType.WoodSkins.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.WoodSkins, title).open(p);
                 break;
             case "Victory-Dances":
-                new CategoryMenu(CosmeticsType.VictoryDances).open(p);
+                title = CosmeticsType.VictoryDances.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.VictoryDances,title).open(p);
                 break;
             case "Island-Toppers":
-                new CategoryMenu(CosmeticsType.IslandTopper).open(p);
+                title = CosmeticsType.IslandTopper.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.IslandTopper, title).open(p);
                 break;
             case "ShopKeeperSkins":
-                new CategoryMenu(CosmeticsType.ShopKeeperSkin).open(p);
+                title = CosmeticsType.ShopKeeperSkin.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.ShopKeeperSkin, title).open(p);
                 break;
             case "Death-Cries":
-                new CategoryMenu(CosmeticsType.DeathCries).open(p);
+                title = CosmeticsType.DeathCries.getFormatedName();
+                if (placeholder){
+                    title = PlaceholderAPI.setPlaceholders(p, title);
+                }
+                new CategoryMenu(CosmeticsType.DeathCries, title).open(p);
                 break;
             case "Back":
                 String command = Utility.plugin().menuData.getConfig().getString("Main-Menu.Back.custom-command");
