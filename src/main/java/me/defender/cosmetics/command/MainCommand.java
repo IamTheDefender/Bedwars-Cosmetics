@@ -1,5 +1,7 @@
 package me.defender.cosmetics.command;
 
+import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.region.Cuboid;
 import com.andrei1058.bedwars.api.server.ISetupSession;
 import com.andrei1058.bedwars.shop.ShopCache;
 import com.andrei1058.bedwars.shop.ShopManager;
@@ -9,10 +11,14 @@ import com.andrei1058.bedwars.shop.quickbuy.QuickBuyElement;
 import com.hakan.core.HCore;
 import com.hakan.core.command.executors.basecommand.BaseCommand;
 import com.hakan.core.command.executors.subcommand.SubCommand;
+import com.hakan.core.hologram.Hologram;
+import com.hakan.core.hologram.builder.HologramBuilder;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.enums.CosmeticsType;
+import me.defender.cosmetics.api.util.CuboidUtil;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.util.MainMenuUtils;
@@ -28,7 +34,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @BaseCommand(
         name = "bwc",
@@ -345,15 +354,25 @@ public class MainCommand {
             return;
         }
         setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
+        Set<UUID> players = new HashSet<>();
+        for (Player player : Bukkit.getOnlinePlayers()){
+            players.add(player.getUniqueId());
+        }
+        Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
+        hologram.addLine(ChatColor.valueOf(teamName.toUpperCase()) + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
         sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
-
-
-
     }
 
+    @SubCommand(
+            args = "setupPreviewLocation",
+            permission = "bwcosmetics.admin"
+    )
+    public void setPreviewLocation(CommandSender sender, String[] args){
+        if (!(sender instanceof Player)){
+            sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
+            return;
+        }
 
-
-
+        //TODO check how /setIslandTopper works and use it that way
+    }
 }
-
-
