@@ -1,7 +1,5 @@
 package me.defender.cosmetics.menu;
 
-import com.andrei1058.bedwars.BedWars;
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
@@ -290,7 +288,7 @@ public class CategoryMenu extends InventoryGui {
                 new KillMessagePreview().sendPreviewMessage(player, id);
                 break;
             case DeathCries:
-                new DeathCryPreview().preview(player, id);
+                new DeathCryPreview().sendPreviewCry(player, id);
                 break;
             case ShopKeeperSkin:
                 new ShopKeeperPreview().sendPreviewShopKeeperSkin(player, id);

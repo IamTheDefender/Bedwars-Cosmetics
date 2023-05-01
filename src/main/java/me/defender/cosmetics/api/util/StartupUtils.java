@@ -7,15 +7,16 @@ import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.*;
 import me.defender.cosmetics.api.category.finalkilleffects.items.*;
-import me.defender.cosmetics.api.category.projectiletrails.items.PTConfigItems;
+import me.defender.cosmetics.api.category.finalkilleffects.items.FireworkEffect;
+import me.defender.cosmetics.api.category.projectiletrails.items.ProjectileTrailItems;
 import me.defender.cosmetics.api.category.sprays.Spray;
 import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.category.bedbreakeffects.BedDestroy;
 import me.defender.cosmetics.api.category.bedbreakeffects.items.*;
-import me.defender.cosmetics.api.category.bedbreakeffects.items.fireworks;
-import me.defender.cosmetics.api.category.bedbreakeffects.items.none;
-import me.defender.cosmetics.api.category.bedbreakeffects.items.squidmissile;
-import me.defender.cosmetics.api.category.bedbreakeffects.items.tornado;
+import me.defender.cosmetics.api.category.bedbreakeffects.items.FireworksBedDestroy;
+import me.defender.cosmetics.api.category.bedbreakeffects.items.NoneBedDestroy;
+import me.defender.cosmetics.api.category.bedbreakeffects.items.SquidMissileBedDestroy;
+import me.defender.cosmetics.api.category.bedbreakeffects.items.TornadoBedDestroy;
 import me.defender.cosmetics.api.category.deathcries.DeathCry;
 import me.defender.cosmetics.api.category.projectiletrails.ProjectileTrail;
 import me.defender.cosmetics.api.category.killmessage.KillMessage;
@@ -44,6 +45,7 @@ import me.defender.cosmetics.api.category.glyphs.GlyphHandler;
 import me.defender.cosmetics.api.category.deathcries.DeathCryHandler;
 import me.defender.cosmetics.api.category.bedbreakeffects.BedDestroyHandler;
 import me.defender.cosmetics.api.category.sprays.items.SprayItems;
+import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.listener.*;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.*;
@@ -227,16 +229,16 @@ public class StartupUtils
      * that come included.
      */
     public static void loadCosmetics(){
-        new tornado().register();
-        new hologram().register();
-        new bedbugs().register();
-        new fireworks().register();
-        new lightstrike().register();
-        new none().register();
-        new pigmissile().register();
-        new squidmissile().register();
-        new theif().register();
-        new random().register();
+        new TornadoBedDestroy().register();
+        new HologramBedDestroy().register();
+        new BedBugsBedDestroy().register();
+        new FireworksBedDestroy().register();
+        new LightStrikeBedDestroy().register();
+        new NoneBedDestroy().register();
+        new PigMissileBedDestroy().register();
+        new SquidMissileBedDestroy().register();
+        new TheifBedDestroy().register();
+        new RandomBedDestroy().register();
 
         //Items From Config
         new DeathCryItems().registerConfigItems();
@@ -249,48 +251,47 @@ public class StartupUtils
         KillMessageItems.registerConfigItems();
         new ShopKeeperItems().registerItems();
         SprayItems.registerConfigItems();
-        new PTConfigItems().registerConfigItems();
+        new ProjectileTrailItems().registerConfigItems();
 
         // Final Kill effect
-        new batcrux().register();
-        new burningshoes().register();
-        new firework().register();
-        new heartaura().register();
-        new lightningstrike().register();
-        new me.defender.cosmetics.api.category.finalkilleffects.items.none().register();
-        new rekt().register();
-        new me.defender.cosmetics.api.category.finalkilleffects.items.squidmissile().register();
-        new me.defender.cosmetics.api.category.finalkilleffects.items.tornado().register();
+        new BatCruxEffect().register();
+        new BurningShoesEffect().register();
+        new FireworkEffect().register();
+        new HeartAuraEffect().register();
+        new LightningStrikeEffect().register();
+        new NoneEffect().register();
+        new RektEffect().register();
+        new SquidMissleEffect().register();
+        new TornadoEffect().register();
 
         // Victory Dance
-        new anvilRain().register();
-        new coldSnap().register();
-        new dragonRider().register();
-        new me.defender.cosmetics.api.category.victorydances.items.fireworks().register();
-        new floatingLantern().register();
-        new haunted().register();
-        new nightShift().register();
-        new me.defender.cosmetics.api.category.victorydances.items.none().register();
-        new rainbowDolly().register();
-        new rainingPigs().register();
-        new toyStick().register();
-        new twerkApocalypse().register();
-        new witherRider().register();
-        new yeeHaw().register();
-        new guardians().register();
+        new AnvilRainDance().register();
+        new ColdSnapDance().register();
+        new DragonRiderDance().register();
+        new FireworksDance().register();
+        new FloatingLanternDance().register();
+        new HauntedDance().register();
+        new NightShiftDance().register();
+        new NoneDance().register();
+        new RainbowDollyDance().register();
+        new RainingPigsDance().register();
+        new ToyStickDance().register();
+        new TwerkApocalypseDance().register();
+        new WitherRiderDance().register();
+        new YeeHawDance().register();
+        new GuardiansDance().register();
 
         // Wood Skins
-        new birchPlank().register();
-        new acaciaPlank().register();
-        new darkOakPlank().register();
-        new junglePlank().register();
-        new oakPlank().register();
-        new sprucePlank().register();
-        new acaciaLog().register();
-        new birchLog().register();
-        new jungleLog().register();
-        new oakLog().register();
-        new spruceLog().register();
+        new BirchPlank().register();
+        new AcaciaPlank().register();
+        new DarkOakPlank().register();
+        new JunglePlank().register();
+        new OakPlank().register();
+        new SprucePlank().register();
+        new AcaciaLog().register();
+        new BirchLog().register();
+        new JungleLog().register();
+        new OakLog().register();
+        new SpruceLog().register();
     }
-
 }
