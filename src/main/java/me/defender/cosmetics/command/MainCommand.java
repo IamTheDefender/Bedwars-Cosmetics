@@ -23,7 +23,6 @@ import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -376,6 +375,8 @@ public class MainCommand {
         }
     }
 
+
+
     @SubCommand(
             args = "setIslandTopperPosition",
             permission = "bwcosmetics.admin"
@@ -414,7 +415,7 @@ public class MainCommand {
     }
 
     @SubCommand(
-            args = "setPreviewLocation",
+            args = "setupPreviewLocation",
             permission = "bwcosmetics.admin"
     )
     public void setPreviewLocation(CommandSender sender, String[] args){
@@ -422,39 +423,6 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
             return;
         }
-        Player p = (Player) sender;
-        if (args.length != 2){
-            p.sendMessage(ChatColor.RED + "Command usage, /bwc setPreviewLocation 1/2");
-            return;
-        }
-
-        int number = Integer.parseInt(args[1]);
-
-        Location loc = p.getLocation();
-
-        if (number == 1){
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.world", loc.getWorld().getName());
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.x", loc.getX());
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.y", loc.getY());
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.z", loc.getZ());
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.yaw", loc.getYaw());
-            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.pitch", loc.getPitch());
-        } else if (number == 2){
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.world", loc.getWorld());
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.x", loc.getX());
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.y", loc.getY());
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.z", loc.getZ());
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.yaw", loc.getYaw());
-            Utility.plugin().getConfig().set("cosmetic-preview.player-location.pitch", loc.getPitch());
-        } else {
-            p.sendMessage(ChatColor.RED + "Command usage, /bwc setPreviewLocation 1/2");
-            return;
-        }
-
-        Utility.plugin().saveConfig();
-        Utility.plugin().reloadConfig();
-
-        p.sendMessage(ChatColor.GREEN + "Successfully set cosmetic preview location!");
 
         //TODO check how /setIslandTopper works and use it that way
     }

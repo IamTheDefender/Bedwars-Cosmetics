@@ -2,6 +2,7 @@
 
 package me.defender.cosmetics.api.util;
 
+import com.hakan.core.command.executors.placeholder.Placeholder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
@@ -101,14 +102,14 @@ public class MainMenuUtils {
     }
 
     public static void openMenus(Player p, String name){
-        String title;
-        boolean placeholder = Cosmetics.isPlaceholderAPI();
-        switch (name){
+        String title = null;
+        Boolean placeholder = Cosmetics.isPlaceholderAPI();
+        switch (name) {
             case "Sprays":
                 title = CosmeticsType.Sprays.getFormatedName();
                 if (placeholder){
                     title = PlaceholderAPI.setPlaceholders(p, title);
-                }
+                 }
                 new CategoryMenu(CosmeticsType.Sprays, title).open(p);
                 break;
             case "Projectile-Trails":
@@ -123,7 +124,7 @@ public class MainMenuUtils {
                 if (placeholder){
                     title = PlaceholderAPI.setPlaceholders(p, title);
                 }
-                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);
+                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);;
                 break;
             case "Kill-Messages":
                 title = CosmeticsType.KillMessage.getFormatedName();
