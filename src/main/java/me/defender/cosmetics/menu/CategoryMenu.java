@@ -41,11 +41,11 @@ public class CategoryMenu extends InventoryGui {
     String title;
     List<Integer> slots;
 
-    public CategoryMenu(CosmeticsType type) {
-        super(type.getFormatedName(), type.getFormatedName(), 6, InventoryType.CHEST);
+    public CategoryMenu(CosmeticsType type, String title) {
+        super(type.getFormatedName(), title, 6, InventoryType.CHEST);
         this.config = type.getConfig();
         this.cosmeticsType = type;
-        title = type.getFormatedName();
+        this.title = title;
         String list = config.getString("slots");
         list = list.replace("[", "").replace("]", "");
         List<Integer> integerList = new ArrayList<>();
@@ -80,6 +80,8 @@ public class CategoryMenu extends InventoryGui {
             List<String> lore = Utility.getListLang(player ,"cosmetics." + path + "lore");
             lore = StringUtils.formatLore(lore, formattedName, price, getItemStatus(player, cosmeticsType, id, price), rarity.getChatColor() + rarity.toString());
 
+            // Model data
+            int model_data = configManager.getInt(path + "model_data");
 
             // Items
             ClickableItem item = null;

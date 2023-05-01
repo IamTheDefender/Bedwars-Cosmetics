@@ -10,6 +10,7 @@ import com.hakan.core.command.executors.subcommand.SubCommand;
 import com.hakan.core.hologram.Hologram;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -23,6 +24,7 @@ import me.defender.cosmetics.menu.CategoryMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -172,7 +174,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.KillMessage);
+            String title = CosmeticsType.KillMessage.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.KillMessage, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -186,7 +193,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.ShopKeeperSkin);
+            String title = CosmeticsType.ShopKeeperSkin.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.ShopKeeperSkin, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -200,7 +212,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.Sprays);
+            String title = CosmeticsType.Sprays.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.Sprays, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -214,7 +231,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.DeathCries);
+            String title = CosmeticsType.DeathCries.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.DeathCries, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -228,7 +250,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.Glyphs);
+            String title = CosmeticsType.Glyphs.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.Glyphs, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -242,7 +269,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.BedBreakEffects);
+            String title = CosmeticsType.BedBreakEffects.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.BedBreakEffects, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -256,7 +288,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.FinalKillEffects);
+            String title = CosmeticsType.FinalKillEffects.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.FinalKillEffects, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -270,7 +307,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.ProjectileTrails);
+            String title = CosmeticsType.ProjectileTrails.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.ProjectileTrails, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -284,7 +326,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.VictoryDances);
+            String title = CosmeticsType.VictoryDances.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.VictoryDances, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -298,7 +345,12 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.WoodSkins);
+            String title = CosmeticsType.WoodSkins.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.WoodSkins, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
@@ -312,14 +364,17 @@ public class MainCommand {
         if (sender instanceof Player) {
             if (Utility.isInArena((Player) sender))
                 return;
-            InventoryGui inv = new CategoryMenu(CosmeticsType.IslandTopper);
+            String title = CosmeticsType.IslandTopper.getFormatedName();
+            boolean placeholder = Cosmetics.isPlaceholderAPI();
+            if (placeholder){
+                title = PlaceholderAPI.setPlaceholders((OfflinePlayer) sender, title);
+            }
+            InventoryGui inv = new CategoryMenu(CosmeticsType.IslandTopper, title);
             inv.open(((Player) sender).getPlayer());
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
         }
     }
-
-
 
     @SubCommand(
             args = "setIslandTopperPosition",
