@@ -150,7 +150,7 @@ public class UsefulUtilsVD
 
 
     public static List<Block> getFreeBlocks(Location location) {
-        return (List<Block>)(new CuboidUtil(location, 20)).getAirBlocks().stream()
+        return (new CuboidUtil(location, 20)).getAirBlocks().stream()
                 .filter(b -> !b.getLocation().clone().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().equals(Material.AIR))
                 .filter(b -> b.getLocation().clone().add(0.0D, 1.0D, 0.0D).getBlock().getType().equals(Material.AIR))
                 .filter(b -> b.getLocation().clone().add(1.0D, 0.0D, 0.0D).getBlock().getType().equals(Material.AIR))

@@ -17,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +36,58 @@ public class ShopKeeperSkinsUtils {
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
         npc.spawn(loc);
 
+    }
+
+    private static void createEntityNPCForPreview(final EntityType ent, final Location loc, int ticks) {
+        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
+        NPC npc = registry.createNPC(ent, "");
+        npc.setBukkitEntityType(ent);
+        npc.getOrAddTrait(LookClose.class).lookClose(true);
+        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
+        npc.spawn(loc);
+
+        new BukkitRunnable() {
+            int tick = ticks;
+            @Override
+            public void run() {
+                if (tick == 0){
+                    npc.despawn();
+                    cancel();
+                }
+                tick--;
+            }
+        }.runTaskTimer(plugin(), 0, 20);
+    }
+
+    private static void createShopKeeperNPCForPreview(Player p, Location loc, String value, String sign, Boolean mirror, int ticks) {
+        // mirror skin
+        if (mirror) {
+            List<String> values = Arrays.asList(Objects.requireNonNull(Utility.getFromName(p.getName())));
+            value = values.get(0);
+            sign = values.get(1);
+        }
+        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
+        // Shop NPC
+        NPC npc = registry.createNPC(EntityType.PLAYER, "");
+        npc.setName("&r");
+        npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
+        npc.getTrait(SkinTrait.class).setTexture(value, sign);
+//        npc.getTrait(LookClose.class).lookClose(true);
+        npc.getOrAddTrait(HologramTrait.class).clear();
+        npc.spawn(loc);
+        npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
+
+        new BukkitRunnable() {
+            int tick = ticks;
+            @Override
+            public void run() {
+                if (tick == 0){
+                    npc.despawn();
+                    cancel();
+                }
+                tick--;
+            }
+        }.runTaskTimer(plugin(), 0, 20);
     }
 
     private static void createShopKeeperNPC(Player p, Location loc, Location loc1, String value, String sign, Boolean mirror) {
@@ -95,6 +148,27 @@ public class ShopKeeperSkinsUtils {
             createEntityNPC(EntityType.valueOf(etype), loc);
         }else if(skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, false);
+        }
+    }
+
+    public static void spawnShopKeeperNPCForPreview(Player p, Location loc) {
+        Cosmetics plugin = plugin();
+        String skin = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
+        ConfigManager config = ConfigUtils.getShopKeeperSkins();
+        String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
+        String skinvalue = config.getString(key + "." + skin + ".skin-value");
+        String skinsign = config.getString(key + "." + skin + ".skin-sign");
+        String etype = config.getString(key + "." + skin + ".entity-type");
+        boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
+
+        if(mirror){
+            createShopKeeperNPCForPreview(p, loc, skinvalue, skinsign, true, 5);
+            return;
+        }
+        if(etype != null) {
+            createEntityNPCForPreview(EntityType.valueOf(etype), loc, 5);
+        }else if(skinvalue != null && skinsign != null) {
+            createShopKeeperNPCForPreview(p, loc, skinvalue, skinsign, false, 5);
         }
     }
 }

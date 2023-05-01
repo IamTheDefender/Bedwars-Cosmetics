@@ -94,6 +94,7 @@ public class StartupUtils
         HCore.registerListeners(new PlayerLeaveListener());
         HCore.registerListeners(new CosmeticPurchaseListener());
         HCore.registerListeners(new PlayerJoinListener());
+        HCore.registerListeners(new PlayerInteractListener());
         HCore.registerListeners(new DeathCryHandler());
         HCore.registerListeners(new SpraysHandler());
     }

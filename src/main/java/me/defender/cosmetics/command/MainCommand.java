@@ -1,24 +1,18 @@
 package me.defender.cosmetics.command;
 
-import com.andrei1058.bedwars.api.BedWars;
-import com.andrei1058.bedwars.api.region.Cuboid;
 import com.andrei1058.bedwars.api.server.ISetupSession;
 import com.andrei1058.bedwars.shop.ShopCache;
 import com.andrei1058.bedwars.shop.ShopManager;
-import com.andrei1058.bedwars.shop.main.ShopIndex;
 import com.andrei1058.bedwars.shop.quickbuy.PlayerQuickBuyCache;
-import com.andrei1058.bedwars.shop.quickbuy.QuickBuyElement;
 import com.hakan.core.HCore;
 import com.hakan.core.command.executors.basecommand.BaseCommand;
 import com.hakan.core.command.executors.subcommand.SubCommand;
 import com.hakan.core.hologram.Hologram;
-import com.hakan.core.hologram.builder.HologramBuilder;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
-import com.sk89q.worldedit.regions.CuboidRegion;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.util.CuboidUtil;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.util.MainMenuUtils;
@@ -28,6 +22,7 @@ import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -364,7 +359,7 @@ public class MainCommand {
     }
 
     @SubCommand(
-            args = "setupPreviewLocation",
+            args = "setPreviewLocation",
             permission = "bwcosmetics.admin"
     )
     public void setPreviewLocation(CommandSender sender, String[] args){
@@ -372,6 +367,39 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
             return;
         }
+        Player p = (Player) sender;
+        if (args.length != 2){
+            p.sendMessage(ChatColor.RED + "Command usage, /bwc setPreviewLocation 1/2");
+            return;
+        }
+
+        int number = Integer.parseInt(args[1]);
+
+        Location loc = p.getLocation();
+
+        if (number == 1){
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.world", loc.getWorld().getName());
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.x", loc.getX());
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.y", loc.getY());
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.z", loc.getZ());
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.yaw", loc.getYaw());
+            Utility.plugin().getConfig().set("cosmetic-preview.cosmetic-location.pitch", loc.getPitch());
+        } else if (number == 2){
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.world", loc.getWorld());
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.x", loc.getX());
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.y", loc.getY());
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.z", loc.getZ());
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.yaw", loc.getYaw());
+            Utility.plugin().getConfig().set("cosmetic-preview.player-location.pitch", loc.getPitch());
+        } else {
+            p.sendMessage(ChatColor.RED + "Command usage, /bwc setPreviewLocation 1/2");
+            return;
+        }
+
+        Utility.plugin().saveConfig();
+        Utility.plugin().reloadConfig();
+
+        p.sendMessage(ChatColor.GREEN + "Successfully set cosmetic preview location!");
 
         //TODO check how /setIslandTopper works and use it that way
     }

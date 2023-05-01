@@ -11,6 +11,7 @@ import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.deathcries.preview.DeathCryPreview;
 import me.defender.cosmetics.api.category.killmessage.preview.KillMessagePreview;
+import me.defender.cosmetics.api.category.shopkeeperskins.preview.ShopKeeperPreview;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.event.CosmeticPurchaseEvent;
@@ -291,11 +292,11 @@ public class CategoryMenu extends InventoryGui {
             case DeathCries:
                 new DeathCryPreview().preview(player, id);
                 break;
-
+            case ShopKeeperSkin:
+                new ShopKeeperPreview().sendPreviewShopKeeperSkin(player, id);
             default:
                 onClick(player,type, price, id, false);
                 break;
         }
     }
-
 }
