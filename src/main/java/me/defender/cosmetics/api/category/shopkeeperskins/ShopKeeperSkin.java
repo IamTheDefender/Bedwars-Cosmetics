@@ -55,7 +55,11 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8ShopKeeper Skins", ""));
         finalLore.addAll(getLore());
-        finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
+        if(getRarity() != RarityType.NONE){
+            finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
+        }else{
+            finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
+        }
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
         StartupUtils.shopKeeperSkinList.add(this);

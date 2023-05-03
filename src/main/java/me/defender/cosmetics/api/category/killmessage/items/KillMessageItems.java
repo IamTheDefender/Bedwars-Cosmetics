@@ -14,7 +14,6 @@ import java.util.List;
 
 public class KillMessageItems {
 
-
     public static void registerConfigItems(){
         ConfigurationSection section = CosmeticsType.KillMessage.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessage.getSectionKey());
         if(section == null) return;
