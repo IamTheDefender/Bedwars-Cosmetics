@@ -17,13 +17,12 @@ import java.util.concurrent.TimeUnit;
 
 public class ShopKeeperPreview {
 
-    public void sendPreviewShopKeeperSkin(Player player, String selected){
+    public void sendPreviewShopKeeperSkin(Player player, String selected, InventoryGui gui){
         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
             if (shopKeeperSkin.getIdentifier().equals(selected)){
                 if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
             }
         }
-        InventoryGui gui = HCore.getInventoryByPlayer(player);
         Location beforeLocation = player.getLocation();
         float walkSpeed = player.getWalkSpeed();
         player.closeInventory();
@@ -34,7 +33,6 @@ public class ShopKeeperPreview {
         HCore.asyncScheduler().run(() -> {
             player.teleport(playerLocation);
             ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, cosmeticLocation);
-
             player.setWalkSpeed(0);
         });
 
