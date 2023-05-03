@@ -1,4 +1,3 @@
- 
 
 package me.defender.cosmetics;
 
@@ -40,6 +39,27 @@ public class Cosmetics extends JavaPlugin
 
     @Override
     public void onEnable() {
+        loadOnEnable();
+    }
+
+    
+    public void onDisable() {
+        unloadOnDisable();
+    }
+
+    public static void downloadFile(URL url, String filePath) {
+        try {
+            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+            rbc.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadOnEnable() {
         if(!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);
@@ -64,6 +84,7 @@ public class Cosmetics extends JavaPlugin
         ConfigUtils.getWoodSkins().save();
         ConfigUtils.getMainConfig().save();
         ConfigUtils.addExtrasToLang();
+
         this.menuData = new MainMenuData(this);
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
@@ -103,8 +124,7 @@ public class Cosmetics extends JavaPlugin
         VictoryDance.getDefault(null);
     }
 
-    
-    public void onDisable() {
+    private void unloadOnDisable() {
         if(forcedDisable){
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
@@ -120,29 +140,15 @@ public class Cosmetics extends JavaPlugin
             }
             getLogger().info("Player data saved to SQLite database!");
         }
-    	try {
-			db.getConnection().close();
-		} catch (SQLException e) {
-			getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
-		}
-
-
+        try {
+            db.getConnection().close();
+        } catch (SQLException e) {
+            getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
+        }
     }
 
     public static HikariDataSource getDB(){
         return db;
-    }
-
-    public static void downloadFile(URL url, String filePath) {
-        try {
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(filePath);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            rbc.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static boolean isPlaceholderAPI() {
@@ -153,6 +159,3 @@ public class Cosmetics extends JavaPlugin
         Cosmetics.placeholderAPI = placeholderAPI;
     }
 }
-
-
-

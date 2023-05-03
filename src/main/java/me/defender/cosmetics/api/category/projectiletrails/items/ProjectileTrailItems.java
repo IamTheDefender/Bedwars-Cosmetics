@@ -1,7 +1,6 @@
-package me.defender.cosmetics.api.category.killmessage.items;
+package me.defender.cosmetics.api.category.projectiletrails.items;
 
-import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
-import me.defender.cosmetics.api.category.killmessage.KillMessage;
+import me.defender.cosmetics.api.category.projectiletrails.ProjectileTrail;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StringUtils;
@@ -12,16 +11,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class KillMessageItems {
+public class ProjectileTrailItems {
 
-    public static void registerConfigItems(){
-        ConfigurationSection section = CosmeticsType.KillMessage.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessage.getSectionKey());
+    public void registerConfigItems(){
+        ConfigurationSection section = CosmeticsType.ProjectileTrails.getConfig().getYml().getConfigurationSection(CosmeticsType.ProjectileTrails.getSectionKey());
         if(section == null) return;
-        ConfigManager config = CosmeticsType.KillMessage.getConfig();
-
+        ConfigManager config = CosmeticsType.ProjectileTrails.getConfig();
         for(String id : section.getKeys(false)){
-            String path = CosmeticsType.KillMessage.getSectionKey() + "." + id + ".";
-            KillMessage killMessage = new KillMessage() {
+            String path = CosmeticsType.ProjectileTrails.getSectionKey() + "." + id + ".";
+            ProjectileTrail trails = new ProjectileTrail() {
                 @Override
                 public ItemStack getItem() {
                     return config.getItemStack(path + "item");
@@ -44,7 +42,10 @@ public class KillMessageItems {
 
                 @Override
                 public List<String> getLore() {
-                    return List.of("&7Select the " + getDisplayName() + " Kill,", "&7Message for in-game chat", "&7messages!");
+                    if(getRarity() == RarityType.NONE){
+                        return List.of("&7Selecting this option disables your", "&7Projectile Trail.");
+                    }
+                    return List.of("&7Select " + getDisplayName() + " as your Projectile,", "&7trail!");
                 }
 
                 @Override
@@ -54,16 +55,16 @@ public class KillMessageItems {
 
                 @Override
                 public RarityType getRarity() {
-                    return RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
+                    return RarityType.valueOf(config.getString(path + "rarity").toUpperCase().toUpperCase());
                 }
 
-                // Do nothing because API currently doesn't support it
+                // Does nothing because API doesn't support it yet.
                 @Override
-                public String execute(Player player, PlayerKillEvent.PlayerKillCause killCause) {
+                public String execute(Player player) {
                     return null;
                 }
             };
-            killMessage.register();
+            trails.register();
         }
     }
 }

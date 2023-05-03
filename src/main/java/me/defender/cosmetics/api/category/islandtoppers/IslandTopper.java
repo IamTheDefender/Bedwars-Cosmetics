@@ -2,7 +2,7 @@ package me.defender.cosmetics.api.category.islandtoppers;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.Cosmetics;
-import me.defender.cosmetics.api.category.islandtoppers.items.dummy;
+import me.defender.cosmetics.api.category.islandtoppers.items.DummyTopper;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
@@ -106,7 +106,7 @@ public abstract class IslandTopper extends Cosmetics {
             }
         }
         // This will never return null!
-        return new dummy();
+        return new DummyTopper();
     }
 
 }

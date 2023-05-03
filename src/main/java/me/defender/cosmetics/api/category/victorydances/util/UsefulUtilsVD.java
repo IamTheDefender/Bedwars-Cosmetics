@@ -30,7 +30,7 @@ public class UsefulUtilsVD
         if (b == null) {
             return;
         }
-        Object fb;
+        Entity fb;
         if (b.getType() == Material.TNT) {
             fb = b.getWorld().spawn(b.getLocation().add(0.0, 1.0, 0.0), TNTPrimed.class);
         }
@@ -42,7 +42,7 @@ public class UsefulUtilsVD
         final float x = -1.0f + (float)(Math.random() * 3.0);
         final float y = 0.5f;
         final float z = -0.3f + (float)(Math.random() * 1.6);
-        ((Entity)fb).setVelocity(new Vector(x, y, z));
+        fb.setVelocity(new Vector(x, y, z));
     }
     
     public static List<Location> generateSphere(final Location centerBlock, final int radius, final boolean hollow) {
@@ -78,26 +78,25 @@ public class UsefulUtilsVD
     }
     
     public static Location getRandomLocation(final Location originalLocation, final int radius) {
-        final Location location = originalLocation;
-        final Double x = location.getX();
-        final Double y = location.getY();
-        final Double z = location.getZ();
-        final Double maxX = x + radius;
-        final Double minX = x - radius;
-        final Double maxZ = z + radius;
-        final Double minZ = z - radius;
-        final Double maxY = y + radius;
-        final Double minY = y - radius;
+        final double x = originalLocation.getX();
+        final double y = originalLocation.getY();
+        final double z = originalLocation.getZ();
+        final double maxX = x + radius;
+        final double minX = x - radius;
+        final double maxZ = z + radius;
+        final double minZ = z - radius;
+        final double maxY = y + radius;
+        final double minY = y - radius;
         final double newX = ThreadLocalRandom.current().nextDouble(minX, maxX);
         final double newY = ThreadLocalRandom.current().nextDouble(minY, maxY);
         final double newZ = ThreadLocalRandom.current().nextDouble(minZ, maxZ);
-        location.setX(newX);
-        location.setY(newY);
-        location.setZ(newZ);
-        if (location.getBlock().getType() == Material.AIR) {
+        originalLocation.setX(newX);
+        originalLocation.setY(newY);
+        originalLocation.setZ(newZ);
+        if (originalLocation.getBlock().getType() == Material.AIR) {
             return originalLocation;
         }
-        return location;
+        return originalLocation;
     }
     
     public static ItemStack gethead(final String value, final String name) {
@@ -150,7 +149,7 @@ public class UsefulUtilsVD
 
 
     public static List<Block> getFreeBlocks(Location location) {
-        return (List<Block>)(new CuboidUtil(location, 20)).getAirBlocks().stream()
+        return (new CuboidUtil(location, 20)).getAirBlocks().stream()
                 .filter(b -> !b.getLocation().clone().subtract(0.0D, 0.1D, 0.0D).getBlock().getType().equals(Material.AIR))
                 .filter(b -> b.getLocation().clone().add(0.0D, 1.0D, 0.0D).getBlock().getType().equals(Material.AIR))
                 .filter(b -> b.getLocation().clone().add(1.0D, 0.0D, 0.0D).getBlock().getType().equals(Material.AIR))
