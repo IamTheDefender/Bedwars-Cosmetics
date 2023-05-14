@@ -45,10 +45,10 @@ import me.defender.cosmetics.api.category.glyphs.GlyphHandler;
 import me.defender.cosmetics.api.category.deathcries.DeathCryHandler;
 import me.defender.cosmetics.api.category.bedbreakeffects.BedDestroyHandler;
 import me.defender.cosmetics.api.category.sprays.items.SprayItems;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.listener.*;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.*;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -142,19 +142,15 @@ public class StartupUtils
             tempFile.delete();
         }
         String[] filesInFolder = folder.list();
-        if(filesInFolder != null && filesInFolder.length == 0){
+        if (filesInFolder != null && filesInFolder.length != 0) {
             return;
         }
+        JavaPlugin plugin = Utility.plugin();
+        Utility.saveFileFromInputStream(plugin.getResource("glyph/GlyphsTemp.zip"), "temp.zip", folder);
         try {
-            Cosmetics.downloadFile(new URL("https://dl.dropboxusercontent.com/s/ione3f01k1la6e8/Glyphs.zip"), temp);
+            new UnzippingUtils().unzip(tempFile.getPath(), folder.getPath());
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-        final UnzippingUtils unzip = new UnzippingUtils();
-        try {
-            unzip.unzip(temp, folder.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         tempFile.delete();
     }

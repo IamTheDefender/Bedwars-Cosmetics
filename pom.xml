@@ -6,7 +6,7 @@
 
     <groupId>me.defender</groupId>
     <artifactId>BW1058-Cosmetics</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
     <packaging>jar</packaging>
 
     <name>Cosmetics</name>
@@ -56,12 +56,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
     <repositories>
