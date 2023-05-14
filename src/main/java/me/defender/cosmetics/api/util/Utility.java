@@ -22,9 +22,9 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 
 
@@ -220,6 +220,28 @@ public class Utility {
             return null;
         }
     }
+
+
+    /**
+     * Save a file from plugin JAR to a folder
+     * @param inputStream inputStream of the file
+     * @param fileName name of the file
+     * @param folder folder where the file will be saved
+     */
+    public static void saveFileFromInputStream(InputStream inputStream, String fileName, File folder)  {
+        File file = new File(folder, fileName);
+        if(file.exists()) return;
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath())) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }
