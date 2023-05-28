@@ -142,7 +142,7 @@ public class StartupUtils
             tempFile.delete();
         }
         String[] filesInFolder = folder.list();
-        if (filesInFolder != null && filesInFolder.length != 0) {
+        if (filesInFolder != null && filesInFolder.length == 0) {
             return;
         }
         JavaPlugin plugin = Utility.plugin();

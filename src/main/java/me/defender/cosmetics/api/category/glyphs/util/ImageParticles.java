@@ -17,7 +17,7 @@ public class ImageParticles
     private double ratio;
     private final BufferedImage image;
     private final int clearence;
-    
+
     public ImageParticles(final BufferedImage image, final int scanQuality) {
         this.particles = new HashMap<Vector, Color>();
         this.anchor = new Vector(0, 0, 0);
@@ -26,15 +26,15 @@ public class ImageParticles
         this.image = image;
         this.renderParticles(Math.abs(scanQuality));
     }
-    
+
     public void setAnchor(final int x, final int y) {
         this.anchor = new Vector(x, y, 0);
     }
-    
+
     public void setDisplayRatio(final double ratio) {
         this.ratio = ratio;
     }
-    
+
     public Map<Location, Color> getParticles(final Location location, final double pitch, final double yaw) {
         final Map<Location, Color> map = new HashMap<Location, Color>();
         for (final Vector vector : this.particles.keySet()) {
@@ -46,11 +46,11 @@ public class ImageParticles
         }
         return map;
     }
-    
+
     public Map<Location, Color> getParticles(final Location location) {
         return this.getParticles(location, location.getPitch(), location.getYaw());
     }
-    
+
     private void renderParticles(final int sensitivity) {
         final int height = this.image.getHeight();
         for (int width = this.image.getWidth(), x = 0; x < width; x += sensitivity) {
@@ -64,7 +64,7 @@ public class ImageParticles
             }
         }
     }
-    
+
     private Vector rotateAroundAxisX(final Vector v, double angle) {
         angle = Math.toRadians(angle);
         final double cos = Math.cos(angle);
@@ -73,7 +73,7 @@ public class ImageParticles
         final double z = v.getY() * sin + v.getZ() * cos;
         return v.setY(y).setZ(z);
     }
-    
+
     private Vector rotateAroundAxisY(final Vector v, double angle) {
         angle = -angle;
         angle = Math.toRadians(angle);
