@@ -14,14 +14,17 @@ import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.DebugUtil;
 import me.defender.cosmetics.api.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.Debug;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,16 +53,16 @@ public class ShopKeeperHandler implements Listener
                         Location shopLocation = team.getShop();
                         Location upgradeLocation = team.getTeamUpgrades();
                         World world = shopLocation.getWorld();
-
+                        DebugUtil.addMessage("Executing ShopKeeper Skins for team " + team.getName());
                         // Delete existing NPCs
                         world.getEntities().stream()
-                                .filter(e -> (e.getLocation().distance(shopLocation) <= 0.2 || e.getLocation().distance(upgradeLocation) <= 0.2))
+                                .filter(e -> (e.getLocation().distance(shopLocation) <= 0.2 || e.getLocation().distance(upgradeLocation) <= 0.2 && e instanceof Villager))
                                 .forEach(Entity::remove);
 
                         // Choose random player from the team
                         Player player = team.getMembers().get(new Random().nextInt(team.getSize()));
                         String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
-
+                       DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {
                             if (skin.equals(skins.getIdentifier())) {

@@ -34,18 +34,8 @@ public class Cosmetics extends JavaPlugin
     public static HikariDataSource db;
     @Getter
     public static Connection dbConnection;
-    public boolean forcedDisable = false;
+    public boolean dependenciesMissing = false;
     static boolean placeholderAPI;
-
-    @Override
-    public void onEnable() {
-        loadOnEnable();
-    }
-
-    
-    public void onDisable() {
-        unloadOnDisable();
-    }
 
     public static void downloadFile(URL url, String filePath) {
         try {
@@ -59,11 +49,12 @@ public class Cosmetics extends JavaPlugin
         }
     }
 
-    private void loadOnEnable() {
+    @Override
+    public void onEnable() {
         if(!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);
-            forcedDisable = true;
+            dependenciesMissing = true;
             return;
         }
 
@@ -121,11 +112,14 @@ public class Cosmetics extends JavaPlugin
         getLogger().info("Loading cosmetics...");
         StartupUtils.loadCosmetics();
         getLogger().info("Addon have been loaded and enabled!");
+        // This is a check to make sure victory dance config doesn't have any issues.
         VictoryDance.getDefault(null);
+
     }
 
-    private void unloadOnDisable() {
-        if(forcedDisable){
+    @Override
+    public void onDisable() {
+        if(dependenciesMissing){
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
         }

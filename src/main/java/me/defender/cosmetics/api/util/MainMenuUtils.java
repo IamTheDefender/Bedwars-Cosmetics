@@ -73,31 +73,36 @@ public class MainMenuUtils {
         BwcAPI api = new BwcAPI();
         PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(p.getUniqueId());
 
-        lores = lores.stream()
-                .map(s -> s.replace("{islandtopper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.IslandTopper))))
-                .map(s -> s.replace("{spray}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.Sprays))))
-                .map(s -> s.replace("{killmsg}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.KillMessage))))
-                .map(s -> s.replace("{shopkeeper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin))))
-                .map(s -> s.replace("{woodskin}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.WoodSkins))))
-                .map(s -> s.replace("{victory}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.VictoryDances))))
-                .map(s -> s.replace("{deathcries}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.DeathCries))))
-                .map(s -> s.replace("{glyphs}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.Glyphs))))
-                .map(s -> s.replace("{bedbreak}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.BedBreakEffects))))
-                .map(s -> s.replace("{projectile}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.ProjectileTrails))))
-                .map(s -> s.replace("{finalkill}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.FinalKillEffects))))
-                .map(s -> s.replace("{islandtopper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.IslandTopper))))
-                .map(s -> s.replace("{ownedSpray}", "&a" + ownedData.getSpray() + "/" + StartupUtils.sprayList.size() + " &8(" + ((ownedData.getSpray() / StartupUtils.sprayList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedpt}", "&a" + ownedData.getProjectileTrail() + "/" + StartupUtils.projectileTrailList.size() + " &8(" + ((ownedData.getProjectileTrail() / StartupUtils.projectileTrailList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedfinalkill}", "&a" + ownedData.getFinalKillEffect() + "/" + StartupUtils.finalKillList.size() + " &8(" + ((ownedData.getFinalKillEffect() / StartupUtils.finalKillList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedkm}", "&a" + ownedData.getKillMessage() + "/" + StartupUtils.killMessageList.size() + " &8(" + ((ownedData.getKillMessage() / StartupUtils.killMessageList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedgly}", "&a" + ownedData.getGlyph() + "/" + StartupUtils.glyphsList.size() + " &8(" + ((ownedData.getGlyph() / StartupUtils.glyphsList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedbbe}", "&a" + ownedData.getBedDestroy() + "/" + StartupUtils.bedDestroyList.size() + " &8(" + ((ownedData.getBedDestroy() / StartupUtils.bedDestroyList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedws}", "&a" + ownedData.getWoodSkin() + "/" + StartupUtils.woodSkinsList.size() + " &8(" + ((ownedData.getWoodSkin() / StartupUtils.woodSkinsList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedvd}", "&a" + ownedData.getVictoryDance() + "/" + StartupUtils.victoryDancesList.size() + " &8(" + ((ownedData.getVictoryDance() / StartupUtils.victoryDancesList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedit}", "&a" + ownedData.getIslandTopper() + "/" + StartupUtils.islandTopperList.size() + " &8(" + ((ownedData.getIslandTopper() / StartupUtils.islandTopperList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{ownedshopkeeper}", "&a" + ownedData.getShopkeeperSkin() + "/" + StartupUtils.shopKeeperSkinList.size() + " &8(" + ((ownedData.getShopkeeperSkin() / StartupUtils.shopKeeperSkinList.size()) * 100) + "%)" ))
-                .map(s -> s.replace("{owneddc}", "&a" + ownedData.getDeathCry() + "/" + StartupUtils.deathCryList.size() + " &8(" + ((ownedData.getDeathCry() / StartupUtils.deathCryList.size()) * 100) + "%)" ))
-                .collect(Collectors.toList());
+        try {
+            lores = lores.stream()
+                    .map(s -> s.replace("{islandtopper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.IslandTopper))))
+                    .map(s -> s.replace("{spray}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.Sprays))))
+                    .map(s -> s.replace("{killmsg}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.KillMessage))))
+                    .map(s -> s.replace("{shopkeeper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin))))
+                    .map(s -> s.replace("{woodskin}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.WoodSkins))))
+                    .map(s -> s.replace("{victory}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.VictoryDances))))
+                    .map(s -> s.replace("{deathcries}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.DeathCries))))
+                    .map(s -> s.replace("{glyphs}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.Glyphs))))
+                    .map(s -> s.replace("{bedbreak}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.BedBreakEffects))))
+                    .map(s -> s.replace("{projectile}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.ProjectileTrails))))
+                    .map(s -> s.replace("{finalkill}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.FinalKillEffects))))
+                    .map(s -> s.replace("{islandtopper}", "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, CosmeticsType.IslandTopper))))
+                    .map(s -> s.replace("{ownedSpray}", "&a" + ownedData.getSpray() + "/" + StartupUtils.sprayList.size() + " &8(" + ((ownedData.getSpray() / StartupUtils.sprayList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedpt}", "&a" + ownedData.getProjectileTrail() + "/" + StartupUtils.projectileTrailList.size() + " &8(" + ((ownedData.getProjectileTrail() / StartupUtils.projectileTrailList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedfinalkill}", "&a" + ownedData.getFinalKillEffect() + "/" + StartupUtils.finalKillList.size() + " &8(" + ((ownedData.getFinalKillEffect() / StartupUtils.finalKillList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedkm}", "&a" + ownedData.getKillMessage() + "/" + StartupUtils.killMessageList.size() + " &8(" + ((ownedData.getKillMessage() / StartupUtils.killMessageList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedgly}", "&a" + ownedData.getGlyph() + "/" + StartupUtils.glyphsList.size() + " &8(" + ((ownedData.getGlyph() / StartupUtils.glyphsList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedbbe}", "&a" + ownedData.getBedDestroy() + "/" + StartupUtils.bedDestroyList.size() + " &8(" + ((ownedData.getBedDestroy() / StartupUtils.bedDestroyList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedws}", "&a" + ownedData.getWoodSkin() + "/" + StartupUtils.woodSkinsList.size() + " &8(" + ((ownedData.getWoodSkin() / StartupUtils.woodSkinsList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedvd}", "&a" + ownedData.getVictoryDance() + "/" + StartupUtils.victoryDancesList.size() + " &8(" + ((ownedData.getVictoryDance() / StartupUtils.victoryDancesList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedit}", "&a" + ownedData.getIslandTopper() + "/" + StartupUtils.islandTopperList.size() + " &8(" + ((ownedData.getIslandTopper() / StartupUtils.islandTopperList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{ownedshopkeeper}", "&a" + ownedData.getShopkeeperSkin() + "/" + StartupUtils.shopKeeperSkinList.size() + " &8(" + ((ownedData.getShopkeeperSkin() / StartupUtils.shopKeeperSkinList.size()) * 100) + "%)"))
+                    .map(s -> s.replace("{owneddc}", "&a" + ownedData.getDeathCry() + "/" + StartupUtils.deathCryList.size() + " &8(" + ((ownedData.getDeathCry() / StartupUtils.deathCryList.size()) * 100) + "%)"))
+                    .collect(Collectors.toList());
+        }catch (Exception ignored){
+            // Cuz I guess only IslandTopper have this issue
+            Bukkit.getLogger().severe("Please install world edit, without world edit plugin will not work!");
+        }
         return lores;
     }
 

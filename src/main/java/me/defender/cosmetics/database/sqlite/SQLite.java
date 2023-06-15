@@ -34,7 +34,7 @@ public class SQLite {
             config.setUsername("");
             config.setPassword("");
             config.setConnectionTestQuery("SELECT 1");
-            config.setConnectionTimeout(5000);
+            config.setConnectionTimeout(500000);
             config.setMaximumPoolSize(100);
             config.setPoolName("COSMETICS-SQLITE");
             dataSource = new HikariDataSource(config);

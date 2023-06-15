@@ -9,6 +9,7 @@ import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.StringUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -74,8 +75,14 @@ public class ShopKeeperItems {
                                 shopKeeperSkins.add(shopKeeperSkin);
                             }
                         }
-                        shopKeeperSkins.get(new Random().nextInt(shopKeeperSkins.size())).execute(player, shopLocation, upgradeLocation);
-                        return;
+                        if(shopKeeperSkins.isEmpty()){
+                            // ShopKeeperSkin#getDefault should not return null!
+                            ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation, ShopKeeperSkin.getDefault(player).getIdentifier());
+                        }else{
+                            ShopKeeperSkin shopKeeperSkin1 = shopKeeperSkins.get(new Random().nextInt(shopKeeperSkins.size()));
+                            ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation, shopKeeperSkin1.getIdentifier());
+                        }
+                         return;
                     }
                     ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation);
                 }

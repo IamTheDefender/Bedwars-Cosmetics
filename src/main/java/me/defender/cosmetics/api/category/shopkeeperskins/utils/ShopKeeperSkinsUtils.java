@@ -1,5 +1,8 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.utils;
 
+import com.hakan.core.HCore;
+import com.hakan.core.npc.Npc;
+import com.hakan.core.skin.Skin;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -19,10 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static me.defender.cosmetics.api.util.Utility.plugin;
 
@@ -76,25 +76,8 @@ public class ShopKeeperSkinsUtils {
             value = values.get(0);
             sign = values.get(1);
         }
-        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
-        // Shop NPC
-        NPC npc = registry.createNPC(EntityType.PLAYER, "");
-        npc.setName("&r");
-        npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-        npc.getTrait(SkinTrait.class).setTexture(value, sign);
-        npc.getTrait(LookClose.class).lookClose(true);
-        npc.getOrAddTrait(HologramTrait.class).clear();
-        npc.spawn(loc);
-        npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
-        // Upgrade NPC
-        NPC npc1 = registry.createNPC(EntityType.PLAYER, "");
-        npc1.setName("&r");
-        npc1.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-        npc1.getTrait(SkinTrait.class).setTexture(value, sign);
-        npc1.getTrait(LookClose.class).lookClose(true);
-        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
-        npc1.spawn(loc1);
-        npc1.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
+        Npc npc = HCore.npcBuilder(new Random().nextInt() + "ID").skin(new Skin(value, sign)).showEveryone(true).target(Npc.LookTarget.NEAREST).lines(Collections.emptyList()).location(loc).build();
+        Npc npc1 = HCore.npcBuilder(new Random().nextInt() + "ID").skin(new Skin(value, sign)).showEveryone(true).target(Npc.LookTarget.NEAREST).lines(Collections.emptyList()).location(loc1).build();
     }
 
     /**
@@ -114,7 +97,7 @@ public class ShopKeeperSkinsUtils {
         npc.setName("&r");
         npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
         npc.getTrait(SkinTrait.class).setTexture(value, sign);
-//        npc.getTrait(LookClose.class).lookClose(true);
+       npc.getTrait(LookClose.class).lookClose(true);
         npc.getOrAddTrait(HologramTrait.class).clear();
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
@@ -145,6 +128,26 @@ public class ShopKeeperSkinsUtils {
     public static void spawnShopKeeperNPC(Player p, Location loc, Location loc1) {
         Cosmetics plugin = plugin();
         String skin = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
+        ConfigManager config = ConfigUtils.getShopKeeperSkins();
+        String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
+        String skinvalue = config.getString(key + "." + skin + ".skin-value");
+        String skinsign = config.getString(key + "." + skin + ".skin-sign");
+        String etype = config.getString(key + "." + skin + ".entity-type");
+        boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
+
+        if(mirror){
+            createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, true);
+            return;
+        }
+        if(etype != null) {
+            createEntityNPC(EntityType.valueOf(etype), loc1);
+            createEntityNPC(EntityType.valueOf(etype), loc);
+        }else if(skinvalue != null && skinsign != null) {
+            createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, false);
+        }
+    }
+
+    public static void spawnShopKeeperNPC(Player p, Location loc, Location loc1, String skin) {
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
         String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");

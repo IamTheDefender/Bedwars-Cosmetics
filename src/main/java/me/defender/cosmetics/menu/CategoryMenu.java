@@ -294,6 +294,7 @@ public class CategoryMenu extends InventoryGui {
                 break;
             case ShopKeeperSkin:
                 new ShopKeeperPreview().sendPreviewShopKeeperSkin(player, id, this);
+                break;
             default:
                 onClick(player,type, price, id, false);
                 break;
