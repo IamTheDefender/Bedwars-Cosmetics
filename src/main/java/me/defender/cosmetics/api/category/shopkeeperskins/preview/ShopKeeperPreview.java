@@ -2,6 +2,7 @@ package me.defender.cosmetics.api.category.shopkeeperskins.preview;
 
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
+import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
 import me.defender.cosmetics.api.enums.FieldsType;
@@ -26,13 +27,23 @@ public class ShopKeeperPreview {
         Location beforeLocation = player.getLocation();
         float walkSpeed = player.getWalkSpeed();
         player.closeInventory();
+        Location cosmeticLocation = null, playerLocation = null;
 
-        Location cosmeticLocation = getCosmeticLocation();
-        Location playerLocation = getPlayerLocation();
+        try {
+             cosmeticLocation = getCosmeticLocation();
+             playerLocation = getPlayerLocation();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            player.sendMessage(ColorUtil.colored("&cEither Preview location or Player location is not set! Contact the admin."));
+        }
 
-        HCore.asyncScheduler().run(() -> {
-            player.teleport(playerLocation);
-            ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, cosmeticLocation);
+        if(cosmeticLocation == null || playerLocation == null) return;
+
+        Location finalPlayerLocation = playerLocation;
+        Location finalCosmeticLocation = cosmeticLocation;
+        HCore.syncScheduler().run(() -> {
+            player.teleport(finalPlayerLocation);
+            ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation);
             player.setWalkSpeed(0);
         });
 

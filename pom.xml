@@ -6,7 +6,7 @@
 
     <groupId>me.defender</groupId>
     <artifactId>BW1058-Cosmetics</artifactId>
-    <version>1.4.2</version>
+    <version>1.4.4</version>
     <packaging>jar</packaging>
 
     <name>Cosmetics</name>
@@ -45,6 +45,18 @@
                             <shadedPattern>me.defender.cosmetics.support.hcore</shadedPattern>
                         </relocation>
                     </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>com/cryptomorin/xseries/XBiome*</exclude>
+                                <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
+                                <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
+                                <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
+                                <exclude>com/hakan/core/scoreboard</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
@@ -83,6 +95,7 @@
             <id>enginehub-maven</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+
     </repositories>
 
     <dependencies>
@@ -96,7 +109,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>

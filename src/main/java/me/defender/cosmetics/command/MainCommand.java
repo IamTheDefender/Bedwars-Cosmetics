@@ -12,6 +12,7 @@ import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.util.StartupUtils;
@@ -23,9 +24,11 @@ import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -67,6 +70,9 @@ public class MainCommand {
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc vd    &8- &eclick for details", "Opens the Victory Dance GUI"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc ws    &8- &eclick for details", "Opens the Wood Skins GUI"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc it    &8- &eclick for details", "Opens the Island Toppers GUI"));
+            p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupIslandTopper    &8- &eclick for details", "Set the island topper location for an team in an arena"));
+            p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupPlayerLocation    &8- &eclick for details", "Set the player location for preview"));
+            p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupPreviewLocation    &8- &eclick for details", "Set the preview location"));
         } else {
             sender.sendMessage(ChatColor.RED + "You need to be in-game!");
         }
@@ -423,7 +429,40 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
             return;
         }
+        Player player = (Player) sender;
+        Location location = player.getLocation();
+        ConfigManager config = ConfigUtils.getMainConfig();
+        config.set("cosmetic-preview.cosmetic-location.world", location.getWorld().getName());
+        config.set("cosmetic-preview.cosmetic-location.x", location.getX());
+        config.set("cosmetic-preview.cosmetic-location.y", location.getY());
+        config.set("cosmetic-preview.cosmetic-location.z", location.getZ());
+        config.set("cosmetic-preview.cosmetic-location.yaw", location.getYaw());
+        config.set("cosmetic-preview.cosmetic-location.pitch", location.getPitch());
+        config.save();
+        config.reload();
+        player.sendMessage(ChatColor.GREEN + "Done! saved your current location as preview location.");
+    }
 
-        //TODO check how /setIslandTopper works and use it that way
+    @SubCommand(
+            args = "setupPlayerLocation",
+            permission = "bwcosmetics.admin"
+    )
+    public void setPlayerLocation(CommandSender sender, String[] args){
+        if (!(sender instanceof Player)){
+            sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
+            return;
+        }
+        Player player = (Player) sender;
+        Location location = player.getLocation();
+        ConfigManager config = ConfigUtils.getMainConfig();
+        config.set("cosmetic-preview.player-location.world", location.getWorld().getName());
+        config.set("cosmetic-preview.player-location.x", location.getX());
+        config.set("cosmetic-preview.player-location.y", location.getY());
+        config.set("cosmetic-preview.player-location.z", location.getZ());
+        config.set("cosmetic-preview.player-location.yaw", location.getYaw());
+        config.set("cosmetic-preview.player-location.pitch", location.getPitch());
+        config.save();
+        config.reload();
+        player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 }

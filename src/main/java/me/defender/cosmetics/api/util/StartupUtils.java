@@ -184,6 +184,11 @@ public class StartupUtils
             log.severe("Cosmetics addon requires Vault to work properly!");
             return false;
         }
+        if(!isPluginEnabled("WorldEdit") && !isPluginEnabled("FastAsyncWorldEdit")){
+            log.severe("Cosmetics addon requires WorldEdit to work!");
+            return false;
+        }
+
         if(isPluginEnabled("PlaceholderAPI")){
             log.info("Found PlaceholderAPI, loading placeholders!");
             new Placeholders(Utility.plugin()).register();
