@@ -34,6 +34,7 @@ public class MySQL {
             int port = plugin.getConfig().getInt("mysql.port", 3306);
 
             HikariConfig config = new HikariConfig();
+            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
             config.setUsername(username);
             config.setPassword(password);
