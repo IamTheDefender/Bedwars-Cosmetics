@@ -60,7 +60,7 @@ public class HologramBedDestroy extends BedDestroy {
         ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(bedLocation.add(0,1,0), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
-        stand.setCustomName(ColorUtil.colored("&c" + victimTeam + "'s Bed was destroyed by " + player.getDisplayName()));
+        stand.setCustomName(ColorUtil.colored("&c" + victimTeam.getName() + "'s Bed was destroyed by " + player.getDisplayName()));
         stand.setCustomNameVisible(true);
     }
 }
