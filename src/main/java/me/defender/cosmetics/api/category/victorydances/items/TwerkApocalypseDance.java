@@ -71,7 +71,7 @@ public class TwerkApocalypseDance extends VictoryDance {
 
         HCore.syncScheduler().every(1).limit(15).run(() -> {
             List<Block> freeBlocks = UsefulUtilsVD.getFreeBlocks(winner.getLocation());
-            Location loc = freeBlocks.get(new Random().nextInt(freeBlocks.size())).getLocation();
+            Location loc = freeBlocks.get(MathUtil.getRandom(0, freeBlocks.size() -1)).getLocation();
             loc.setYaw((float) MathUtil.getRandom(0.0D, 360.0D));
 
             if(loc.getBlock().getType() == Material.AIR && loc.subtract(0,1,0).getBlock().getType() != Material.AIR) {
