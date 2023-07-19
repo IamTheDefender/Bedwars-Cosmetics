@@ -78,8 +78,7 @@ public class RainbowDollyDance extends VictoryDance {
                     color.add("LIME");
                     color.add("CYAN");
                     color.add("MAGENTA");
-                    final int size = ThreadLocalRandom.current().nextInt(color.size());
-                    final String colors = color.get(size);
+                    final String colors = color.get(MathUtil.getRandom(0, color.size() -1));
                     final Sheep sheep2 = (Sheep)sheep.getWorld().spawnEntity(sheep.getLocation(), EntityType.SHEEP);
                     sheep2.getWorld().createExplosion(sheep2.getLocation(), 1.0f);
                     sheep2.setColor(DyeColor.valueOf(colors));
