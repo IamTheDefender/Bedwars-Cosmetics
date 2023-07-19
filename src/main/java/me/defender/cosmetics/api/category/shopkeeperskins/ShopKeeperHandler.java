@@ -60,7 +60,7 @@ public class ShopKeeperHandler implements Listener
                                 .forEach(Entity::remove);
 
                         // Choose random player from the team
-                        Player player = team.getMembers().get(new Random().nextInt(team.getSize()));
+                        Player player = team.getMembers().get(MathUtil.getRandom(0, teams.getSize() -1));
                         String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
                        DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
