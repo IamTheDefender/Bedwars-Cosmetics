@@ -40,6 +40,7 @@ public class CategoryMenu extends InventoryGui {
     CosmeticsType cosmeticsType;
     String title;
     List<Integer> slots;
+    int page;
 
     public CategoryMenu(CosmeticsType type, String title) {
         super(type.getFormatedName(), title, 6, InventoryType.CHEST);
@@ -56,6 +57,25 @@ public class CategoryMenu extends InventoryGui {
         if(slots.isEmpty()){
             slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
         }
+        this.page = 0;
+    }
+
+    public CategoryMenu(CosmeticsType type, String title, int page) {
+        super(type.getFormatedName(), title, 6, InventoryType.CHEST);
+        this.config = type.getConfig();
+        this.cosmeticsType = type;
+        this.title = title;
+        String list = config.getString("slots");
+        list = list.replace("[", "").replace("]", "");
+        List<Integer> integerList = new ArrayList<>();
+        for (String s : list.split("\\s*,\\s*")) {
+            integerList.add(Integer.parseInt(s));
+        }
+        slots = integerList;
+        if(slots.isEmpty()){
+            slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
+        }
+       this.page = page;
     }
 
     @Override
@@ -79,9 +99,6 @@ public class CategoryMenu extends InventoryGui {
             String formattedName = Utility.getMSGLang(player, "cosmetics." + path + "name");
             List<String> lore = Utility.getListLang(player ,"cosmetics." + path + "lore");
             lore = StringUtils.formatLore(lore, formattedName, price, getItemStatus(player, cosmeticsType, id, price), rarity.getChatColor() + rarity.toString());
-
-            // Model data
-            int model_data = configManager.getInt(path + "model_data");
 
             // Items
             ClickableItem item = null;
@@ -108,17 +125,38 @@ public class CategoryMenu extends InventoryGui {
                 rarityMap.put(item, rarity);
             }
         }
+        if(Utility.plugin().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
+            setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> Utility.openMainMenu((Player) e.getWhoClicked()));
+        }
+        createPages(items, rarityMap);
+    }
+
+    public void createPages(List<ClickableItem> items, Map<ClickableItem, RarityType> rarityMap) {
         // Page system
         Pagination pages = new Pagination(this);
         pages.setSlots(slots);
         pages.setItems(items);
-        addItemsAccordingToRarity(rarityMap);
-        if(Utility.plugin().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
-            setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> {
-                Utility.openMainMenu((Player) e.getWhoClicked());
-            });
+        // Using try and ignoring it because it will only throw exception when the page doesn't exist so no need for
+        // these items in the GUI
+        try {
+            if (!pages.getPage(page - 1).getItems().isEmpty()) {
+                setItem(45, HCore.itemBuilder(Material.ARROW).name(true, "&aPrevious Page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page - 1).open((Player) e.getWhoClicked()));
+            }
+        }catch (IndexOutOfBoundsException ignored){}
+
+        try {
+            if (!pages.getPage(page + 1).getItems().isEmpty()) {
+                setItem(53, HCore.itemBuilder(Material.ARROW).name(true, "&aNext page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page + 1).open((Player) e.getWhoClicked()));
+            }
+        }catch (IndexOutOfBoundsException ignored){}
+
+        Map<ClickableItem, RarityType> rarityMapNew = new HashMap<>();
+        for (ClickableItem value : pages.getPage(page).getItems().values()) {
+            if(value.getItem().getType() != Material.AIR) {
+                rarityMapNew.put(value, rarityMap.get(value));
+            }
         }
-        Utility.createPages(pages, this, title);
+        addItemsAccordingToRarity(rarityMapNew);
     }
 
 
@@ -252,7 +290,7 @@ public class CategoryMenu extends InventoryGui {
                 if (isOnlyForCheck) return 0;
                 api.setSelectedCosmetic(p, type, id);
                 XSound.ENTITY_VILLAGER_YES.play(p);
-                HCore.getInventoryByPlayer(p).open(p);
+                new CategoryMenu(cosmeticsType, title, page).open(p);
 
                 // Can't purchase, cuz locked
             } else if(type.getConfig().getString(type.getSectionKey() + "." + id + ".purchase-able") != null){
@@ -274,7 +312,7 @@ public class CategoryMenu extends InventoryGui {
                 api.setSelectedCosmetic(p, type, id);
                 eco.withdrawPlayer(p, price);
                 p.playSound(p.getLocation(), XSound.ENTITY_VILLAGER_YES.parseSound(), 1.0f, 1.0f);
-                HCore.getInventoryByPlayer(p).open(p);
+                new CategoryMenu(cosmeticsType, title, page).open(p);
                 // Don't have money and is purchasable
             } else {
                 if(isOnlyForCheck) return 2;
