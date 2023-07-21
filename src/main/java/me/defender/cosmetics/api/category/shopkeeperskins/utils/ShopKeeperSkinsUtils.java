@@ -70,14 +70,32 @@ public class ShopKeeperSkinsUtils {
      * When playing in game.
      * */
     private static void createShopKeeperNPC(Player p, Location loc, Location loc1, String value, String sign, Boolean mirror) {
-        // mirror skin
         if (mirror) {
             List<String> values = Arrays.asList(Objects.requireNonNull(Utility.getFromName(p.getName())));
             value = values.get(0);
             sign = values.get(1);
         }
-        Npc npc = HCore.npcBuilder(new Random().nextInt() + "ID").skin(new Skin(value, sign)).showEveryone(true).target(Npc.LookTarget.NEAREST).lines(Collections.emptyList()).location(loc).build();
-        Npc npc1 = HCore.npcBuilder(new Random().nextInt() + "ID").skin(new Skin(value, sign)).showEveryone(true).target(Npc.LookTarget.NEAREST).lines(Collections.emptyList()).location(loc1).build();
+        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
+        // Shop NPC
+        NPC npc = registry.createNPC(EntityType.PLAYER, "");
+        npc.setName("&r");
+        npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
+        npc.getTrait(SkinTrait.class).setTexture(value, sign);
+        npc.getTrait(LookClose.class).lookClose(true);
+        npc.getOrAddTrait(HologramTrait.class).clear();
+        npc.spawn(loc);
+        npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
+
+        // Shop NPC
+        NPC npc1 = registry.createNPC(EntityType.PLAYER, "");
+        npc1.setName("&r");
+        npc1.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
+        npc1.getTrait(SkinTrait.class).setTexture(value, sign);
+        npc1.getTrait(LookClose.class).lookClose(true);
+        npc1.getOrAddTrait(HologramTrait.class).clear();
+        npc1.spawn(loc1);
+        npc1.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
+
     }
 
     /**
@@ -167,9 +185,8 @@ public class ShopKeeperSkinsUtils {
         }
     }
 
-    public static void spawnShopKeeperNPCForPreview(Player p, Location loc) {
+    public static void spawnShopKeeperNPCForPreview(Player p, Location loc, String skin) {
         Cosmetics plugin = plugin();
-        String skin = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
         String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");

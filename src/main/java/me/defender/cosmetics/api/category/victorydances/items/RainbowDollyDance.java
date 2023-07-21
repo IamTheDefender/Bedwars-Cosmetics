@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.enums.RarityType;
+import me.defender.cosmetics.api.util.MathUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

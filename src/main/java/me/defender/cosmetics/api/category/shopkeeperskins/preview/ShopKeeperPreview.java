@@ -1,5 +1,6 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.preview;
 
+import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
@@ -21,7 +22,11 @@ public class ShopKeeperPreview {
     public void sendPreviewShopKeeperSkin(Player player, String selected, InventoryGui gui){
         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
             if (shopKeeperSkin.getIdentifier().equals(selected)){
-                if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
+                if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE) {
+                    gui.open(player);
+                    XSound.ENTITY_VILLAGER_NO.play(player, 1.0f, 1.0f);
+                    return;
+                }
             }
         }
         Location beforeLocation = player.getLocation();
@@ -43,7 +48,7 @@ public class ShopKeeperPreview {
         Location finalCosmeticLocation = cosmeticLocation;
         HCore.syncScheduler().run(() -> {
             player.teleport(finalPlayerLocation);
-            ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation);
+            ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation, selected);
             player.setWalkSpeed(0);
         });
 

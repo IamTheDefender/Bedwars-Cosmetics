@@ -1,5 +1,5 @@
 name: BW1058-Cosmetics
-version: '${project.version}'
+version: '1.4.4'
 main: me.defender.cosmetics.Cosmetics
 prefix: BW1058-Cosmetics
 softdepend: [ BedWars1058, BedwarsProxy, Vault, Citizens, PlaceholderAPI, WorldEdit ]

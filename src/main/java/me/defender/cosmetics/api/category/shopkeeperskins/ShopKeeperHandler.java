@@ -10,6 +10,7 @@ import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
+import me.defender.cosmetics.api.util.MathUtil;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.DebugUtil;
 import me.defender.cosmetics.api.util.Utility;
@@ -60,7 +61,7 @@ public class ShopKeeperHandler implements Listener
                                 .forEach(Entity::remove);
 
                         // Choose random player from the team
-                        Player player = team.getMembers().get(MathUtil.getRandom(0, teams.getSize() -1));
+                        Player player = team.getMembers().get(MathUtil.getRandom(0, teams.size() -1));
                         String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
                        DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs

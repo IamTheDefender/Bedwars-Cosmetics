@@ -60,8 +60,6 @@ public class ColdSnapDance extends VictoryDance {
                     if (loc.getBlock().getType() != Material.AIR) {
                         loc.getBlock().setType(Material.ICE);
                         winner.playSound(winner.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                    } else {
-                        this.run();
                     }
                 }else{
                     this.cancel();
