@@ -120,7 +120,7 @@ public class CategoryMenu extends InventoryGui {
                     }
                 });
             }
-            if(item != null) {
+            if(item != null && !disabled) {
                 items.add(item);
                 rarityMap.put(item, rarity);
             }
@@ -247,6 +247,14 @@ public class CategoryMenu extends InventoryGui {
         for (ClickableItem clickableItem : legendaryItems) {
             if(!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
+            }
+        }
+
+        String extrasPath = "Extras.fill-empty.";
+        if(config.getBoolean(extrasPath + "enabled")){
+            ItemStack stack = ConfigManager.getItemStack(config.getYml(), config.getString(extrasPath + "item"));
+            while (toInventory().firstEmpty() != -1){
+                setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());
             }
         }
 

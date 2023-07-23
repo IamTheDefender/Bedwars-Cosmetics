@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.util.SkullUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -117,7 +118,30 @@ public class ConfigManager {
         return item;
     }
 
-    public ItemStack getCustomSkull(String base64) {
+    public static ItemStack getItemStack(FileConfiguration config, String path) {
+        ItemStack item = null;
+        String material = null;
+        try {
+            String[] data = config.getString(path).split(":", 2);
+            material = data[0];
+            if(material.equalsIgnoreCase("player_head") || material.equalsIgnoreCase("skull_item")){
+                String[] data2 = config.getString(path).split(":", 3);
+                String base64 = data2[2];
+                item = getCustomSkull(base64);
+                return item;
+            }
+            int damage = Integer.parseInt(data[1]);
+            item = XMaterial.matchXMaterial(material.toUpperCase()).get().parseItem();
+            assert item != null;
+            item.setDurability((short) damage);
+        } catch (NoSuchElementException e2) {
+            e2.printStackTrace();
+            Bukkit.getLogger().severe("Looks like the material " + material + " is invalid!");
+        }
+        return item;
+    }
+
+    public static ItemStack getCustomSkull(String base64) {
         return SkullUtil.makeTextureSkull(base64);
     }
 

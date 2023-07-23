@@ -3,12 +3,15 @@ package me.defender.cosmetics.menu;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.util.MainMenuUtils;
 import me.defender.cosmetics.api.util.SkullUtil;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -27,25 +30,25 @@ public class MainMenu extends InventoryGui {
         String loc = "Main-Menu";
         String langLoc = "cosmetics.main-menu";
         for(String name : config.getConfigurationSection(loc).getKeys(false)) {
-            String material = config.getString(loc + "." + name + ".Material");
+            ItemStack itemStack = ConfigManager.getItemStack(config, config.getString(loc + "." + name + ".item"));
             List<String> lore = Utility.getListLang(player, langLoc + "." + name + ".lore");
             String itemName = Utility.getMSGLang(player, langLoc + "." + name + ".name");
-            String head = config.getString(loc + "." + name + ".Head-Value");
-            int slot = config.getInt(loc + "." + name + ".Slot");
-            short data = (short) config.getInt(loc + "." + name + ".Data");
+            int slot = config.getInt(loc + "." + name + ".slot");
             List<String> lores = MainMenuUtils.formatLore(lore, player);
+            boolean disabled = config.getBoolean(loc + "." + name + ".disabled");
 
-            if(material != null){
-                super.setItem(slot, HCore.itemBuilder(Objects.requireNonNull(XMaterial.matchXMaterial(material).get().parseMaterial())).lores(true, lores).durability(data).name(true, itemName).build(), (e) -> {
+            if(itemStack != null && !disabled){
+                super.setItem(slot, HCore.itemBuilder(itemStack).lores(true, lores).name(true, itemName).build(), (e) -> {
                     MainMenuUtils.openMenus((Player) e.getWhoClicked(), name);
                 });
             }
-            if(head != null){
-                super.setItem(slot, HCore.itemBuilder(SkullUtil.makeTextureSkull(head)).name(true, itemName).lores(true, lores).build(), (e) -> {
-                    MainMenuUtils.openMenus((Player) e.getWhoClicked(), name);
-                });
+        }
+        String extrasPath = "Extras.fill-empty.";
+        if(config.getBoolean(extrasPath + "enabled")){
+            ItemStack stack = ConfigManager.getItemStack(config, config.getString(extrasPath + "item"));
+            while (toInventory().firstEmpty() != -1){
+                setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());
             }
-
         }
     }
 }
