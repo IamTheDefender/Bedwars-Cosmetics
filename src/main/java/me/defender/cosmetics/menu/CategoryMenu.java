@@ -99,11 +99,11 @@ public class CategoryMenu extends InventoryGui {
             String formattedName = Utility.getMSGLang(player, "cosmetics." + path + "name");
             List<String> lore = Utility.getListLang(player ,"cosmetics." + path + "lore");
             lore = StringUtils.formatLore(lore, formattedName, price, getItemStatus(player, cosmeticsType, id, price), rarity.getChatColor() + rarity.toString());
-
+            boolean disabled = config.getBoolean(path + "disabled");
             // Items
             ClickableItem item = null;
             List<String> lore1 = new ArrayList<>(lore);
-            if(stack != null) {
+            if(stack != null && !disabled) {
                 String colorCode = "&a";
                 int returnValue = onClick(player, cosmeticsType, price, id, true);
                 if(returnValue == 2){
