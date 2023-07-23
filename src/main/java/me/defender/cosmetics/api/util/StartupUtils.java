@@ -108,7 +108,7 @@ public class StartupUtils
      If the folders do not exist, they will be created.
      */
     public static void createFolders() {
-        File spraysFolder = new File(Utility.plugin().getDataFolder().getPath() + "/Sprays");
+        File spraysFolder = new File(Utility.plugin().getDataFolder().getPath() + "/" + Utility.plugin().getConfig().getString("Spray-Dir"));
         if (!spraysFolder.exists()) {
             spraysFolder.mkdirs();
         }
