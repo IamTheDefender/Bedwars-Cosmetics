@@ -6,12 +6,16 @@ import com.hakan.core.command.executors.placeholder.Placeholder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.configuration.ConfigManager;
+import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.menu.CategoryMenu;
 import me.defender.cosmetics.database.PlayerOwnedData;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,7 +70,21 @@ public class MainMenuUtils {
         Utility.saveIfNotExistsLang("cosmetics.main-menu.Back.name", "&aBack");
         Utility.saveIfNotExistsLang("cosmetics.main-menu.Back.lore", List.of("&7Click to go back!"));
 
-    	}
+        Utility.saveIfNotExistsLang("cosmetics.main-menu.Balance.name", "&6Balance");
+        Utility.saveIfNotExistsLang("cosmetics.main-menu.Balance.lore", List.of("&7Balance: &6%vault_eco_balance_formatted%"));
+
+        List<String> defaultList = new ArrayList<>(List.of("Sprays", "Projectile-Trails", "FinalKill-Effects", "Kill-Messages", "Glyphs", "Bed-Destroys", "Wood-Skins", "Victory-Dances", "Island-Toppers", "ShopKeeperSkins", "Death-Cries", "Back", "Balance"));
+        ConfigManager config = ConfigUtils.getMainConfig();
+        ConfigurationSection section = config.getYml().getConfigurationSection("Main-Menu");
+        if(section != null){
+            for (String key : section.getKeys(false)) {
+                Utility.saveIfNotExistsLang( "cosmetics.main-menu." + key + ".name", "&cName not set!");
+                Utility.saveIfNotExistsLang( "cosmetics.main-menu." + key + ".lore", List.of("&cLore not set!"));
+            }
+        }
+        config.save();
+        config.reload();
+    }
 
 
     public static List<String> formatLore(List<String> lores, Player p){
@@ -98,6 +116,7 @@ public class MainMenuUtils {
                     .map(s -> s.replace("{ownedit}", "&a" + ownedData.getIslandTopper() + "/" + StartupUtils.islandTopperList.size() + " &8(" + ((ownedData.getIslandTopper() / StartupUtils.islandTopperList.size()) * 100) + "%)"))
                     .map(s -> s.replace("{ownedshopkeeper}", "&a" + ownedData.getShopkeeperSkin() + "/" + StartupUtils.shopKeeperSkinList.size() + " &8(" + ((ownedData.getShopkeeperSkin() / StartupUtils.shopKeeperSkinList.size()) * 100) + "%)"))
                     .map(s -> s.replace("{owneddc}", "&a" + ownedData.getDeathCry() + "/" + StartupUtils.deathCryList.size() + " &8(" + ((ownedData.getDeathCry() / StartupUtils.deathCryList.size()) * 100) + "%)"))
+                    .map(s -> PlaceholderAPI.setPlaceholders(p, s))
                     .collect(Collectors.toList());
         }catch (Exception ignored){
             // Cuz I guess only IslandTopper have this issue
