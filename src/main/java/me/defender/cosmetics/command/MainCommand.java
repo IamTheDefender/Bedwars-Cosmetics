@@ -439,7 +439,6 @@ public class MainCommand {
         config.set("cosmetic-preview.cosmetic-location.yaw", location.getYaw());
         config.set("cosmetic-preview.cosmetic-location.pitch", location.getPitch());
         config.save();
-        config.reload();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as preview location.");
     }
 
@@ -462,7 +461,6 @@ public class MainCommand {
         config.set("cosmetic-preview.player-location.yaw", location.getYaw());
         config.set("cosmetic-preview.player-location.pitch", location.getPitch());
         config.save();
-        config.reload();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 }
