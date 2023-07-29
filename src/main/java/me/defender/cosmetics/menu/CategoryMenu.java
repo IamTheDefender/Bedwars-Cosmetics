@@ -252,7 +252,7 @@ public class CategoryMenu extends InventoryGui {
 
         String extrasPath = "Extras.fill-empty.";
         if(config.getBoolean(extrasPath + "enabled")){
-            ItemStack stack = ConfigManager.getItemStack(config.getYml(), config.getString(extrasPath + "item"));
+            ItemStack stack = ConfigManager.getItemStack(config.getYml(), extrasPath + "item");
             while (toInventory().firstEmpty() != -1){
                 setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());
             }
