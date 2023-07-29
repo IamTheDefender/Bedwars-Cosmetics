@@ -9,6 +9,7 @@ import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.MathUtil;
 import me.defender.cosmetics.api.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.trait.LookClose;
@@ -91,7 +92,9 @@ public class TwerkApocalypseDance extends VictoryDance {
         });
 
         HCore.syncScheduler().after(30, TimeUnit.SECONDS).run(() -> {
-            npcs.forEach(NPC::destroy);
+            for (NPC npc : npcs) {
+                npc.despawn(DespawnReason.PLUGIN);
+            }
         });
 
     }
