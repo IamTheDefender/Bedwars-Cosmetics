@@ -67,7 +67,13 @@ public class ShopKeeperHandler implements Listener
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {
                             if (skin.equals(skins.getIdentifier())) {
-                                skins.execute(player, shopLocation, upgradeLocation);
+                                try {
+                                    skins.execute(player, shopLocation, upgradeLocation);
+                                }catch (Exception e){
+                                    if(e instanceof ClassNotFoundException)
+                                    Bukkit.getLogger().severe("Citizens was not found! please install it.");
+
+                                }
                             }
                         }
 
