@@ -1,9 +1,13 @@
 package me.defender.cosmetics.api;
 
 import com.andrei1058.bedwars.api.BedWars;
+import com.hakan.core.HCore;
+import com.zaxxer.hikari.HikariDataSource;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.database.PlayerData;
+import me.defender.cosmetics.database.sqlite.SQLite;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -105,6 +109,8 @@ public class BwcAPI {
                 break;
         }
         Utility.playerDataList.replace(p.getUniqueId(), playerData);
+        // Ran ASYNC
+        HCore.asyncScheduler().run(playerData::save);
     }
 
     /**

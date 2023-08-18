@@ -14,5 +14,8 @@ public class CosmeticPurchaseListener implements Listener {
             return;
         PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(e.getPlayer().getUniqueId());
         ownedData.updateOwned();
+
+        // Save the data
+
     }
 }
