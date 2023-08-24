@@ -96,6 +96,8 @@ public class Placeholders extends PlaceholderExpansion {
                 return StartupUtils.deathCryList.size() + "";
             case "total_finalkill":
                 return StartupUtils.finalKillList.size() + "";
+            case "total_shopkeeper":
+                return StartupUtils.shopKeeperSkinList.size() + "";
             case "total_ws":
                 return StartupUtils.woodSkinsList.size() + "";
             case "total_km":
