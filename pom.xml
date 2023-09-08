@@ -155,7 +155,7 @@
         <dependency>
             <groupId>com.github.hakan-krgn.hCore</groupId>
             <artifactId>hCore-bukkit</artifactId>
-            <version>0.7.0.3</version>
+            <version>0.7.2.0</version>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
