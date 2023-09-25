@@ -13,6 +13,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.trait.PlayerFilter;
 import net.citizensnpcs.trait.HologramTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
@@ -113,10 +114,14 @@ public class ShopKeeperSkinsUtils {
         // Shop NPC
         NPC npc = registry.createNPC(EntityType.PLAYER, "");
         npc.setName("&r");
-        npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-        npc.getTrait(SkinTrait.class).setTexture(value, sign);
-       npc.getTrait(LookClose.class).lookClose(true);
+        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
+        npc.getOrAddTrait(SkinTrait.class).setTexture(value, sign);
+        npc.getOrAddTrait(LookClose.class).lookClose(true);
         npc.getOrAddTrait(HologramTrait.class).clear();
+
+        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
+        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
 
