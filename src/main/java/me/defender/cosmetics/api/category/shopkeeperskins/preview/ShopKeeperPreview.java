@@ -10,10 +10,17 @@ import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.Utility;
+import net.minecraft.server.v1_8_R3.PacketPlayOutCamera;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,8 +36,7 @@ public class ShopKeeperPreview {
                 }
             }
         }
-        Location beforeLocation = player.getLocation();
-        float walkSpeed = player.getWalkSpeed();
+        Location beforeLocation = player.getLocation().clone();
         player.closeInventory();
         Location cosmeticLocation = null, playerLocation = null;
 
@@ -46,15 +52,40 @@ public class ShopKeeperPreview {
 
         Location finalPlayerLocation = playerLocation;
         Location finalCosmeticLocation = cosmeticLocation;
-        HCore.syncScheduler().run(() -> {
-            player.teleport(finalPlayerLocation);
-            ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation, selected);
-            player.setWalkSpeed(0);
-        });
+
+        ArmorStand as = (ArmorStand) player.getWorld().spawnEntity(finalPlayerLocation, EntityType.ARMOR_STAND);
+        as.setVisible(false);
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
+                Integer.MAX_VALUE, 2));
+
+        for (Player player1 : Bukkit.getOnlinePlayers()) {
+            if (player1.equals(player)) continue;
+
+            player1.hidePlayer(player);
+        }
+
+        CraftPlayer craftPlayer = (CraftPlayer)player;
+
+        PacketPlayOutCamera cameraPacket = new PacketPlayOutCamera(((CraftArmorStand) as).getHandle());
+        PacketPlayOutCamera resetPacket = new PacketPlayOutCamera(craftPlayer.getHandle());
+        craftPlayer.getHandle().playerConnection.sendPacket(cameraPacket);
+
+        ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation, selected);
 
         HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
+            if (!as.isDead()) as.remove();
+
+            craftPlayer.getHandle().playerConnection.sendPacket(resetPacket);
+            player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
-            player.setWalkSpeed(walkSpeed);
+
+            for (Player player1 : Bukkit.getOnlinePlayers()) {
+                if (player1.equals(player)) continue;
+
+                player1.showPlayer(player);
+            }
+
             gui.open(player);
         });
     }
