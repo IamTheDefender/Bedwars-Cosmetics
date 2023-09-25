@@ -45,12 +45,16 @@ public class ShopKeeperSkinsUtils {
     /**
      * This creates an entity NPC but with a timer.
      * */
-    private static void createEntityNPC(final EntityType ent, final Location loc, int ticks) {
+    private static void createEntityNPC(final Player p,final EntityType ent, final Location loc, int ticks) {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
         npc.getOrAddTrait(LookClose.class).lookClose(true);
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
+
+        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
+        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+
         npc.spawn(loc);
 
         new BukkitRunnable() {
@@ -204,7 +208,7 @@ public class ShopKeeperSkinsUtils {
             return;
         }
         if(etype != null) {
-            createEntityNPC(EntityType.valueOf(etype), loc, 5);
+            createEntityNPC(p, EntityType.valueOf(etype), loc, 5);
         }else if(skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, skinvalue, skinsign, false, 5);
         }
