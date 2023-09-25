@@ -1,0 +1,27 @@
+Debug: false
+BackItemInCosmeticsMenu: true
+Final-Kill-Suffix: "&b&lFINAL KILL!"
+# plugins/BW1058-Cosmetics/Sprays
+Spray-Dir: "Sprays"
+mysql:
+  enable: false
+  host: "localhost"
+  port: "3306"
+  database: "name"
+  username: "root"
+  password: "none"
+cosmetic-preview:
+  cosmetic-location:
+    world:
+    x:
+    y:
+    z:
+    yaw:
+    pitch:
+  player-location:
+    world:
+    x:
+    y:
+    z:
+    yaw:
+    pitch:
