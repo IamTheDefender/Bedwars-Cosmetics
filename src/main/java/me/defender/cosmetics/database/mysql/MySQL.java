@@ -32,12 +32,21 @@ public class MySQL {
             String username = plugin.getConfig().getString("mysql.username");
             String password = plugin.getConfig().getString("mysql.password");
             int port = plugin.getConfig().getInt("mysql.port", 3306);
+            int poolsize = plugin.getConfig().getInt("mysql.poolsize");
 
             HikariConfig config = new HikariConfig();
+
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
+            config.setMaximumPoolSize(poolsize);
+            config.setMaxLifetime(1800000);
             config.setUsername(username);
             config.setPassword(password);
+            config.addDataSourceProperty("characterEncoding", "utf8");
+            config.addDataSourceProperty("encoding", "UTF-8");
+            config.addDataSourceProperty("useUnicode", "true");
+            config.addDataSourceProperty("rewriteBatchedStatements", "true");
+            config.addDataSourceProperty("jdbcCompliantTruncation", "false");
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -55,6 +64,7 @@ public class MySQL {
     public void createTable(){
         if(dataSource != null){
             try {
+                connection = dataSource.getConnection();
                 Statement statement = connection.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS cosmetics_player_data (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
