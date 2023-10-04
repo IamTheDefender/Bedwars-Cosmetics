@@ -41,5 +41,3 @@ public class GlyphHandler implements Listener {
 		}
 	}
 }
-
-

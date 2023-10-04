@@ -9,22 +9,32 @@ import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsU
 import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
-import me.defender.cosmetics.api.util.Utility;
 import net.minecraft.server.v1_8_R3.PacketPlayOutCamera;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static me.defender.cosmetics.api.util.StartupUtils.getCosmeticLocation;
+import static me.defender.cosmetics.api.util.StartupUtils.getPlayerLocation;
+
 public class ShopKeeperPreview {
+
+    private final Map<UUID, Map<Integer, org.bukkit.inventory.ItemStack>> inventories = new HashMap<>();
+
 
     public void sendPreviewShopKeeperSkin(Player player, String selected, InventoryGui gui){
         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
@@ -36,7 +46,24 @@ public class ShopKeeperPreview {
                 }
             }
         }
+
+        UUID playerUUID = player.getUniqueId();
+
         Location beforeLocation = player.getLocation().clone();
+        Inventory playerInv = player.getInventory();
+        if (!inventories.containsKey(playerUUID)) inventories.put(playerUUID, new HashMap<>());
+
+        Map<Integer, ItemStack> items = inventories.get(playerUUID);
+
+        for (int i = 0; i < playerInv.getSize(); i++) {
+            if (playerInv.getItem(i) == null) continue;
+            if (playerInv.getItem(i).getType() == null) continue;
+            if (playerInv.getItem(i).getType() == Material.AIR) continue;
+
+            items.put(i, playerInv.getItem(i));
+        }
+
+        playerInv.clear();
         player.closeInventory();
         Location cosmeticLocation = null, playerLocation = null;
 
@@ -50,14 +77,14 @@ public class ShopKeeperPreview {
 
         if(cosmeticLocation == null || playerLocation == null) return;
 
-        Location finalPlayerLocation = playerLocation;
-        Location finalCosmeticLocation = cosmeticLocation;
+        final Location finalPlayerLocation = playerLocation;
+        final Location finalCosmeticLocation = cosmeticLocation;
 
         ArmorStand as = (ArmorStand) player.getWorld().spawnEntity(finalPlayerLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
-                Integer.MAX_VALUE, 2));
+                100, 2));
 
         for (Player player1 : Bukkit.getOnlinePlayers()) {
             if (player1.equals(player)) continue;
@@ -86,29 +113,11 @@ public class ShopKeeperPreview {
                 player1.showPlayer(player);
             }
 
+            for (Map.Entry<Integer, ItemStack> entry: items.entrySet()) {
+                playerInv.setItem(entry.getKey(), entry.getValue());
+            }
+
             gui.open(player);
         });
-    }
-
-    private Location getCosmeticLocation() {
-        World world = Bukkit.getWorld(Utility.plugin().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
-        double x = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");
-        double y = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.y");
-        double z = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.z");
-        float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.yaw");
-        float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.pitch");
-
-        return new Location(world, x, y, z, yaw, pitch);
-    }
-
-    private Location getPlayerLocation() {
-        World world = Bukkit.getWorld(Utility.plugin().getConfig().getString("cosmetic-preview.player-location.world"));
-        double x = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.x");
-        double y = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.y");
-        double z = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.z");
-        float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.yaw");
-        float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.pitch");
-
-        return new Location(world, x, y, z, yaw, pitch);
     }
 }
