@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class glyphUtil
 {
     
-    public static void sendglyphs(File file, Location loc) {
+    public static void sendGlyphs(File file, Location loc) {
         BufferedImage image = null;
         try {
             image = ImageIO.read(file);

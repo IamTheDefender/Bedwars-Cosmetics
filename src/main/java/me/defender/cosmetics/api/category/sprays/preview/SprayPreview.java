@@ -122,7 +122,7 @@ public class SprayPreview {
             PacketPlayOutEntityDestroy itemFrameDestroyPacket = new PacketPlayOutEntityDestroy(currentID);
             sendPacket(player, itemFrameDestroyPacket);
 
-            craftPlayer.getHandle().playerConnection.sendPacket(resetPacket);
+            sendPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
