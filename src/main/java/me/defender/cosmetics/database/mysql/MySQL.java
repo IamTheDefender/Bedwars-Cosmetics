@@ -32,13 +32,13 @@ public class MySQL {
             String username = plugin.getConfig().getString("mysql.username");
             String password = plugin.getConfig().getString("mysql.password");
             int port = plugin.getConfig().getInt("mysql.port", 3306);
-            int poolsize = plugin.getConfig().getInt("mysql.poolsize");
+            int maxpoolsize = plugin.getConfig().getInt("mysql.maxpoolsize", 50);
 
             HikariConfig config = new HikariConfig();
 
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database);
-            config.setMaximumPoolSize(poolsize);
+            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" );
+            config.setMaximumPoolSize(maxpoolsize);
             config.setMaxLifetime(1800000);
             config.setUsername(username);
             config.setPassword(password);
