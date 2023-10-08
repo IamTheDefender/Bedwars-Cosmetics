@@ -6,11 +6,11 @@ Spray-Dir: "Sprays"
 mysql:
   enable: false
   host: "localhost"
-  port: "3306"
+  port: 3306
   database: "name"
   username: "root"
   password: "none"
-  poolsize: "50"
+  maxpoolsize: 50
 cosmetic-preview:
   cosmetic-location:
     world:
