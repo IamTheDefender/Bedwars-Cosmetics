@@ -38,6 +38,7 @@ public class MySQL {
 
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" );
+            config.setPoolName("BW1058Cosmetics-MySQLPool");
             config.setMaximumPoolSize(maxpoolsize);
             config.setMaxLifetime(1800000);
             config.setUsername(username);
