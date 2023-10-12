@@ -9,6 +9,7 @@ import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.deathcries.preview.DeathCryPreview;
 import me.defender.cosmetics.api.category.glyphs.preview.GlyphPreview;
+import me.defender.cosmetics.api.category.islandtoppers.preview.IslandTopperPreview;
 import me.defender.cosmetics.api.category.killmessage.preview.KillMessagePreview;
 import me.defender.cosmetics.api.category.shopkeeperskins.preview.ShopKeeperPreview;
 import me.defender.cosmetics.api.category.sprays.preview.SprayPreview;
@@ -348,6 +349,9 @@ public class CategoryMenu extends InventoryGui {
                 break;
             case Glyphs:
                 new GlyphPreview().sendPreviewGlyph(player, id, this);
+                break;
+            case IslandTopper:
+                new IslandTopperPreview().sendIslandTopperPreview(player, id, this);
                 break;
             default:
                 onClick(player,type, price, id, false);
