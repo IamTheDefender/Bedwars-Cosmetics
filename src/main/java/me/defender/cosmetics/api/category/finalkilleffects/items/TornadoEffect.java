@@ -1,14 +1,21 @@
 package me.defender.cosmetics.api.category.finalkilleffects.items;
 
+import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.arena.IArena;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
+import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.Packet;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,9 +61,8 @@ public class TornadoEffect extends FinalKillEffect {
     }
 
     @Override
-    public void execute(Player killer, Player victim) {
-        Location loc = victim.getLocation();
-        XSound.ENTITY_GENERIC_EXPLODE.play(loc, 1.0f, 1.0f);
+    public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
+        XSound.ENTITY_GENERIC_EXPLODE.play(location, 1.0f, 1.0f);
         new BukkitRunnable() {
             int angle = 0;
 
@@ -69,11 +75,15 @@ public class TornadoEffect extends FinalKillEffect {
                 for (int l = 0; l < lines; ++l) {
                     for (double y = 0.0; y < max_height; y += height_increasement) {
                         final double radius = y * radius_increasement;
-                        final double x = Math.cos(Math.toRadians(360 / lines * l + y * 30.0 - this.angle)) * radius;
-                        final double z = Math.sin(Math.toRadians(360 / lines * l + y * 30.0 - this.angle)) * radius;
+                        final double x = Math.cos(Math.toRadians((double) 360 / lines * l + y * 30.0 - this.angle)) * radius;
+                        final double z = Math.sin(Math.toRadians((double) 360 / lines * l + y * 30.0 - this.angle)) * radius;
                         Particle particle = new Particle(ParticleType.CLOUD, 1, 0.01f, new Vector(0.0f, 0.0f, 0.0f));
-                        HCore.playParticle(loc.clone().add(x, y, z), particle);
 
+                        if (onlyVictim) {
+                            HCore.playParticle(victim, location.clone().add(x, y, z), particle);
+                        } else {
+                            HCore.playParticle(location.clone().add(x, y, z), particle);
+                        }
                     }
                 }
                 ++this.angle;

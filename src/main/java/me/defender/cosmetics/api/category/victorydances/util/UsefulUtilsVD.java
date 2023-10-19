@@ -2,18 +2,26 @@
 
 package me.defender.cosmetics.api.category.victorydances.util;
 
+import com.hakan.core.HCore;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import me.defender.cosmetics.api.util.CuboidUtil;
+import me.defender.cosmetics.api.util.StartupUtils;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
@@ -22,6 +30,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+
+import static me.defender.cosmetics.api.util.Utility.plugin;
 
 public class UsefulUtilsVD
 {
@@ -46,7 +56,7 @@ public class UsefulUtilsVD
     }
     
     public static List<Location> generateSphere(final Location centerBlock, final int radius, final boolean hollow) {
-        final List<Location> circleBlocks = new ArrayList<Location>();
+        final List<Location> circleBlocks = new ArrayList<>();
         final int bx = centerBlock.getBlockX();
         final int by = centerBlock.getBlockY();
         final int bz = centerBlock.getBlockZ();
@@ -64,16 +74,94 @@ public class UsefulUtilsVD
         return circleBlocks;
     }
     
-    public static void spawnFireWorks(final Player p, final int amount, final Color color1, final Color color2, final Location loc) {
-        final Firework fw = (Firework)loc.getWorld().spawnEntity(loc.subtract(0.0, 1.0, 0.0), EntityType.FIREWORK);
-        final FireworkMeta fwm = fw.getFireworkMeta();
-        fwm.addEffect(FireworkEffect.builder().withColor(color1).trail(false).flicker(true).build());
-        fwm.addEffect(FireworkEffect.builder().withColor(color2).trail(false).flicker(true).build());
-        fw.setFireworkMeta(fwm);
-        fw.detonate();
-        for (int i = 0; i < amount; ++i) {
-            final Firework fw2 = (Firework)loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-            fw2.setFireworkMeta(fwm);
+    public static void spawnFireWorks(final Player p, final int amount, final Color color1, final Color color2, final Location loc, boolean preview) {
+        if (!preview) {
+            final Firework fw = (Firework)loc.getWorld().spawnEntity(loc.subtract(0.0, 1.0, 0.0), EntityType.FIREWORK);
+            final FireworkMeta fwm = fw.getFireworkMeta();
+            fwm.addEffect(FireworkEffect.builder().withColor(color1).trail(false).flicker(true).build());
+            fwm.addEffect(FireworkEffect.builder().withColor(color2).trail(false).flicker(true).build());
+            fw.setFireworkMeta(fwm);
+            fw.detonate();
+            for (int i = 0; i < amount; ++i) {
+                final Firework fw2 = (Firework)loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
+                fw2.setFireworkMeta(fwm);
+            }
+        } else {
+//            Location toSpawn = StartupUtils.getCosmeticLocation();
+            List<Integer> ids = new ArrayList<>();
+
+            ItemStack stackFirework = new ItemStack(Material.FIREWORK);
+            FireworkMeta fireworkMeta = (FireworkMeta) stackFirework.getItemMeta();
+            fireworkMeta.addEffect(FireworkEffect.builder().withColor(color1).trail(false).flicker(true).build());
+            fireworkMeta.addEffect(FireworkEffect.builder().withColor(color2).trail(false).flicker(true).build());
+            fireworkMeta.setPower(1);
+            stackFirework.setItemMeta(fireworkMeta);
+
+            EntityFireworks fw = new EntityFireworks(
+                    ((CraftWorld) loc.getWorld()).getHandle(),
+                    loc.getX(),
+                    loc.getY(),
+                    loc.getZ(),
+                    CraftItemStack.asNMSCopy(stackFirework));
+
+            fw.expectedLifespan = 0;
+
+            PacketPlayOutSpawnEntity spawnFwPacket =
+                    new PacketPlayOutSpawnEntity(fw, 76);
+            PacketPlayOutEntityMetadata metaDataPacket =
+                    new PacketPlayOutEntityMetadata(fw.getId(), fw.getDataWatcher(), true);
+//            PacketPlayOutEntityStatus statusPacket =
+//                    new PacketPlayOutEntityStatus(fw, (byte) 17);
+
+            HCore.sendPacket(p, spawnFwPacket);
+            HCore.sendPacket(p, metaDataPacket);
+//            HCore.sendPacket(p, statusPacket);
+            ids.add(fw.getId());
+
+            for (int i = 0; i < amount; ++i) {
+                final EntityFireworks fw2 = new EntityFireworks(
+                        ((CraftWorld) loc.getWorld()).getHandle(),
+                        loc.getX(),
+                        loc.getY(),
+                        loc.getZ(),
+                        CraftItemStack.asNMSCopy(stackFirework));
+
+                PacketPlayOutSpawnEntity spawnFw2Packet =
+                        new PacketPlayOutSpawnEntity(fw2, 76);
+                PacketPlayOutEntityMetadata metaData2Packet =
+                        new PacketPlayOutEntityMetadata(fw2.getId(), fw2.getDataWatcher(), true);
+//                PacketPlayOutEntityStatus status2Packet =
+//                        new PacketPlayOutEntityStatus(fw2, (byte) 17);
+
+                HCore.sendPacket(p, spawnFw2Packet);
+                HCore.sendPacket(p, metaData2Packet);
+//                HCore.sendPacket(p, status2Packet);
+                ids.add(fw2.getId());
+            }
+
+            new BukkitRunnable() {
+                int index = 0;
+                @Override
+                public void run() {
+
+                    if (index >= ids.size()) {
+                        cancel();
+                        return;
+                    }
+
+                    PacketPlayOutEntityStatus statusPacket =
+                        new PacketPlayOutEntityStatus(fw, (byte) 17);
+
+                    HCore.sendPacket(p, statusPacket);
+
+                    PacketPlayOutEntityDestroy destroyPacket =
+                            new PacketPlayOutEntityDestroy(ids.get(index));
+
+                    HCore.sendPacket(p, destroyPacket);
+
+                    index++;
+                }
+            }.runTaskTimer(plugin(), 18L, 0L);
         }
     }
     
@@ -105,7 +193,7 @@ public class UsefulUtilsVD
         GameProfile profile = new GameProfile(UUID.randomUUID(), "");
         profile.getProperties().put("textures", new Property("textures", value));
         meta.setDisplayName(name);
-        Field profileField = null;
+        Field profileField;
         try {
             profileField = meta.getClass().getDeclaredField("profile");
             profileField.setAccessible(true);

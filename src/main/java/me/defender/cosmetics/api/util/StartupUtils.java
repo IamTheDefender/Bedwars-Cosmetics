@@ -304,7 +304,11 @@ public class StartupUtils
         float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.yaw");
         float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.pitch");
 
-        return new Location(world, x, y, z, yaw, pitch);
+        Location location = new Location(world, x, y, z, yaw, pitch);
+        location.setX(location.getBlockX() + 0.5);
+        location.setZ(location.getBlockZ() + 0.5);
+
+        return location;
     }
 
     public static Location getPlayerLocation() {
@@ -315,6 +319,10 @@ public class StartupUtils
         float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.yaw");
         float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.pitch");
 
-        return new Location(world, x, y, z, yaw, pitch);
+        Location location = new Location(world, x, y, z, yaw, pitch);
+        location.setX(location.getBlockX() + 0.5);
+        location.setZ(location.getBlockZ() + 0.5);
+
+        return location;
     }
 }

@@ -8,6 +8,7 @@ import com.hakan.core.ui.inventory.pagination.Pagination;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.deathcries.preview.DeathCryPreview;
+import me.defender.cosmetics.api.category.finalkilleffects.preview.FinalKillEffectPreview;
 import me.defender.cosmetics.api.category.glyphs.preview.GlyphPreview;
 import me.defender.cosmetics.api.category.islandtoppers.preview.IslandTopperPreview;
 import me.defender.cosmetics.api.category.killmessage.preview.KillMessagePreview;
@@ -352,6 +353,9 @@ public class CategoryMenu extends InventoryGui {
                 break;
             case IslandTopper:
                 new IslandTopperPreview().sendIslandTopperPreview(player, id, this);
+                break;
+            case FinalKillEffects:
+                new FinalKillEffectPreview().sendPreviewKillEffect(player, id, this);
                 break;
             default:
                 onClick(player,type, price, id, false);

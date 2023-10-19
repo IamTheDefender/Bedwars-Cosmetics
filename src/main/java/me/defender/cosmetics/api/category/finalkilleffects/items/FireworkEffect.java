@@ -5,6 +5,7 @@ import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,7 +49,7 @@ public class FireworkEffect extends FinalKillEffect {
     }
 
     @Override
-    public void execute(Player killer, Player victim) {
-        UsefulUtilsVD.spawnFireWorks(victim, 1, Color.RED, Color.GREEN, victim.getLocation());
+    public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
+        UsefulUtilsVD.spawnFireWorks(victim, 1, Color.RED, Color.GREEN, location, onlyVictim);
     }
 }

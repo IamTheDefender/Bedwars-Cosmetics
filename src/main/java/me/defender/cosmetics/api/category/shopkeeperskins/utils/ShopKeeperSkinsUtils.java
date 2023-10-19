@@ -49,7 +49,6 @@ public class ShopKeeperSkinsUtils {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
-        npc.getOrAddTrait(LookClose.class).lookClose(true);
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
 
         npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
@@ -120,7 +119,6 @@ public class ShopKeeperSkinsUtils {
         npc.setName("&r");
         npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
         npc.getOrAddTrait(SkinTrait.class).setTexture(value, sign);
-        npc.getOrAddTrait(LookClose.class).lookClose(true);
         npc.getOrAddTrait(HologramTrait.class).clear();
 
         npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
