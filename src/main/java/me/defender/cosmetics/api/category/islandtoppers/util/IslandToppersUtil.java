@@ -43,9 +43,8 @@ public class IslandToppersUtil
                     clipboard.setOrigin(new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()));
                     // Paste the schematic
                     clipboard.paste(editSession, new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()), true);
-
                 }
-                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

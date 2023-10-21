@@ -32,7 +32,7 @@ public class FinalKillEffectHandler implements Listener {
         for(FinalKillEffect finalKillEffects : StartupUtils.finalKillList){
             if(selected.equals(finalKillEffects.getIdentifier())){
                 if(finalKillEffects.getField(FieldsType.RARITY, e.getKiller()) == RarityType.NONE) return;
-                finalKillEffects.execute(e.getKiller(), e.getVictim());
+                finalKillEffects.execute(e.getKiller(), e.getVictim(), e.getVictim().getLocation(), false);
             }
         }
         DebugUtil.addMessage("Playing " + selected + " Final Kill Effect for " + e.getKiller().getDisplayName());

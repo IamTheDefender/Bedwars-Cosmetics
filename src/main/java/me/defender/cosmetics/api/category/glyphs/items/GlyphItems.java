@@ -70,7 +70,7 @@ public class GlyphItems {
                     String fileLocation = config.getString(path + "file");
                     File file = new File(Utility.plugin().getDataFolder().getPath() + "/Glyphs/" + fileLocation);
                     HCore.asyncScheduler().every(500, TimeUnit.MILLISECONDS).limit(10).run(()-> {
-                        glyphUtil.sendglyphs(player, file, location);
+                        glyphUtil.sendGlyphs(file, location);
                             });
                 }
             };

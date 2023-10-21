@@ -49,6 +49,7 @@ public class Cosmetics extends JavaPlugin
         }
     }
 
+
     @Override
     public void onEnable() {
         if(!StartupUtils.checkDependencies()){

@@ -19,7 +19,7 @@ public class ImageParticles
     private final int clearence;
 
     public ImageParticles(final BufferedImage image, final int scanQuality) {
-        this.particles = new HashMap<Vector, Color>();
+        this.particles = new HashMap<>();
         this.anchor = new Vector(0, 0, 0);
         this.ratio = 0.1;
         this.clearence = 100;
