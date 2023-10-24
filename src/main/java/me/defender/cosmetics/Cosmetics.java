@@ -4,6 +4,7 @@ package me.defender.cosmetics;
 import com.hakan.core.HCore;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import lombok.Setter;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.util.StartupUtils;
@@ -13,6 +14,7 @@ import me.defender.cosmetics.api.configuration.DefaultsUtils;
 import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.command.MainCommand;
 import me.defender.cosmetics.config.MainMenuData;
+import me.defender.cosmetics.database.IDatabase;
 import me.defender.cosmetics.database.PlayerData;
 import me.defender.cosmetics.database.PlayerOwnedData;
 import me.defender.cosmetics.database.mysql.MySQL;
@@ -27,6 +29,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Cosmetics extends JavaPlugin
 {
@@ -35,7 +38,10 @@ public class Cosmetics extends JavaPlugin
     @Getter
     public static Connection dbConnection;
     public boolean dependenciesMissing = false;
+    @Getter @Setter
     static boolean placeholderAPI;
+    @Getter
+    private IDatabase database;
 
     public static void downloadFile(URL url, String filePath) {
         try {
@@ -84,11 +90,13 @@ public class Cosmetics extends JavaPlugin
             getLogger().info("Loading MySQL database..");
             MySQL mySQL = new MySQL(this);
             db = mySQL.dataSource;
+            database = mySQL;
             dbConnection = mySQL.getConnection();
         }else{
             getLogger().info("Loading SQLite database..");
             SQLite sqLite = new SQLite(this);
             db = sqLite.dataSource;
+            database = sqLite;
             dbConnection = sqLite.getConnection();
         }
 
@@ -115,6 +123,14 @@ public class Cosmetics extends JavaPlugin
         getLogger().info("Addon have been loaded and enabled!");
         // This is a check to make sure victory dance config doesn't have any issues.
         VictoryDance.getDefault(null);
+
+        HCore.asyncScheduler().every(5, TimeUnit.SECONDS).run(() -> {
+            try{
+                db.getConnection();
+            }catch (Exception e){
+                database.connect();
+            }
+        });
 
     }
 
@@ -146,11 +162,4 @@ public class Cosmetics extends JavaPlugin
         return db;
     }
 
-    public static boolean isPlaceholderAPI() {
-        return placeholderAPI;
-    }
-
-    public static void setPlaceholderAPI(boolean placeholderAPI) {
-        Cosmetics.placeholderAPI = placeholderAPI;
-    }
 }
