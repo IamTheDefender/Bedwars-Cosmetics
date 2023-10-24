@@ -56,10 +56,10 @@ public class FireworksDance extends VictoryDance {
             public void run() {
                 if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
                     final Location loc = winner.getEyeLocation();
-                    UsefulUtilsVD.spawnFireWorks(winner, 1, Color.RED, Color.BLUE, loc);
+                    UsefulUtilsVD.spawnFireWorks(winner, 1, Color.RED, Color.BLUE, loc, false);
                     new BukkitRunnable() {
                         public void run() {
-                            UsefulUtilsVD.spawnFireWorks(winner, 1, Color.ORANGE, Color.YELLOW, loc);
+                            UsefulUtilsVD.spawnFireWorks(winner, 1, Color.ORANGE, Color.YELLOW, loc, false);
                         }
                     }.runTaskLater(Utility.plugin(), 300L);
                 }

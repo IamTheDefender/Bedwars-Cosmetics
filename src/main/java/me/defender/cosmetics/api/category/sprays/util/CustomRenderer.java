@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class CustomRenderer extends MapRenderer
 {
@@ -31,10 +32,11 @@ public class CustomRenderer extends MapRenderer
     }
     
     public boolean load(String url) {
-        BufferedImage image = null;
+        BufferedImage image;
         try {
             image = ImageIO.read(new URL(url));
             image = MapPalette.resizeImage(image);
+            Logger.getLogger("successfully loaded image! " + image);
         }
         catch (final IOException e) {
             e.printStackTrace();
@@ -44,7 +46,7 @@ public class CustomRenderer extends MapRenderer
         return true;
     }
     public boolean load(File file) {
-        BufferedImage image = null;
+        BufferedImage image;
         try {
             image = ImageIO.read(file);
             image = MapPalette.resizeImage(image);
@@ -63,5 +65,9 @@ public class CustomRenderer extends MapRenderer
         }
         canvas.drawImage(0, 0, this.image);
         this.done = true;
+    }
+
+    public BufferedImage getBufferedImage(){
+        return image;
     }
 }

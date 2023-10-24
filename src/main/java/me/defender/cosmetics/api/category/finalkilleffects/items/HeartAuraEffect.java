@@ -51,16 +51,29 @@ public class HeartAuraEffect extends FinalKillEffect {
     }
 
     @Override
-    public void execute(Player killer, Player victim) {
-        Location loc = victim.getLocation();
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.1f, 0.0f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.2f, 0.0f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.3f, 0.1f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.4f, 0.3f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.4f, 0.5f, 0.0f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.1f, 0.0f, 0.0f)));
-        HCore.playParticle(loc, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.2f, 0.3f, 0.0f)));
+    public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
+        sendParticles(victim, location, onlyVictim);
+    }
 
+    private void sendParticles(Player victim, Location location, boolean onlyVictim) {
+        if (!onlyVictim) {
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.1f, 0.0f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.2f, 0.0f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.3f, 0.1f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.4f, 0.3f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.4f, 0.5f, 0.0f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.1f, 0.0f, 0.0f)));
+            HCore.playParticle(location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.2f, 0.3f, 0.0f)));
+        } else {
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.1f, 0.0f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.2f, 0.0f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.3f, 0.1f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.0f, 0.4f, 0.3f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.4f, 0.5f, 0.0f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.1f, 0.0f, 0.0f)));
+            HCore.playParticle(victim, location, new Particle(ParticleType.HEART, 100, 0.01, new Vector(0.2f, 0.3f, 0.0f)));
+        }
     }
 }

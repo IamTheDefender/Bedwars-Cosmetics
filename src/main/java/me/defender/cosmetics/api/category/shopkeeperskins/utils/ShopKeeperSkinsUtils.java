@@ -13,6 +13,7 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.trait.trait.PlayerFilter;
 import net.citizensnpcs.trait.HologramTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
@@ -44,12 +45,15 @@ public class ShopKeeperSkinsUtils {
     /**
      * This creates an entity NPC but with a timer.
      * */
-    private static void createEntityNPC(final EntityType ent, final Location loc, int ticks) {
+    private static void createEntityNPC(final Player p,final EntityType ent, final Location loc, int ticks) {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
-        npc.getOrAddTrait(LookClose.class).lookClose(true);
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
+
+        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
+        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+
         npc.spawn(loc);
 
         new BukkitRunnable() {
@@ -113,10 +117,13 @@ public class ShopKeeperSkinsUtils {
         // Shop NPC
         NPC npc = registry.createNPC(EntityType.PLAYER, "");
         npc.setName("&r");
-        npc.getTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-        npc.getTrait(SkinTrait.class).setTexture(value, sign);
-       npc.getTrait(LookClose.class).lookClose(true);
+        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
+        npc.getOrAddTrait(SkinTrait.class).setTexture(value, sign);
         npc.getOrAddTrait(HologramTrait.class).clear();
+
+        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
+        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
 
@@ -199,7 +206,7 @@ public class ShopKeeperSkinsUtils {
             return;
         }
         if(etype != null) {
-            createEntityNPC(EntityType.valueOf(etype), loc, 5);
+            createEntityNPC(p, EntityType.valueOf(etype), loc, 5);
         }else if(skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, skinvalue, skinsign, false, 5);
         }

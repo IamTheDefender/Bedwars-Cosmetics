@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class GlyphHandler implements Listener {
 
-	public static HashMap<Location, Integer> glyphs = new HashMap<Location, Integer>();
+	public static HashMap<Location, Integer> glyphs = new HashMap<>();
 
 	@EventHandler
 	public void onGenCollect(PlayerGeneratorCollectEvent e) {
@@ -41,5 +41,3 @@ public class GlyphHandler implements Listener {
 		}
 	}
 }
-
-

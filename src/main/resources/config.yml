@@ -26,3 +26,5 @@ cosmetic-preview:
     z:
     yaw:
     pitch:
+island-topper:
+  order: true

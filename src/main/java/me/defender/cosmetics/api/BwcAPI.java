@@ -137,8 +137,4 @@ public class BwcAPI {
     public Boolean isProxy(){
         return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null;
     }
-
-
-
-
 }

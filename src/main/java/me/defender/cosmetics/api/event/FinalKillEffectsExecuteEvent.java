@@ -1,6 +1,7 @@
 package me.defender.cosmetics.api.event;
 
 import com.andrei1058.bedwars.api.arena.IArena;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -9,10 +10,38 @@ import org.bukkit.event.HandlerList;
 public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
     private Boolean cancelled;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
+    /**
+     * -- GETTER --
+     *  Get the victim.
+     *
+     * @return Player
+     */
+    @Getter
     private Player victim;
+    /**
+     * -- GETTER --
+     *  Get the killer.
+     *
+     * @return Player
+     */
+    @Getter
     private Player killer;
 
+    /**
+     * -- GETTER --
+     *  Get the Arena.
+     *
+     * @return IArena
+     */
+    @Getter
     private IArena arena;
+    /**
+     * -- GETTER --
+     *  Get the selected final kill effect.
+     *
+     * @return String
+     */
+    @Getter
     private String selected;
     public FinalKillEffectsExecuteEvent(Player victim, Player killer, IArena arena, String selected){
         this.cancelled = false;
@@ -21,37 +50,6 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
         this.arena = arena;
         this.selected = selected;
        }
-    /**
-     * Get the Arena.
-     * @return IArena
-     */
-    public IArena getArena() {
-        return arena;
-    }
-
-    /**
-     * Get the selected final kill effect.
-     * @return String
-     */
-    public String getSelected(){
-        return selected;
-    }
-
-    /**
-     * Get the victim.
-     * @return Player
-     */
-    public Player getVictim() {
-        return victim;
-    }
-
-    /**
-     * Get the killer.
-     * @return Player
-     */
-    public Player getKiller() {
-        return killer;
-    }
 
     @Override
     public boolean isCancelled() {

@@ -295,4 +295,34 @@ public class StartupUtils
         new OakLog().register();
         new SpruceLog().register();
     }
+
+    public static Location getCosmeticLocation() {
+        World world = Bukkit.getWorld(Utility.plugin().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
+        double x = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");
+        double y = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.y");
+        double z = Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.z");
+        float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.yaw");
+        float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.cosmetic-location.pitch");
+
+        Location location = new Location(world, x, y, z, yaw, pitch);
+        location.setX(location.getBlockX() + 0.5);
+        location.setZ(location.getBlockZ() + 0.5);
+
+        return location;
+    }
+
+    public static Location getPlayerLocation() {
+        World world = Bukkit.getWorld(Utility.plugin().getConfig().getString("cosmetic-preview.player-location.world"));
+        double x = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.x");
+        double y = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.y");
+        double z = Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.z");
+        float yaw = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.yaw");
+        float pitch = (float) Utility.plugin().getConfig().getDouble("cosmetic-preview.player-location.pitch");
+
+        Location location = new Location(world, x, y, z, yaw, pitch);
+        location.setX(location.getBlockX() + 0.5);
+        location.setZ(location.getBlockZ() + 0.5);
+
+        return location;
+    }
 }

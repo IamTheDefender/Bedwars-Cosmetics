@@ -53,8 +53,7 @@ public class BurningShoesEffect extends FinalKillEffect {
     }
 
     @Override
-    public void execute(Player killer, Player victim) {
-        Location loc = victim.getLocation();
+    public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
         (new BukkitRunnable() {
             double t = 0.0D;
 
@@ -64,11 +63,15 @@ public class BurningShoesEffect extends FinalKillEffect {
                     double x = 0.11D * (12.5D - this.t) * Math.cos(this.t + phi);
                     double y = 0.23D * this.t;
                     double z = 0.11D * (12.5D - this.t) * Math.sin(this.t + phi);
-                    loc.add(x, y, z);
-                    HCore.playParticle(loc, new Particle(ParticleType.CLOUD, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
-                    loc.subtract(x, y, z);
+                    location.add(x, y, z);
+                    if (onlyVictim) {
+                        HCore.playParticle(victim, location, new Particle(ParticleType.FLAME, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
+                    } else {
+                        HCore.playParticle(location, new Particle(ParticleType.FLAME, 100, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
+                    }
+                    location.subtract(x, y, z);
                     if (this.t >= 12.5D) {
-                        loc.add(x, y, z);
+                        location.add(x, y, z);
                         if (phi > Math.PI)
                             cancel();
                     }

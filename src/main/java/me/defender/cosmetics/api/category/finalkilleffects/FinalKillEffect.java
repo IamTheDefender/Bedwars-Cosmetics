@@ -10,6 +10,7 @@ import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +31,7 @@ public abstract class FinalKillEffect extends Cosmetics {
      * @param killer player who killed the victim.
      * @param victim player who was killed.
      */
-    public abstract void execute(Player killer, Player victim);
+    public abstract void execute(Player killer, Player victim, Location location, boolean onlyVictim);
 
     /**
      * Register the final kill effect.
@@ -61,7 +62,7 @@ public abstract class FinalKillEffect extends Cosmetics {
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8Final Kill Effects", ""));
         finalLore.addAll(getLore());
-        finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
+        finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
         StartupUtils.finalKillList.add(this);

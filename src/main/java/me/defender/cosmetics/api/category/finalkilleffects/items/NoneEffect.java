@@ -2,6 +2,7 @@ package me.defender.cosmetics.api.category.finalkilleffects.items;
 
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,7 +46,6 @@ public class NoneEffect extends FinalKillEffect {
     }
 
     @Override
-    public void execute(Player killer, Player victim) {
-
+    public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
     }
 }

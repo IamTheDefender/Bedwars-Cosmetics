@@ -49,7 +49,7 @@ public class ShopKeeperHandler implements Listener
             new BukkitRunnable() {
                 public void run() {
                     for (ITeam team : teams) {
-                        if (team.getMembers().size() == 0) continue; // Skip empty teams
+                        if (team.getMembers().isEmpty()) continue; // Skip empty teams
 
                         Location shopLocation = team.getShop();
                         Location upgradeLocation = team.getTeamUpgrades();
@@ -72,7 +72,6 @@ public class ShopKeeperHandler implements Listener
                                 }catch (Exception e){
                                     if(e instanceof ClassNotFoundException)
                                     Bukkit.getLogger().severe("Citizens was not found! please install it.");
-
                                 }
                             }
                         }
