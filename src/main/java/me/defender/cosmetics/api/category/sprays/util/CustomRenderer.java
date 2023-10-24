@@ -37,6 +37,7 @@ public class CustomRenderer extends MapRenderer
             image = MapPalette.resizeImage(image);
         }
         catch (final IOException e) {
+            e.printStackTrace();
             return false;
         }
         this.image = image;
@@ -49,6 +50,7 @@ public class CustomRenderer extends MapRenderer
             image = MapPalette.resizeImage(image);
         }
         catch (final IOException e) {
+            e.printStackTrace();
             return false;
         }
         this.image = image;
