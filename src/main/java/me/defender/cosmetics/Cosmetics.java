@@ -125,8 +125,8 @@ public class Cosmetics extends JavaPlugin
         VictoryDance.getDefault(null);
 
         HCore.asyncScheduler().every(5, TimeUnit.SECONDS).run(() -> {
-            try{
-                db.getConnection();
+            try (Connection connection = db.getConnection()){
+                connection.createStatement();
             }catch (Exception e){
                 database.connect();
             }
