@@ -2,7 +2,6 @@
 
 package me.defender.cosmetics.api.util;
 
-import com.hakan.core.command.executors.placeholder.Placeholder;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;

@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.category.killmessage;
 
-import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.Cosmetics;
 import me.defender.cosmetics.api.enums.ConfigType;
@@ -98,10 +97,9 @@ public abstract class KillMessage extends Cosmetics {
      * Display the kill message
      *
      * @param player the player to display the kill message
-     * @param killCause the kill cause
      * @return the kill message
      */
-    public abstract String execute(Player player, PlayerKillEvent.PlayerKillCause killCause);
+    public abstract String execute(Player player);
 
 
     /**

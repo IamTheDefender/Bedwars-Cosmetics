@@ -1,5 +1,6 @@
 package me.defender.cosmetics.api.event;
 
+import lombok.Getter;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import org.bukkit.entity.Player;
@@ -12,29 +13,27 @@ public class VictoryDancesExecuteEvent extends Event implements Cancellable {
     private Boolean cancelled;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    /**
+     * -- GETTER --
+     *  Get the player that won the game.
+     *
+     * @return Player
+     */
+    @Getter
     private final Player player;
+    /**
+     * -- GETTER --
+     *  Get the selected victory dance.
+     *
+     * @return String
+     */
+    @Getter
     private final String selected;
 
     public VictoryDancesExecuteEvent(Player winner){
         this.cancelled = false;
         this.player = winner;
         this.selected = new BwcAPI().getSelectedCosmetic(winner, CosmeticsType.VictoryDances);
-    }
-
-    /**
-     * Get the player that won the game.
-     * @return Player
-     */
-    public Player getPlayer() {
-        return player;
-    }
-
-    /**
-     * Get the selected victory dance.
-     * @return String
-     */
-    public String getSelected() {
-        return selected;
     }
 
     @Override

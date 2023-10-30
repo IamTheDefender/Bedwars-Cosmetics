@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.category.killmessage.items;
 
-import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import me.defender.cosmetics.api.category.killmessage.KillMessage;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.enums.RarityType;
@@ -22,6 +21,12 @@ public class KillMessageItems {
         for(String id : section.getKeys(false)){
             String path = CosmeticsType.KillMessage.getSectionKey() + "." + id + ".";
             KillMessage killMessage = new KillMessage() {
+                // Do nothing because API currently doesn't support it
+                @Override
+                public String execute(Player player) {
+                    return null;
+                }
+
                 @Override
                 public ItemStack getItem() {
                     return config.getItemStack(path + "item");
@@ -55,12 +60,6 @@ public class KillMessageItems {
                 @Override
                 public RarityType getRarity() {
                     return RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
-                }
-
-                // Do nothing because API currently doesn't support it
-                @Override
-                public String execute(Player player, PlayerKillEvent.PlayerKillCause killCause) {
-                    return null;
                 }
             };
             killMessage.register();

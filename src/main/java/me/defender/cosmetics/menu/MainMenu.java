@@ -1,22 +1,18 @@
 package me.defender.cosmetics.menu;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.util.MainMenuUtils;
-import me.defender.cosmetics.api.util.SkullUtil;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MainMenu extends InventoryGui {
 

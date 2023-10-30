@@ -1,8 +1,5 @@
-
-
 package me.defender.cosmetics.api.category.killmessage;
 
-import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.killmessage.util.KillMessageUtils;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -11,10 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class KillMessageHandler implements Listener
-{
+public class KillMessageHandler2023 implements Listener {
     @EventHandler
-    public void onPlayerKillByOtherPlayer(PlayerKillEvent e) {
+    public void onPlayerKillByOtherPlayer2023(com.tomkeuper.bedwars.api.events.player.PlayerKillEvent e) {
         if (e.getKiller() == null) return;
         if (e.getVictim() == null) return;
 
@@ -70,9 +66,5 @@ public class KillMessageHandler implements Listener
                 }
                 break;
         }
-
-
-
-
     }
 }

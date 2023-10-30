@@ -54,7 +54,7 @@ public class EggExplosionBedDestroy extends BedDestroy {
     }
 
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
         // Define the center point where the eggs should be spawned
         Location center = bedLocation;
         for (int i = 0; i < MathUtil.getRandom(5, 6); i++) {
@@ -77,6 +77,31 @@ public class EggExplosionBedDestroy extends BedDestroy {
                 egg.remove(); // Remove the egg entity
             });
         }
+    }
 
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
+        // Define the center point where the eggs should be spawned
+        Location center = bedLocation;
+        for (int i = 0; i < MathUtil.getRandom(5, 6); i++) {
+            // Choose a random direction vector
+            Vector direction = new Vector(MathUtil.getRandom(-1, 1), 0, MathUtil.getRandom(-1, 1)).normalize();
+
+            // Spawn an egg entity in the chosen direction
+            Egg egg = player.getWorld().spawn(center, Egg.class);
+            egg.setVelocity(direction.multiply(1.5)); // Make the egg fly faster in the chosen direction
+
+            // Spawn particle effects at the egg's location
+            for (int j = 0; j < 10; j++) {
+                HCore.playParticle(egg.getLocation(), new Particle(ParticleType.SPELL_WITCH, 1, center.toVector()));
+                HCore.playParticle(egg.getLocation(), new Particle(ParticleType.SPELL_INSTANT, 1, center.toVector()));
+            }
+
+            // Schedule a task to run after 5 seconds to spawn a chicken and despawn the egg
+            HCore.syncScheduler().run(() -> {
+                egg.getWorld().spawnEntity(egg.getLocation(), EntityType.CHICKEN); // Spawn a chicken entity
+                egg.remove(); // Remove the egg entity
+            });
+        }
     }
 }

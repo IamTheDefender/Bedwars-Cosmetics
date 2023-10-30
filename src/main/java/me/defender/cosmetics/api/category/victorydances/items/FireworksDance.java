@@ -3,7 +3,7 @@ package me.defender.cosmetics.api.category.victorydances.items;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Color;
@@ -54,7 +54,7 @@ public class FireworksDance extends VictoryDance {
     public void execute(Player winner) {
         new BukkitRunnable() {
             public void run() {
-                if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     final Location loc = winner.getEyeLocation();
                     UsefulUtilsVD.spawnFireWorks(winner, 1, Color.RED, Color.BLUE, loc, false);
                     new BukkitRunnable() {

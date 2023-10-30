@@ -16,9 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class IslandTopperHandler implements Listener {
+public class IslandTopperHandler1058 implements Listener {
     @EventHandler
-    public void onSpawn(GameStateChangeEvent e) {
+    public void onSpawn1058(GameStateChangeEvent e) {
         HCore.syncScheduler().after(20).run((runnable) -> {
             for (ITeam teams : e.getArena().getTeams()) {
                 Player player = null;

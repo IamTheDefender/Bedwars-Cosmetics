@@ -1,7 +1,6 @@
 package me.defender.cosmetics.api.category.bedbreakeffects;
 
 import com.andrei1058.bedwars.api.arena.team.ITeam;
-
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.Cosmetics;
 import me.defender.cosmetics.api.enums.ConfigType;
@@ -36,9 +35,9 @@ public abstract class BedDestroy extends Cosmetics {
      *
      * @param player player who destroyed the bed.
      * @param bedLocation location of the bed.
-     * @param victimTeam team of the player who destroyed the bed.
      */
-    public abstract void execute(Player player, Location bedLocation, ITeam victimTeam);
+    public abstract void execute1058(Player player, Location bedLocation, ITeam victimTeam);
+    public abstract void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam);
 
     /**
      * Register the bed destroy effect.

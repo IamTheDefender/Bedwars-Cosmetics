@@ -28,7 +28,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -47,14 +46,20 @@ import java.util.UUID;
 
 public class MainCommand {
 
+    private Cosmetics plugin;
+
+    public MainCommand(Cosmetics plugin) {
+        this.plugin = plugin;
+    }
+
+
     @SubCommand(
             args = "help",
             permission = "bwcosmetics.help",
             permissionMessage = "§cYou don't have permission to do that!"
     )
     public void helpCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             p.sendMessage(ColorUtil.colored("&7-> &6BedWars1058-Cosmetics Addon &7- &cCommands &7<-"));
             p.sendMessage(" ");
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc reload    &8- &eclick for details", "Reloads the all the YAML's"));
@@ -70,7 +75,8 @@ public class MainCommand {
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc vd    &8- &eclick for details", "Opens the Victory Dance GUI"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc ws    &8- &eclick for details", "Opens the Wood Skins GUI"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc it    &8- &eclick for details", "Opens the Island Toppers GUI"));
-            p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupIslandTopper    &8- &eclick for details", "Set the island topper location for an team in an arena"));
+            p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setIslandTopperPosition" +
+                    "    &8- &eclick for details", "Set the island topper location for an team in an arena"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupPlayerLocation    &8- &eclick for details", "Set the player location for preview"));
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc setupPreviewLocation    &8- &eclick for details", "Set the preview location"));
         } else {
@@ -87,16 +93,29 @@ public class MainCommand {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             p.sendMessage(ColorUtil.colored("&cThis command currently doesn't work! use at your own risk."));
-            new PlayerQuickBuyCache(p);
-            new ShopCache(p.getUniqueId());
-            ShopManager.shop.open(p, PlayerQuickBuyCache.getQuickBuyCache(p.getUniqueId()), true);
+
+            if (!plugin.isBw2023()){
+                new PlayerQuickBuyCache(p);
+                new ShopCache(p.getUniqueId());
+                ShopManager.shop.open(p, PlayerQuickBuyCache.getQuickBuyCache(p.getUniqueId()), true);
+            } else {
+                new com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache(p);
+                new com.tomkeuper.bedwars.shop.ShopCache(p.getUniqueId());
+                com.tomkeuper.bedwars.shop.ShopManager.shop.open(p, com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(p.getUniqueId()), true);
+            }
             p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Utility.plugin(), true));
             HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
                 if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
                     event.getPlayer().removeMetadata("bwc_quickbuy", Utility.plugin());
-                    PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
-                    PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
-                    ShopCache.getShopCache(event.getPlayer().getUniqueId()).destroy();
+                    if (!plugin.isBw2023()) {
+                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
+                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
+                        ShopCache.getShopCache(event.getPlayer().getUniqueId()).destroy();
+                    } else {
+                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
+                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
+                        com.tomkeuper.bedwars.shop.ShopCache.getInstance().getShopCache(event.getPlayer().getUniqueId()).destroy();
+                    }
                 }
             }));
         }else {
@@ -398,26 +417,64 @@ public class MainCommand {
         }
         Player p = (Player) sender;
         BwcAPI api = new BwcAPI();
-        ISetupSession setupSession = api.getBwAPI().getSetupSession(p.getUniqueId());
-        if(setupSession == null){
-            sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
-            return;
+
+        if (!plugin.isBw2023()){
+            ISetupSession setupSession = plugin.getBedWars1058API().getSetupSession(p.getUniqueId());
+
+            if(setupSession == null){
+                sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
+                return;
+            }
+            String teamName = args[1];
+            String configPath = "Team." + teamName;
+            ConfigurationSection section = setupSession.getConfig().getYml().getConfigurationSection("Team." + teamName);
+            if(section == null){
+                sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
+                return;
+            }
+            setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
+            Set<UUID> players = new HashSet<>();
+            for (Player player : Bukkit.getOnlinePlayers()){
+                players.add(player.getUniqueId());
+            }
+            Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
+            ChatColor color;
+            if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
+                color = ChatColor.LIGHT_PURPLE;
+            } else {
+                color = ChatColor.valueOf(teamName.toUpperCase());
+            }
+            hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
+            sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
+        } else {
+            com.tomkeuper.bedwars.api.server.ISetupSession setupSession = plugin.getBedWars2023API().getSetupSession(p.getUniqueId());
+
+            if(setupSession == null){
+                sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
+                return;
+            }
+            String teamName = args[1];
+            String configPath = "Team." + teamName;
+            ConfigurationSection section = setupSession.getConfig().getYml().getConfigurationSection("Team." + teamName);
+            if(section == null){
+                sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
+                return;
+            }
+            setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
+            Set<UUID> players = new HashSet<>();
+            for (Player player : Bukkit.getOnlinePlayers()){
+                players.add(player.getUniqueId());
+            }
+            ChatColor color;
+            if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
+                color = ChatColor.LIGHT_PURPLE;
+            } else {
+                color = ChatColor.valueOf(teamName.toUpperCase());
+            }
+            Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
+            hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
+            sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
         }
-        String teamName = args[1];
-        String configPath = "Team." + teamName;
-        ConfigurationSection section = setupSession.getConfig().getYml().getConfigurationSection("Team." + teamName);
-        if(section == null){
-            sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
-            return;
-        }
-        setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
-        Set<UUID> players = new HashSet<>();
-        for (Player player : Bukkit.getOnlinePlayers()){
-            players.add(player.getUniqueId());
-        }
-        Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
-        hologram.addLine(ChatColor.valueOf(teamName.toUpperCase()) + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
-        sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
     }
 
     @SubCommand(

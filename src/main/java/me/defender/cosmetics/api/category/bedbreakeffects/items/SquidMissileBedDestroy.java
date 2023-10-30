@@ -63,9 +63,43 @@ public class SquidMissileBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
          Squid squid = (Squid) player.getWorld().spawnEntity(bedLocation, EntityType.SQUID);
          ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(bedLocation, EntityType.ARMOR_STAND);
+        stand.setGravity(false);
+        stand.setPassenger(squid);
+        stand.setVisible(false);
+        new BukkitRunnable() {
+            int i1 = 0;
+            public void run() {
+                ++this.i1;
+                squid.getLocation().setYaw(180.0f);
+                stand.eject();
+                stand.teleport(stand.getLocation().add(0.0, 0.5, 0.0));
+                stand.setPassenger(squid);
+                Particle flame = new Particle(ParticleType.FLAME, 1, 0.0f, new Vector(0.0f, 0.0f, 0.0f));
+                HCore.playParticle(player, stand.getLocation(), flame);
+                player.playSound(player.getLocation(), XSound.ENTITY_CHICKEN_EGG.parseSound(), 1.0f, 1.0f);
+                if (this.i1 == 13) {
+                    final Firework fw = stand.getWorld().spawn(stand.getLocation(), Firework.class);
+                    final FireworkMeta fm = fw.getFireworkMeta();
+                    fm.addEffect(FireworkEffect.builder().flicker(true).trail(false).with(FireworkEffect.Type.BALL).withColor(Color.BLACK).withFade(Color.BLACK).build());
+                    fw.setFireworkMeta(fm);
+                }
+                if (this.i1 == 25) {
+                    stand.remove();
+                    squid.remove();
+                    this.i1 = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(Utility.plugin(), 4L, 1L);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
+        Squid squid = (Squid) player.getWorld().spawnEntity(bedLocation, EntityType.SQUID);
+        ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(bedLocation, EntityType.ARMOR_STAND);
         stand.setGravity(false);
         stand.setPassenger(squid);
         stand.setVisible(false);

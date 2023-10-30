@@ -11,6 +11,7 @@ import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.util.StartupUtils;
+import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 
-public class WoodSkinHandler implements Listener
+public class WoodSkinHandler1058 implements Listener
 {
 
 	@EventHandler
@@ -41,18 +42,16 @@ public class WoodSkinHandler implements Listener
                 if(e.getBlock().getData() != data) e.getBlock().setData(data);
             }
         }
-
-
     }
 
 
     @EventHandler
-    public void onBuy(ShopBuyEvent e) {
+    public void onBuy1058(ShopBuyEvent e) {
         Player p = e.getBuyer();
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
              String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
             
-            BedWars bedwarsAPI = new BwcAPI().getBwAPI();
+            BedWars bedwarsAPI = Utility.plugin().getBedWars1058API();
             String iso =  bedwarsAPI.getLangIso(p);
             String msg = bedwarsAPI.getLanguageByIso(iso).getString("shop-new-purchase");
             String prefix = bedwarsAPI.getLanguageByIso(iso).getString("prefix");
@@ -92,7 +91,6 @@ public class WoodSkinHandler implements Listener
             p.playSound(p.getLocation(),soundz , config.getInt("shop-bought.volume"), config.getInt("shop-bought.pitch"));
             p.sendMessage(ColorUtil.colored(msg.replace("{item}", "Wood").replace("{prefix}", prefix)));
             e.setCancelled(true);
-                        
         }
     }
 }

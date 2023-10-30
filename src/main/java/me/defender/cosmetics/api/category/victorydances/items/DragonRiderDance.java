@@ -5,7 +5,7 @@ import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -74,7 +74,7 @@ public class DragonRiderDance extends VictoryDance {
                 for (Block block : UsefulUtilsVD.getBlocksInRadius(dragon.getLocation(), 10, false)) {
                     block.setType(Material.AIR);
                 }
-                if (!ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if (!ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     this.cancel();
                     stand.remove();
                     dragon.remove();

@@ -1,10 +1,8 @@
 package me.defender.cosmetics.api.configuration;
 
-import com.hakan.core.HCore;
 import me.defender.cosmetics.api.enums.ConfigType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

@@ -7,9 +7,6 @@ import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.hakan.core.HCore;
-import com.hakan.core.ui.inventory.InventoryGui;
-import com.hakan.core.ui.inventory.pagination.Pagination;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.menu.MainMenu;
@@ -20,7 +17,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 
 import java.io.*;
 import java.net.URL;
@@ -68,9 +64,17 @@ public class Utility {
     public static String getMSGLang(Player p, String path) {
         BwcAPI api = new BwcAPI();
         if (api.isProxy()) {
-            return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
+            if (!plugin().isBw2023()){
+                return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
+            } else {
+                return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
+            }
         }
-        return Language.getMsg(p, path);
+        if (!plugin().isBw2023()){
+            return Language.getMsg(p, path);
+        } else {
+            return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
+        }
     }
 
     /**
@@ -84,7 +88,11 @@ public class Utility {
         if (api.isProxy()) {
             return BedWarsProxy.getAPI().getLanguageUtil().getList(p, path);
         }
-        return Language.getList(p, path);
+        if (!plugin().isBw2023()){
+            return Language.getList(p, path);
+        } else {
+            return com.tomkeuper.bedwars.api.language.Language.getList(p, path);
+        }
     }
 
     /**
@@ -98,7 +106,11 @@ public class Utility {
             BedWarsProxy.getAPI().getLanguageUtil().saveIfNotExists(path, ob);
             return;
         }
-        Language.saveIfNotExists(path, ob);
+        if (!plugin().isBw2023()){
+            Language.saveIfNotExists(path, ob);
+        } else {
+            com.tomkeuper.bedwars.api.language.Language.saveIfNotExists(path, ob);
+        }
     }
 
     /**
@@ -110,7 +122,11 @@ public class Utility {
         BwcAPI api = new BwcAPI();
         if (api.isProxy())
             return false;
-        return api.getBwAPI().getArenaUtil().getArenaByPlayer(p) != null;
+        if (!plugin().isBw2023()){
+            return plugin().getBedWars1058API().getArenaUtil().getArenaByPlayer(p) != null;
+        } else {
+            return plugin().getBedWars2023API().getArenaUtil().getArenaByPlayer(p) != null;
+        }
     }
 
 

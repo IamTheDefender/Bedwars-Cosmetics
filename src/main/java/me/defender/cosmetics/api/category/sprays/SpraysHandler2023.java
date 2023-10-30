@@ -1,8 +1,5 @@
-
-
 package me.defender.cosmetics.api.category.sprays;
 
-import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
@@ -15,12 +12,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
-public class SpraysHandler implements Listener
-{
+public class SpraysHandler2023 implements Listener {
 
     @EventHandler
     public void onRightClick(PlayerInteractEntityEvent e) {
-         Player p = e.getPlayer();
+        Player p = e.getPlayer();
         if (e.getRightClicked() instanceof ItemFrame) {
             ItemFrame itemFrame = (ItemFrame) e.getRightClicked();
             if(itemFrame.getItem() == null) return;
@@ -37,9 +33,8 @@ public class SpraysHandler implements Listener
         }
     }
 
-
     @EventHandler
-    public void onGameStart(GameStateChangeEvent event) {
+    public void onGameStart2023(com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent event) {
         if (event.getNewState().name().equals("playing")) {
             for (final Entity e : event.getArena().getWorld().getEntities()) {
                 if (e.getType() == EntityType.ITEM_FRAME) {

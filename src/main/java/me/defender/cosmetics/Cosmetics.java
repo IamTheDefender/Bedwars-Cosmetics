@@ -2,8 +2,10 @@
 package me.defender.cosmetics;
 
 import com.hakan.core.HCore;
+import com.tomkeuper.bedwars.api.BedWars;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import lombok.Setter;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.util.StartupUtils;
@@ -17,6 +19,8 @@ import me.defender.cosmetics.database.PlayerData;
 import me.defender.cosmetics.database.PlayerOwnedData;
 import me.defender.cosmetics.database.mysql.MySQL;
 import me.defender.cosmetics.database.sqlite.SQLite;
+import me.defender.cosmetics.support.bedwars.BedWars2023;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.FileOutputStream;
@@ -30,11 +34,18 @@ import java.util.HashMap;
 
 public class Cosmetics extends JavaPlugin
 {
+
+    @Setter
+    @Getter
+    private BedWars bedWars2023API;
+    @Getter
+    private com.andrei1058.bedwars.api.BedWars bedWars1058API;
     public MainMenuData menuData;
     public static HikariDataSource db;
     @Getter
     public static Connection dbConnection;
     public boolean dependenciesMissing = false;
+    @Getter
     static boolean placeholderAPI;
 
     public static void downloadFile(URL url, String filePath) {
@@ -57,6 +68,12 @@ public class Cosmetics extends JavaPlugin
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
             return;
+        }
+        if (StartupUtils.isBw2023) {
+            BedWars2023 bedWars2023 = new BedWars2023(this);
+            bedWars2023.start();
+        } else {
+            this.bedWars1058API = Bukkit.getServer().getServicesManager().getRegistration(com.andrei1058.bedwars.api.BedWars.class).getProvider();
         }
 
         getLogger().info("All dependencies found, continuing with plugin startup.");
@@ -106,7 +123,7 @@ public class Cosmetics extends JavaPlugin
         getLogger().info("Registering event listeners...");
         StartupUtils.registerEvents();
         getLogger().info("Registering command to HCore...");
-        HCore.registerCommands(new MainCommand());
+        HCore.registerCommands(new MainCommand(this));
         getLogger().info("Loading data from resources in jar...");
         DefaultsUtils defaultsUtils = new DefaultsUtils();
         defaultsUtils.saveAllDefaults();
@@ -146,11 +163,11 @@ public class Cosmetics extends JavaPlugin
         return db;
     }
 
-    public static boolean isPlaceholderAPI() {
-        return placeholderAPI;
-    }
-
     public static void setPlaceholderAPI(boolean placeholderAPI) {
         Cosmetics.placeholderAPI = placeholderAPI;
+    }
+
+    public boolean isBw2023() {
+        return getBedWars2023API() != null;
     }
 }

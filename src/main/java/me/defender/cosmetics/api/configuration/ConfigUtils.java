@@ -8,7 +8,6 @@ import me.defender.cosmetics.api.util.Utility;
 import java.util.Arrays;
 import java.util.Objects;
 
-
 public class ConfigUtils {
 
     public static ConfigManager getBedDestroys() {
@@ -86,6 +85,4 @@ public class ConfigUtils {
     public static void addExtrasToLang(){
         Utility.saveIfNotExistsLang("Cosmetics.not-purchase-able", "&cLOCKED");
     }
-
-
 }
