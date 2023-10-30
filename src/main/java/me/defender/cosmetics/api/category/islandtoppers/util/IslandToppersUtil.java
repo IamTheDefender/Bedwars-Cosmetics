@@ -7,15 +7,18 @@ import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import me.defender.cosmetics.api.util.DebugUtil;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.material.Bed;
 import org.bukkit.material.Directional;
+import org.bukkit.material.MaterialData;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,28 +39,32 @@ public class IslandToppersUtil
                 IArena arena = Utility.plugin().getBedWars1058API().getArenaUtil().getArenaByPlayer(p);
                 if(arena != null) {
                     Block block = arena.getTeam(p).getBed().getBlock();
-                    if(block.getState() instanceof Bed && block.getState().getData() instanceof Directional){
-                        Directional directional = (Directional) block.getState().getData();
-                        CuboidClipboard clipboard = schematicFormat.load(file);
-                        clipboard = flipDirection(clipboard, directional.getFacing());
-                        // Move the schematic to the target location
-                        clipboard.setOrigin(new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()));
-                        // Paste the schematic
-                        clipboard.paste(editSession, new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()), true);
+                    if (block.getType() == Material.BED_BLOCK){
+                        if (block.getState().getData() instanceof Directional){
+                            Directional directional = (Directional) block.getState().getData();
+                            CuboidClipboard clipboard = schematicFormat.load(file);
+                            clipboard = flipDirection(clipboard, directional.getFacing());
+                            // Move the schematic to the target location
+                            clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
+                            // Paste the schematic
+                            clipboard.paste(editSession, new Vector(loc.getX(), loc.getY(), loc.getZ()), true);
+                        }
                     }
                 }
             } else {
                 com.tomkeuper.bedwars.api.arena.IArena arena = Utility.plugin().getBedWars2023API().getArenaUtil().getArenaByPlayer(p);
                 if(arena != null) {
                     Block block = arena.getTeam(p).getBed().getBlock();
-                    if(block.getState() instanceof Bed && block.getState().getData() instanceof Directional){
-                        Directional directional = (Directional) block.getState().getData();
-                        CuboidClipboard clipboard = schematicFormat.load(file);
-                        clipboard = flipDirection(clipboard, directional.getFacing());
-                        // Move the schematic to the target location
-                        clipboard.setOrigin(new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()));
-                        // Paste the schematic
-                        clipboard.paste(editSession, new Vector(loc.getX(), loc.getY() + clipboard.getHeight() + 1, loc.getZ()), true);
+                    if (block.getType() == Material.BED_BLOCK){
+                        if (block.getState().getData() instanceof Directional){
+                            Directional directional = (Directional) block.getState().getData();
+                            CuboidClipboard clipboard = schematicFormat.load(file);
+                            clipboard = flipDirection(clipboard, directional.getFacing());
+                            // Move the schematic to the target location
+                            clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
+                            // Paste the schematic
+                            clipboard.paste(editSession, new Vector(loc.getX(), loc.getY(), loc.getZ()), true);
+                        }
                     }
                 }
             }
