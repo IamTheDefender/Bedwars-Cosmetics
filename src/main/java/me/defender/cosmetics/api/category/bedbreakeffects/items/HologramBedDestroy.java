@@ -56,7 +56,16 @@ public class HologramBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+        ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(bedLocation.add(0,1,0), EntityType.ARMOR_STAND);
+        stand.setVisible(false);
+        stand.setGravity(false);
+        stand.setCustomName(ColorUtil.colored("&c" + victimTeam.getName() + "'s Bed was destroyed by " + player.getDisplayName()));
+        stand.setCustomNameVisible(true);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
         ArmorStand stand = (ArmorStand) player.getWorld().spawnEntity(bedLocation.add(0,1,0), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);

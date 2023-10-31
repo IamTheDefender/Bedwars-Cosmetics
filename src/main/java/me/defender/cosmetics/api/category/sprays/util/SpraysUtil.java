@@ -14,7 +14,7 @@ import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.util.DebugUtil;
 import me.defender.cosmetics.api.util.Utility;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.support.sounds.GSound;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -53,6 +53,12 @@ public class SpraysUtil
                     player.sendMessage(ColorUtil.colored(Utility.getMSGLang(player, "cosmetics.spray-msg")));
                     return;
                 }
+                SpraysUtil.cooldown.remove(p.getName());
+            }
+            // The player is no longer in the cool down or it's the first time
+            else if (ShopKeeperHandler1058.arenas.containsKey(p.getWorld().getName())) {
+
+                SpraysUtil.cooldown.put(p.getName(), System.currentTimeMillis() + 3000L);
                 // Player is no longer in cooldown
                 SpraysUtil.cooldown.remove(player.getName());
             } else if (ShopKeeperHandler.arenas.containsKey(player.getWorld().getName())) {

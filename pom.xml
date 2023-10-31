@@ -126,18 +126,18 @@
             <systemPath>${project.basedir}/lib/bedwars-plugin-23.3.jar</systemPath>
         </dependency>
         <dependency>
+            <groupId>com.tompkeuper</groupId>
+            <artifactId>BedWars2023</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/bedwars2023-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>com.andrei1058.bedwars</groupId>
             <artifactId>BedWarsProxy</artifactId>
             <version>1.2.4</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/proxy-plugin-1.2.4.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.tompkeuper</groupId>
-            <artifactId>BedWars2023</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/bedwars-plugin-23.3.1-BETA2.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

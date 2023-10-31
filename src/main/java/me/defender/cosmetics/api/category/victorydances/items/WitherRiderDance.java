@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.entity.EntityType;
@@ -64,7 +64,7 @@ public class WitherRiderDance extends VictoryDance {
         wither.setNoDamageTicks(Integer.MAX_VALUE);
         new BukkitRunnable() {
             public void run() {
-                if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     if(wither.getPassenger() != winner){
                         wither.setPassenger(winner);
                     }

@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.event;
 
-import com.andrei1058.bedwars.api.arena.IArena;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -29,25 +28,16 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
 
     /**
      * -- GETTER --
-     *  Get the Arena.
-     *
-     * @return IArena
-     */
-    @Getter
-    private IArena arena;
-    /**
-     * -- GETTER --
      *  Get the selected final kill effect.
      *
      * @return String
      */
     @Getter
     private String selected;
-    public FinalKillEffectsExecuteEvent(Player victim, Player killer, IArena arena, String selected){
+    public FinalKillEffectsExecuteEvent(Player victim, Player killer, String selected){
         this.cancelled = false;
         this.victim = victim;
         this.killer = killer;
-        this.arena = arena;
         this.selected = selected;
        }
 

@@ -2,7 +2,7 @@ package me.defender.cosmetics.api.category.victorydances.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
@@ -61,7 +61,7 @@ public class HauntedDance extends VictoryDance {
     public void execute(Player winner) {
         new BukkitRunnable() {
             public void run() {
-                if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     final Location loc = UsefulUtilsVD.getRandomLocation(winner.getLocation(), 10);
                     final Bat bat = (Bat)winner.getWorld().spawnEntity(loc, EntityType.BAT);
                     bat.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 19999980, 1));

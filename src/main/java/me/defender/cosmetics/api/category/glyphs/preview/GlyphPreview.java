@@ -6,8 +6,6 @@ import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.category.glyphs.Glyph;
 import me.defender.cosmetics.api.category.glyphs.util.ImageParticles;
-import me.defender.cosmetics.api.category.glyphs.util.glyphUtil;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.api.enums.CosmeticsType;

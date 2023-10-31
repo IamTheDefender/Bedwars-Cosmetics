@@ -1,6 +1,6 @@
 package me.defender.cosmetics.api.event;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
+import lombok.Getter;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import org.bukkit.entity.Player;
@@ -13,50 +13,29 @@ import org.bukkit.event.HandlerList;
 public class BedBreakEffectExecuteEvent extends Event implements Cancellable {
     private Boolean cancelled;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private final Player WhoBrokeTheBed;
-    private final String selected;
-    private final ITeam effectedTeam;
-    private final ITeam breakersTeam;
-
-    public BedBreakEffectExecuteEvent(Player WhoBroke, ITeam effectedTeam){
-        this.cancelled = false;
-        this.WhoBrokeTheBed = WhoBroke;
-        this.effectedTeam = effectedTeam;
-        this.selected = new BwcAPI().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
-        this.breakersTeam = new BwcAPI().getBwAPI().getArenaUtil().getArenaByPlayer(WhoBroke).getTeam(WhoBroke);
-    }
-
     /**
-     * Get the player that broke the bed.
+     * -- GETTER --
+     *  Get the player that broke the bed.
+     *
      * @return Player
      */
-    public Player getWhoBrokeTheBed(){
-        return WhoBrokeTheBed;
-    }
-
+    @Getter
+    private final Player WhoBrokeTheBed;
     /**
-     * Get the selected bed break effect.
+     * -- GETTER --
+     *  Get the selected bed break effect.
+     *
      * @return String
      */
-    public String getSelected() {
-        return selected;
+    @Getter
+    private final String selected;
+
+    public BedBreakEffectExecuteEvent(Player WhoBroke){
+        this.cancelled = false;
+        this.WhoBrokeTheBed = WhoBroke;
+        this.selected = new BwcAPI().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
     }
 
-    /**
-     * Get the team that lost their bed.
-     * @return ITeam
-     */
-    public ITeam getEffectedTeam() {
-        return effectedTeam;
-    }
-
-    /**
-     * Get the team that broke the bed.
-     * @return ITeam
-     */
-    public ITeam getBreakerTeam() {
-        return breakersTeam;
-    }
 
     @Override
     public boolean isCancelled() {

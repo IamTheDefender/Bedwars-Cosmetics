@@ -63,7 +63,42 @@ public class PigMissileBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+        final Pig pig = (Pig)player.getWorld().spawnEntity(bedLocation, EntityType.PIG);
+        final ArmorStand stand = (ArmorStand)player.getWorld().spawnEntity(bedLocation, EntityType.ARMOR_STAND);
+        pig.setSaddle(true);
+        stand.setGravity(false);
+        stand.setPassenger(pig);
+        stand.setVisible(false);
+        new BukkitRunnable() {
+            int i1 = 0;
+
+            public void run() {
+                ++this.i1;
+                stand.eject();
+                stand.teleport(stand.getLocation().add(0.0, 0.5, 0.0));
+                stand.setPassenger(pig);
+                Particle flame = new Particle(ParticleType.FLAME, 1, 0.0f, new Vector(0.0f, 0.0f, 0.0f));
+                HCore.playParticle(player, stand.getLocation(), flame);
+                XSound.ENTITY_CHICKEN_EGG.play(stand.getLocation(), 1.0f, 1.0f);
+                if (this.i1 == 13) {
+                    final Firework fw = stand.getWorld().spawn(stand.getLocation(), Firework.class);
+                    final FireworkMeta fm = fw.getFireworkMeta();
+                    fm.addEffect(FireworkEffect.builder().flicker(true).trail(false).with(FireworkEffect.Type.BALL).withColor(Color.BLACK).withFade(Color.BLACK).build());
+                    fw.setFireworkMeta(fm);
+                }
+                if (this.i1 == 25) {
+                    stand.remove();
+                    pig.remove();
+                    this.i1 = 0;
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(Utility.plugin(), 4L, 1L);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
         final Pig pig = (Pig)player.getWorld().spawnEntity(bedLocation, EntityType.PIG);
         final ArmorStand stand = (ArmorStand)player.getWorld().spawnEntity(bedLocation, EntityType.ARMOR_STAND);
         pig.setSaddle(true);

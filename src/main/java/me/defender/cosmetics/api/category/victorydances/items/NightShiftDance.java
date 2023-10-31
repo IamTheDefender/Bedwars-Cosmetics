@@ -2,7 +2,7 @@ package me.defender.cosmetics.api.category.victorydances.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.entity.Player;
@@ -49,7 +49,7 @@ public class NightShiftDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+        if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
             new BukkitRunnable() {
                 long time = winner.getWorld().getTime();
                 public void run() {

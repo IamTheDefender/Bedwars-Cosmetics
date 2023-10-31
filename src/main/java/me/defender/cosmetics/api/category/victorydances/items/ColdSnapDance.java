@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Location;
@@ -56,7 +56,7 @@ public class ColdSnapDance extends VictoryDance {
         new BukkitRunnable() {
             public void run() {
                 final Location loc = UsefulUtilsVD.getRandomLocation(winner.getLocation(), 3);
-                if(ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if(ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     if (loc.getBlock().getType() != Material.AIR) {
                         loc.getBlock().setType(Material.ICE);
                         winner.playSound(winner.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);

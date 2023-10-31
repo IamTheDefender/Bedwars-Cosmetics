@@ -1,8 +1,5 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.utils;
 
-import com.hakan.core.HCore;
-import com.hakan.core.npc.Npc;
-import com.hakan.core.skin.Skin;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.enums.CosmeticsType;

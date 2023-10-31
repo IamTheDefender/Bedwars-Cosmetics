@@ -16,9 +16,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class IslandTopperHandler implements Listener {
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
+public class IslandTopperHandler1058 implements Listener {
     @EventHandler
-    public void onSpawn(GameStateChangeEvent e) {
+    public void onSpawn1058(GameStateChangeEvent e) {
+
+        boolean isIslandToppersEnabled = plugin().getConfig().getBoolean("island-toppers.enabled");
+        if (!isIslandToppersEnabled) return;
+
         HCore.syncScheduler().after(20).run((runnable) -> {
             for (ITeam teams : e.getArena().getTeams()) {
                 Player player = null;

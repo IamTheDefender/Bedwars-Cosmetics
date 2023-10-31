@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.category.killmessage.util;
 
-import com.andrei1058.bedwars.api.language.Messages;
 import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.api.BwcAPI;
@@ -10,7 +9,6 @@ import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
-import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

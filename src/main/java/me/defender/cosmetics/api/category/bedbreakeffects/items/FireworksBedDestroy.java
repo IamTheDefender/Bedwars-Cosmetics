@@ -55,7 +55,12 @@ public class FireworksBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+        UsefulUtilsVD.spawnFireWorks(player, 1, Color.RED, Color.GREEN, bedLocation, false);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
         UsefulUtilsVD.spawnFireWorks(player, 1, Color.RED, Color.GREEN, bedLocation, false);
     }
 }

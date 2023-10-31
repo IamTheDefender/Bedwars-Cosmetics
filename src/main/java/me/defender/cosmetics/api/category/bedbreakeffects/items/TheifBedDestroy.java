@@ -56,7 +56,15 @@ public class TheifBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+        Enderman enderman = (Enderman) player.getWorld().spawnEntity(bedLocation, EntityType.ENDERMAN);
+        assert XMaterial.RED_BED.parseMaterial() != null;
+        enderman.setCarriedMaterial(new MaterialData(XMaterial.RED_BED.parseMaterial()));
+        HCore.syncScheduler().after(70L).run(enderman::remove);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
         Enderman enderman = (Enderman) player.getWorld().spawnEntity(bedLocation, EntityType.ENDERMAN);
         assert XMaterial.RED_BED.parseMaterial() != null;
         enderman.setCarriedMaterial(new MaterialData(XMaterial.RED_BED.parseMaterial()));

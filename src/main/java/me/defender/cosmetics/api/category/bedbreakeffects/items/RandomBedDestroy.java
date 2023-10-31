@@ -51,13 +51,24 @@ public class RandomBedDestroy extends BedDestroy {
     }
 
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
             List<BedDestroy> bedDestroys = new ArrayList<>();
             for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
                 if(player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
                     bedDestroys.add(bedDestroy);
                 }
             }
-            bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute(player, bedLocation, victimTeam);
+            bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute1058(player, bedLocation, victimTeam);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
+        List<BedDestroy> bedDestroys = new ArrayList<>();
+        for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
+            if(player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
+                bedDestroys.add(bedDestroy);
+            }
+        }
+        bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute2023(player, bedLocation, victimTeam);
     }
 }

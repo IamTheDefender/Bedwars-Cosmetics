@@ -18,12 +18,18 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 
-public class GlyphHandler implements Listener {
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
+public class GlyphHandler1058 implements Listener {
 
 	public static HashMap<Location, Integer> glyphs = new HashMap<>();
 
 	@EventHandler
-	public void onGenCollect(PlayerGeneratorCollectEvent e) {
+	public void onGenCollect1058(PlayerGeneratorCollectEvent e) {
+
+		boolean isGlyphsEnabled = plugin().getConfig().getBoolean("glyphs.enabled");
+		if (!isGlyphsEnabled) return;
+
 		if (e.getItemStack().getType() == Material.DIAMOND || e.getItemStack().getType() == Material.EMERALD) {
 			String selected = new BwcAPI().getSelectedCosmetic(e.getPlayer(), CosmeticsType.Glyphs);
 

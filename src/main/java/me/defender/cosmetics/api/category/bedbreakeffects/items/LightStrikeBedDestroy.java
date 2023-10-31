@@ -53,7 +53,12 @@ public class LightStrikeBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+        player.getWorld().strikeLightningEffect(bedLocation);
+    }
+
+    @Override
+    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
         player.getWorld().strikeLightningEffect(bedLocation);
     }
 }

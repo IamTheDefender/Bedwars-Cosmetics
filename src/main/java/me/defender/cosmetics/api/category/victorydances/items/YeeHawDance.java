@@ -3,7 +3,7 @@ package me.defender.cosmetics.api.category.victorydances.items;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Material;
@@ -64,7 +64,7 @@ public class YeeHawDance extends VictoryDance {
         horse.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 190000000, 3));
         new BukkitRunnable() {
             public void run() {
-                if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+                if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                     if (horse.getPassenger() != winner) {
                         horse.remove();
                     }

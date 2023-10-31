@@ -3,7 +3,7 @@ package me.defender.cosmetics.api.category.victorydances.items;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler;
+import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.category.victorydances.util.UsefulUtilsVD;
 import me.defender.cosmetics.api.enums.RarityType;
 import org.bukkit.Location;
@@ -53,7 +53,7 @@ public class AnvilRainDance extends VictoryDance {
     @Override
     public void execute(Player winner) {
         HCore.syncScheduler().every(1L).run((runnable) -> {
-            if (ShopKeeperHandler.arenas.containsKey(winner.getWorld().getName())) {
+            if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
                 final Location loc = UsefulUtilsVD.getRandomLocation(winner.getLocation(), 20);
                 final FallingBlock anvil = winner.getWorld().spawnFallingBlock(loc, Material.ANVIL, (byte)0);
                 anvil.setHurtEntities(false);

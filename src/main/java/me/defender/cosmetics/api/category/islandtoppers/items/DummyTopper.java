@@ -48,6 +48,5 @@ public class DummyTopper extends IslandTopper {
 
     @Override
     public void execute(Player player, Location topperLocation, String selected) {
-
     }
 }

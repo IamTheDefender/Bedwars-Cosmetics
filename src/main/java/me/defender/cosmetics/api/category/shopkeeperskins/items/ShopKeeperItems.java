@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.items;
 
-import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.enums.CosmeticsType;
 import me.defender.cosmetics.api.enums.FieldsType;
@@ -9,7 +8,6 @@ import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.StringUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

@@ -11,12 +11,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-public class KillMessageHandler implements Listener
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
+public class KillMessageHandler1058 implements Listener
 {
     @EventHandler
-    public void onPlayerKillByOtherPlayer(PlayerKillEvent e) {
+    public void onPlayerKillByOtherPlayer1058(PlayerKillEvent e) {
         if (e.getKiller() == null) return;
         if (e.getVictim() == null) return;
+
+        boolean isKillMessagesEnabled = plugin().getConfig().getBoolean("kill-messages.enabled");
+        if (!isKillMessagesEnabled) return;
 
         BwcAPI api = new BwcAPI();
 
@@ -70,9 +75,5 @@ public class KillMessageHandler implements Listener
                 }
                 break;
         }
-
-
-
-
     }
 }

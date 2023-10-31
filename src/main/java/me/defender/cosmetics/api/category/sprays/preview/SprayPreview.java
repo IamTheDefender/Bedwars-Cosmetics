@@ -139,13 +139,13 @@ public class SprayPreview {
         });
     }
 
-    private ItemStack createMapItem() {
+    public org.bukkit.inventory.ItemStack createMapItem() {
         org.bukkit.inventory.ItemStack bukkitItem = new org.bukkit.inventory.ItemStack(Material.MAP);
         bukkitItem.setDurability(view.getId());
-        return CraftItemStack.asNMSCopy(bukkitItem);
+        return bukkitItem;
     }
 
-    private void sendFrame(Player player, Location location, String selected) {
+    public void sendFrame(Player player, Location location, String selected) {
         view = Bukkit.createMap(player.getWorld());
 
         CustomRenderer renderer = new CustomRenderer();
@@ -173,7 +173,7 @@ public class SprayPreview {
 
         World nmsWorld = ((CraftWorld)location.getWorld()).getHandle();
 
-        ItemStack nmsItem = createMapItem();
+        ItemStack nmsItem = CraftItemStack.asNMSCopy(createMapItem());
         org.bukkit.inventory.ItemStack bukkitItem = CraftItemStack.asBukkitCopy(nmsItem);
 
         frame = new EntityItemFrame(nmsWorld);
