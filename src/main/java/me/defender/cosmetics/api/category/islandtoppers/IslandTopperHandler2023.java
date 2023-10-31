@@ -18,6 +18,10 @@ import static me.defender.cosmetics.api.util.Utility.plugin;
 public class IslandTopperHandler2023 implements Listener {
     @EventHandler
     public void onSpawn2023(GameStateChangeEvent e) {
+
+        boolean isIslandToppersEnabled = plugin().getConfig().getBoolean("island-toppers.enabled");
+        if (!isIslandToppersEnabled) return;
+
         if (e.getNewState() == GameState.playing) {
             spawnTopper(e);
         }

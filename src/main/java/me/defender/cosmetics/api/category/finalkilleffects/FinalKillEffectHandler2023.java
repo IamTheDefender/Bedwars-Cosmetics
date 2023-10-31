@@ -12,12 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class FinalKillEffectHandler2023 implements Listener {
 
     @EventHandler
     public void onFinalKill2023(com.tomkeuper.bedwars.api.events.player.PlayerKillEvent e){
         BwcAPI api = new BwcAPI();
         if(e.getKiller() == null) return;
+
+        boolean isFinalKillEffectsEnabled = plugin().getConfig().getBoolean("final-kill-effects.enabled");
+        if (!isFinalKillEffectsEnabled) return;
 
         String selected = api.getSelectedCosmetic(e.getKiller(), CosmeticsType.FinalKillEffects);
         Player victim = e.getVictim();

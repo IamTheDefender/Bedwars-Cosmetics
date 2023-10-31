@@ -12,10 +12,16 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class GlyphHandler2023 implements Listener {
 
     @EventHandler
     public void onGenCollect2023(com.tomkeuper.bedwars.api.events.player.PlayerGeneratorCollectEvent e) {
+
+        boolean isGlyphsEnabled = plugin().getConfig().getBoolean("glyphs.enabled");
+        if (!isGlyphsEnabled) return;
+
         if (e.getItemStack().getType() == Material.DIAMOND || e.getItemStack().getType() == Material.EMERALD) {
             String selected = new BwcAPI().getSelectedCosmetic(e.getPlayer(), CosmeticsType.Glyphs);
 

@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class BedDestroyHandler1058 implements Listener{
 	
 	@EventHandler
@@ -23,7 +25,8 @@ public class BedDestroyHandler1058 implements Listener{
 		Bukkit.getServer().getPluginManager().callEvent(event);
 
 		if(event.isCancelled()) return;
-
+		boolean isBedDestroysEnabled = plugin().getConfig().getBoolean("bed-break-effects.enabled");
+		if (!isBedDestroysEnabled) return;
 
 		DebugUtil.addMessage("Executing " + selected + " Bed Break Effect for " + e.getPlayer().getDisplayName());
 		Player p = e.getPlayer();

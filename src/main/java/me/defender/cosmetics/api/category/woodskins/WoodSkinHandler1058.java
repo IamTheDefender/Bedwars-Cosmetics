@@ -25,12 +25,18 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class WoodSkinHandler1058 implements Listener
 {
 
 	@EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         if (e.isCancelled()) return;
+
+        boolean isWoodSkinsEnabled = plugin().getConfig().getBoolean("wood-skins.enabled");
+        if (!isWoodSkinsEnabled) return;
+
         if(!XTag.PLANKS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType())) || !XTag.LOGS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType()))) return;
         String selected = new BwcAPI().getSelectedCosmetic(e.getPlayer(), CosmeticsType.WoodSkins);
         for(WoodSkin woodSkin : StartupUtils.woodSkinsList){
@@ -47,6 +53,10 @@ public class WoodSkinHandler1058 implements Listener
 
     @EventHandler
     public void onBuy1058(ShopBuyEvent e) {
+
+        boolean isWoodSkinsEnabled = plugin().getConfig().getBoolean("wood-skins.enabled");
+        if (!isWoodSkinsEnabled) return;
+
         Player p = e.getBuyer();
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
              String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.WoodSkins);

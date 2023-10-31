@@ -14,12 +14,17 @@ import org.bukkit.event.Listener;
 
 import java.util.NoSuchElementException;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class DeathCryHandler2023 implements Listener {
 
     @EventHandler
     public void onPlayerDeath2023(com.tomkeuper.bedwars.api.events.player.PlayerKillEvent e) {
         Player killed = e.getVictim();
         String selected = new BwcAPI().getSelectedCosmetic(killed, CosmeticsType.DeathCries);
+
+        boolean isDeathCriesEnabled = plugin().getConfig().getBoolean("death-cries.enabled");
+        if (!isDeathCriesEnabled) return;
 
         for (DeathCry deathCry : StartupUtils.deathCryList) {
             if (deathCry.getIdentifier().equals(selected)) {

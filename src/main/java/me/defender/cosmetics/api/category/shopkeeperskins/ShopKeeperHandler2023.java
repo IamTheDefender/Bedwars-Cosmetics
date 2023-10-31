@@ -28,6 +28,10 @@ public class ShopKeeperHandler2023 implements Listener {
 
     @EventHandler
     public void onGameStart2023(com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent event) {
+
+        boolean isShopkeepersEnabled = plugin().getConfig().getBoolean("shopkeeper-skins.enabled");
+        if (!isShopkeepersEnabled) return;
+
         if (event.getNewState().name().equals("playing")) {
             ShopKeeperHandler1058.arenas.put(event.getArena().getWorldName(), true);
             List<ITeam> teams = event.getArena().getTeams();
@@ -73,6 +77,10 @@ public class ShopKeeperHandler2023 implements Listener {
 
     @EventHandler
     public void onPlayerTeleportEvent(PlayerTeleportEvent e){
+
+        boolean isShopkeepersEnabled = plugin().getConfig().getBoolean("shopkeeper-skins.enabled");
+        if (!isShopkeepersEnabled) return;
+
         if(e.getPlayer().hasMetadata("NPC2")){
             e.setCancelled(true);
             HCore.syncScheduler().after(2).run((() -> {
@@ -83,6 +91,10 @@ public class ShopKeeperHandler2023 implements Listener {
 
     @EventHandler
     public void onGameEnd2023(com.tomkeuper.bedwars.api.events.gameplay.GameEndEvent e) {
+
+        boolean isShopkeepersEnabled = plugin().getConfig().getBoolean("shopkeeper-skins.enabled");
+        if (!isShopkeepersEnabled) return;
+
         String name = e.getArena().getWorldName();
 
         new BukkitRunnable(){

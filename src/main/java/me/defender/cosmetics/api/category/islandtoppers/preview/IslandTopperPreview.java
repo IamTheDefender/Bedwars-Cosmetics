@@ -157,7 +157,7 @@ public class IslandTopperPreview {
             Vector newOrigin = new Vector(location.getX(), location.getY(), location.getZ());
             newOrigin = newOrigin.add(clipboard.getOffset());
 
-            boolean order = Utility.plugin().getConfig().getBoolean("island-topper.order");
+            boolean order = Utility.plugin().getConfig().getBoolean("island-toppers.order");
 
             if (!order){
                 HashMap<Location, BlockData> blockLocations = new HashMap<>();

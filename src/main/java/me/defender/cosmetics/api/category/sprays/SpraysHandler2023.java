@@ -12,10 +12,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class SpraysHandler2023 implements Listener {
 
     @EventHandler
     public void onRightClick(PlayerInteractEntityEvent e) {
+
+        boolean isSpraysEnabled = plugin().getConfig().getBoolean("sprays.enabled");
+        if (!isSpraysEnabled) return;
+
         Player p = e.getPlayer();
         if (e.getRightClicked() instanceof ItemFrame) {
             ItemFrame itemFrame = (ItemFrame) e.getRightClicked();
@@ -35,6 +41,10 @@ public class SpraysHandler2023 implements Listener {
 
     @EventHandler
     public void onGameStart2023(com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent event) {
+
+        boolean isSpraysEnabled = plugin().getConfig().getBoolean("sprays.enabled");
+        if (!isSpraysEnabled) return;
+
         if (event.getNewState().name().equals("playing")) {
             for (final Entity e : event.getArena().getWorld().getEntities()) {
                 if (e.getType() == EntityType.ITEM_FRAME) {
