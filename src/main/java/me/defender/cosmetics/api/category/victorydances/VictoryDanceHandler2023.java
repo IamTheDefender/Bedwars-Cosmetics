@@ -15,10 +15,16 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class VictoryDanceHandler2023 implements Listener {
 
     @EventHandler
     public void onGameEnd2023(GameEndEvent e) {
+
+        boolean isVictoryDancesEnabled = plugin().getConfig().getBoolean("victory-dances.enabled");
+        if (!isVictoryDancesEnabled) return;
+
         for (UUID uuid : e.getWinners()) {
             Player p = Bukkit.getPlayer(uuid);
             String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.VictoryDances);

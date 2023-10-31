@@ -9,6 +9,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import static me.defender.cosmetics.api.util.Utility.plugin;
+
 public class ProjectileHandler implements Listener {
 
     private final Plugin plugin;
@@ -22,6 +24,10 @@ public class ProjectileHandler implements Listener {
         if (!(event.getEntity().getShooter() instanceof Player)) {
             return;
         }
+
+        boolean isProjectileTrailsEnabled = plugin().getConfig().getBoolean("projectile-trails.enabled");
+        if (!isProjectileTrailsEnabled) return;
+
         Player shooter = (Player) event.getEntity().getShooter();
         event.getEntity().setMetadata("shooter", new FixedMetadataValue(plugin, shooter.getName()));
         new BukkitRunnable() {

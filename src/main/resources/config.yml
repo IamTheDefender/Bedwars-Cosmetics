@@ -26,5 +26,26 @@ cosmetic-preview:
     z:
     yaw:
     pitch:
-island-topper:
+bed-break-effects:
+  enabled: true
+death-cries:
+  enabled:true
+final-kill-effects:
+  enabled: true
+glyphs:
+  enabled: true
+island-toppers:
+  enabled: true
   order: true
+kill-messages:
+  enabled: true
+projectile-trails:
+  enabled: true
+shopkeeper-skins:
+  enabled: true
+sprays:
+  enabled: true
+victory-dances:
+  enabled: true
+wood-skins:
+  enabled: true
