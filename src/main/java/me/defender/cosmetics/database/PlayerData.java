@@ -1,5 +1,8 @@
 package me.defender.cosmetics.database;
 
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
+import lombok.Setter;
 import me.defender.cosmetics.Cosmetics;
 import org.bukkit.Bukkit;
 
@@ -12,17 +15,8 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID uuid;
-    private String bedDestroy;
-    private String woodSkin;
-    private String victoryDance;
-    private String shopkeeperSkin;
-    private String glyph;
-    private String spray;
-    private String projectileTrail;
-    private String killMessage;
-    private String finalKillEffect;
-    private String islandTopper;
-    private String deathCry;
+    @Getter @Setter
+    private String woodSkin, bedDestroy, victoryDance, shopkeeperSkin, glyph, spray, projectileTrail, killMessage, finalKillEffect, islandTopper, deathCry;
     private final Connection connection;
 
     public PlayerData(UUID uuid) {
@@ -113,92 +107,4 @@ public class PlayerData {
     }
 
 
-
-    public String getBedDestroy() {
-        return bedDestroy;
-    }
-
-    public void setBedDestroy(String bedDestroy) {
-        this.bedDestroy = bedDestroy;
-    }
-
-    public String getWoodSkin() {
-        return woodSkin;
-    }
-
-    public void setWoodSkin(String woodSkin) {
-        this.woodSkin = woodSkin;
-    }
-
-    public String getVictoryDance() {
-        return victoryDance;
-    }
-
-    public void setVictoryDance(String victoryDance) {
-        this.victoryDance = victoryDance;
-    }
-
-    public String getShopkeeperSkin() {
-        return shopkeeperSkin;
-    }
-
-    public void setShopkeeperSkin(String shopkeeperSkin) {
-        this.shopkeeperSkin = shopkeeperSkin;
-    }
-
-    public String getGlyph() {
-        return glyph;
-    }
-
-    public void setGlyph(String glyph) {
-        this.glyph = glyph;
-    }
-
-    public String getSpray() {
-        return spray;
-    }
-
-    public void setSpray(String spray) {
-        this.spray = spray;
-    }
-
-    public String getProjectileTrail() {
-        return projectileTrail;
-    }
-
-    public void setProjectileTrail(String projectileTrail) {
-        this.projectileTrail = projectileTrail;
-    }
-
-    public String getKillMessage() {
-        return killMessage;
-    }
-
-    public void setKillMessage(String killMessage) {
-        this.killMessage = killMessage;
-    }
-
-    public String getFinalKillEffect() {
-        return finalKillEffect;
-    }
-
-    public void setFinalKillEffect(String finalKillEffect) {
-        this.finalKillEffect = finalKillEffect;
-    }
-
-    public String getIslandTopper() {
-        return islandTopper;
-    }
-
-    public void setIslandTopper(String islandTopper) {
-        this.islandTopper = islandTopper;
-    }
-
-    public String getDeathCry() {
-        return deathCry;
-    }
-
-    public void setDeathCry(String deathCry) {
-        this.deathCry = deathCry;
-    }
 }

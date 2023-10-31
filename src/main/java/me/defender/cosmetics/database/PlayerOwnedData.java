@@ -1,5 +1,7 @@
 package me.defender.cosmetics.database;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.bedbreakeffects.BedDestroy;
 import me.defender.cosmetics.api.category.deathcries.DeathCry;
@@ -25,19 +27,8 @@ import java.util.UUID;
 public class PlayerOwnedData{
     private final UUID uuid;
     private final Connection connection;
-    private int bedDestroy;
-    private int deathCry;
-
-    private int finalKillEffect;
-    private int glyph;
-    private int islandTopper;
-    private int killMessage;
-    private int projectileTrail;
-    private int shopkeeperSkin;
-    private int spray;
-    private int victoryDance;
-    private int woodSkin;
-
+    @Getter @Setter
+    private int bedDestroy, deathCry, finalKillEffect, glyph, islandTopper, killMessage, projectileTrail, shopkeeperSkin, spray, victoryDance, woodSkin;
 
     public PlayerOwnedData (UUID uuid) {
         this.uuid = uuid;
@@ -109,95 +100,6 @@ public class PlayerOwnedData{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public int getBedDestroy() {
-        return bedDestroy;
-    }
-
-    public void setBedDestroy(int bedDestroy) {
-        this.bedDestroy = bedDestroy;
-    }
-
-    public int getDeathCry() {
-        return deathCry;
-    }
-
-    public void setDeathCry(int deathCry) {
-        this.deathCry = deathCry;
-    }
-
-    public int getFinalKillEffect() {
-        return finalKillEffect;
-    }
-
-    public void setFinalKillEffect(int finalKillEffect) {
-        this.finalKillEffect = finalKillEffect;
-    }
-
-    public int getGlyph() {
-        return glyph;
-    }
-
-    public void setGlyph(int glyph) {
-        this.glyph = glyph;
-    }
-
-    public int getIslandTopper() {
-        return islandTopper;
-    }
-
-    public void setIslandTopper(int islandTopper) {
-        this.islandTopper = islandTopper;
-    }
-
-    public int getKillMessage() {
-        return killMessage;
-    }
-
-    public void setKillMessage(int killMessage) {
-        this.killMessage = killMessage;
-    }
-
-    public int getProjectileTrail() {
-        return projectileTrail;
-    }
-
-    public void setProjectileTrail(int projectileTrail) {
-        this.projectileTrail = projectileTrail;
-    }
-
-    public int getShopkeeperSkin() {
-        return shopkeeperSkin;
-    }
-
-    public void setShopkeeperSkin(int shopkeeperSkin) {
-        this.shopkeeperSkin = shopkeeperSkin;
-    }
-
-    public int getSpray() {
-        return spray;
-    }
-
-    public void setSpray(int spray) {
-        this.spray = spray;
-    }
-
-    public int getVictoryDance() {
-        return victoryDance;
-    }
-
-    public void setVictoryDance(int victoryDance) {
-        this.victoryDance = victoryDance;
-    }
-
-    public int getWoodSkin() {
-        return woodSkin;
-    }
-
-    public void setWoodSkin(int woodSkin) {
-        this.woodSkin = woodSkin;
     }
 
 

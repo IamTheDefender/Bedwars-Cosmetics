@@ -2,6 +2,8 @@ package me.defender.cosmetics.database.mysql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
+import me.defender.cosmetics.database.IDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -9,9 +11,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MySQL {
+public class MySQL implements IDatabase {
 
     public HikariDataSource dataSource;
+    @Getter
     public Connection connection;
     private final JavaPlugin plugin;
 
@@ -101,7 +104,4 @@ public class MySQL {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
 }

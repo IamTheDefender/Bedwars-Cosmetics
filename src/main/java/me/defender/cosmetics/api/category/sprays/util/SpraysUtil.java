@@ -33,16 +33,24 @@ public class SpraysUtil
 {
     public static HashMap<String, Long> cooldown = new HashMap<>();
 
-    
-    @SuppressWarnings("deprecation")
-	public static void spawnSprays( Player p, ItemFrame f) {
+    /**
+     * Spawn a spray for a player in an item frame.
+     *
+     * @param player The player for whom to spawn the spray.
+     * @param itemFrame The item frame in which to display the spray.
+     */
+    public static void spawnSprays(Player player, ItemFrame itemFrame) {
         HCore.syncScheduler().run(() -> {
-            MapView view = Bukkit.createMap(p.getWorld());
-            // If player is in cool down
-            if (SpraysUtil.cooldown.containsKey(p.getName())) {
-                if (SpraysUtil.cooldown.get(p.getName()) > System.currentTimeMillis()) {
-                    p.playSound(p.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1.0f, 1.0f);
-                    p.sendMessage(ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.spray-msg")));
+            MapView view = Bukkit.createMap(player.getWorld());
+            String spray = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.Sprays);
+            ConfigManager config = ConfigUtils.getSprays();
+
+            if (SpraysUtil.cooldown.containsKey(player.getName())) {
+                // Player is in cooldown
+                long cooldownEndTime = SpraysUtil.cooldown.get(player.getName());
+                if (cooldownEndTime > System.currentTimeMillis()) {
+                    player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1.0f, 1.0f);
+                    player.sendMessage(ColorUtil.colored(Utility.getMSGLang(player, "cosmetics.spray-msg")));
                     return;
                 }
                 SpraysUtil.cooldown.remove(p.getName());
@@ -51,58 +59,63 @@ public class SpraysUtil
             else if (ShopKeeperHandler1058.arenas.containsKey(p.getWorld().getName())) {
 
                 SpraysUtil.cooldown.put(p.getName(), System.currentTimeMillis() + 3000L);
+                // Player is no longer in cooldown
+                SpraysUtil.cooldown.remove(player.getName());
+            } else if (ShopKeeperHandler.arenas.containsKey(player.getWorld().getName())) {
+                // Player is not in cooldown or it's the first time
+                SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
                 view.removeRenderer(view.getRenderers().get(0));
                 final CustomRenderer renderer = new CustomRenderer();
-                String Spray = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.Sprays);
-                ConfigManager config = ConfigUtils.getSprays();
-                String Sprays = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + Spray + ".url");
-                String SpraysFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + Spray + ".file");
-                DebugUtil.addMessage("Playing "+ Spray + " Spray for " + p.getDisplayName());
-                if(SpraysFile == null){
-                    if (!renderer.load(Sprays)) {
-                        p.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
-                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the URL for the " + Spray + " Check if the URL in Sprays.yml is valid!");
-                    }else {
-                        view.addRenderer(renderer);
-                        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
-                        map.setDurability(view.getId());
-                        map.setAmount(1);
-                        f.setItem(map);
-                        f.setRotation(Rotation.NONE);
-                        Sound sound = GSound.ENTITY_SILVERFISH_HURT.parseSound();
-                        p.playSound(f.getLocation(), sound, 1f, 1f);
-                        HCore.playParticle(f.getLocation(), new Particle(ParticleType.FIREWORKS_SPARK, 4, f.getLocation().toVector()));
-                        for (final Entity en : f.getNearbyEntities(1.0, 1.0, 1.0)) {
-                            if (en.getType() == EntityType.ARMOR_STAND && en.hasMetadata("HOLO_ITEM_FRAME")) {
-                                en.remove();
-                            }
-                        }
+
+                String sprayUrl = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".url");
+                String sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
+
+                DebugUtil.addMessage("Playing " + spray + " Spray for " + player.getDisplayName());
+
+                if (sprayFile == null) {
+                    if (!renderer.load(sprayUrl)) {
+                        player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
+                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the URL for the " + spray + ". Check if the URL in Sprays.yml is valid!");
+                    } else {
+                        addRendererAndShowSpray(player, itemFrame, renderer, view);
                     }
-                }else{
-                    Sprays = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + Spray + ".file");
-                    File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Utility.plugin().getConfig().getString("Spray-Dir") + "/" + Sprays);
+                } else {
+                    sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
+                    File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Utility.plugin().getConfig().getString("Spray-Dir") + "/" + sprayFile);
                     if (!renderer.load(file)) {
-                        p.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
-                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + Spray + " Check if the File in Sprays.yml is valid!");
-                    }else {
-                        view.addRenderer(renderer);
-                        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
-                        map.setDurability(view.getId());
-                        map.setAmount(1);
-                        f.setItem(map);
-                        f.setRotation(Rotation.NONE);
-                        p.playEffect(f.getLocation(), Effect.FLYING_GLYPH, 10);
-                        for (final Entity en : f.getNearbyEntities(1.0, 1.0, 1.0)) {
-                            if (en.getType() == EntityType.ARMOR_STAND && en.hasMetadata("HOLO_ITEM_FRAME")) {
-                                en.remove();
-                            }
-                        }
+                        player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
+                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid!");
+                    } else {
+                        addRendererAndShowSpray(player, itemFrame, renderer, view);
                     }
                 }
             }
         });
-
     }
+
+    /**
+     * Add the renderer to the map view and display the spray.
+     *
+     * @param player The player for whom to display the spray.
+     * @param itemFrame The item frame in which to display the spray.
+     * @param renderer The custom renderer to add.
+     * @param view The map view to render.
+     */
+    private static void addRendererAndShowSpray(Player player, ItemFrame itemFrame, CustomRenderer renderer, MapView view) {
+        view.addRenderer(renderer);
+        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
+        map.setDurability(view.getId());
+        map.setAmount(1);
+        itemFrame.setItem(map);
+        itemFrame.setRotation(Rotation.NONE);
+        player.playEffect(itemFrame.getLocation(), Effect.FLYING_GLYPH, 10);
+        for (final Entity entity : itemFrame.getNearbyEntities(1.0, 1.0, 1.0)) {
+            if (entity.getType() == EntityType.ARMOR_STAND && entity.hasMetadata("HOLO_ITEM_FRAME")) {
+                entity.remove();
+            }
+        }
+    }
+
 }
 
 
