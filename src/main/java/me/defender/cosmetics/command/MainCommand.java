@@ -59,7 +59,8 @@ public class MainCommand {
             permissionMessage = "§cYou don't have permission to do that!"
     )
     public void helpCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player p) {
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
             p.sendMessage(ColorUtil.colored("&7-> &6BedWars1058-Cosmetics Addon &7- &cCommands &7<-"));
             p.sendMessage(" ");
             p.spigot().sendMessage(Utility.hoverablemsg("&6-> &7/bwc reload    &8- &eclick for details", "Reloads the all the YAML's"));

@@ -327,20 +327,17 @@ public class IslandTopperPreview {
     }
 
     private static CuboidClipboard flipDirection(CuboidClipboard clipboard, String direction) {
-        return switch (direction.toUpperCase()) {
-            case "NORTH" -> {
+        switch (direction.toUpperCase()) {
+            case "NORTH":
                 clipboard.rotate2D(180);
-                yield clipboard;
-            }
-            case "EAST" -> {
+                break;
+            case "EAST":
                 clipboard.rotate2D(270);
-                yield clipboard;
-            }
-            case "WEST" -> {
+                break;
+            case "WEST":
                 clipboard.rotate2D(90);
-                yield clipboard;
+                break;
             }
-            default -> clipboard;
-        };
-    }
+            return clipboard;
+        }
 }

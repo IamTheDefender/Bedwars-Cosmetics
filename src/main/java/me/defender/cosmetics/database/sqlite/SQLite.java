@@ -2,6 +2,7 @@ package me.defender.cosmetics.database.sqlite;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.Getter;
 import me.defender.cosmetics.database.IDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +15,7 @@ public class SQLite implements IDatabase {
 
     private final JavaPlugin plugin;
     public HikariDataSource dataSource;
+    @Getter
     public Connection connection;
     public SQLite(JavaPlugin plugin){
         this.plugin = plugin;
@@ -85,7 +87,4 @@ public class SQLite implements IDatabase {
         }
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
 }

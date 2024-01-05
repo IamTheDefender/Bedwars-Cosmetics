@@ -75,20 +75,17 @@ public class IslandToppersUtil
 
 
     private static CuboidClipboard flipDirection(CuboidClipboard clipboard, BlockFace direction) {
-        return switch (direction) {
-            case NORTH -> {
+        switch (direction) {
+            case NORTH:
                 clipboard.rotate2D(180);
-                yield clipboard;
-            }
-            case EAST -> {
+                break;
+            case EAST:
                 clipboard.rotate2D(270);
-                yield clipboard;
-            }
-            case WEST -> {
+                break;
+            case WEST:
                 clipboard.rotate2D(90);
-                yield clipboard;
-            }
-            default -> clipboard;
-        };
+                break;
+        }
+        return clipboard;
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 
 // This class has no use as of now.
+@Deprecated
 public class PlayerLeaveListener implements Listener {
 
     @EventHandler
