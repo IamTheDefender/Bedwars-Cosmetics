@@ -50,19 +50,7 @@ public class Cosmetics extends JavaPlugin
     @Getter
     static boolean placeholderAPI;
     @Getter
-    private IDatabase database;
-
-    public static void downloadFile(URL url, String filePath) {
-        try {
-            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-            FileOutputStream fos = new FileOutputStream(filePath);
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            fos.close();
-            rbc.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private IDatabase dataBase;
 
 
     @Override
@@ -81,7 +69,13 @@ public class Cosmetics extends JavaPlugin
         }
 
         getLogger().info("All dependencies found, continuing with plugin startup.");
-        HCore.initialize(this);
+        try{
+            HCore.initialize(this);
+        }catch (IllegalStateException ignored){
+            getLogger().severe("BW1058-Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
+            setEnabled(false);
+            return;
+        }
         // Download Glyphs
         StartupUtils.downloadGlyphs();
         ConfigUtils.getBedDestroys().save();
@@ -105,13 +99,13 @@ public class Cosmetics extends JavaPlugin
             getLogger().info("Loading MySQL database..");
             MySQL mySQL = new MySQL(this);
             db = mySQL.dataSource;
-            database = mySQL;
+            dataBase = mySQL;
             dbConnection = mySQL.getConnection();
         }else{
             getLogger().info("Loading SQLite database..");
             SQLite sqLite = new SQLite(this);
             db = sqLite.dataSource;
-            database = sqLite;
+            dataBase = sqLite;
             dbConnection = sqLite.getConnection();
         }
 
@@ -143,7 +137,7 @@ public class Cosmetics extends JavaPlugin
             try (Connection connection = db.getConnection()){
                 connection.createStatement();
             }catch (Exception e){
-                database.connect();
+                dataBase.connect();
             }
         });
 
@@ -173,6 +167,8 @@ public class Cosmetics extends JavaPlugin
         }
     }
 
+
+
     public static HikariDataSource getDB(){
         return db;
     }
@@ -184,4 +180,6 @@ public class Cosmetics extends JavaPlugin
     public boolean isBw2023() {
         return getBedWars2023API() != null;
     }
+
+
 }

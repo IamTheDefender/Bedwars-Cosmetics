@@ -47,6 +47,11 @@ public class ShopKeeperSkinsUtils {
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
+        npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.SILENT, true);
+
 
         npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
         npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
@@ -86,6 +91,11 @@ public class ShopKeeperSkinsUtils {
         npc.getOrAddTrait(HologramTrait.class).clear();
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
+        npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
+        npc.data().setPersistent(NPC.Metadata.SILENT, true);
+
 
         // Shop NPC
         NPC npc1 = registry.createNPC(EntityType.PLAYER, "");
@@ -96,7 +106,10 @@ public class ShopKeeperSkinsUtils {
         npc1.getOrAddTrait(HologramTrait.class).clear();
         npc1.spawn(loc1);
         npc1.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
-
+        npc1.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
+        npc1.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
+        npc1.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
+        npc1.data().setPersistent(NPC.Metadata.SILENT, true);
     }
 
     /**

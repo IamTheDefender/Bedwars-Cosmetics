@@ -63,6 +63,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -149,7 +151,7 @@ public class StartupUtils
         // Save if not found
         if(cubeFile.exists()) return;
         try {
-            Cosmetics.downloadFile(new URL("https://dl.dropboxusercontent.com/s/x9rmk36qa1uwrr3/idkcube.schematic"), cubeFile.getPath());
+            downloadFile(new URL("https://dl.dropboxusercontent.com/s/x9rmk36qa1uwrr3/idkcube.schematic"), cubeFile.getPath());
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -182,6 +184,23 @@ public class StartupUtils
             throw new RuntimeException(e);
         }
         tempFile.delete();
+    }
+
+    /**
+     * Download a file from a URL to a file
+     * @param url URL for the download, should be a direct download
+     * @param filePath Path to the file
+     */
+    public static void downloadFile(URL url, String filePath) {
+        try {
+            ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            fos.close();
+            rbc.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

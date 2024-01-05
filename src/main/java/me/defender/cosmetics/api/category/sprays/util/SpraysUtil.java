@@ -53,15 +53,15 @@ public class SpraysUtil
                     player.sendMessage(ColorUtil.colored(Utility.getMSGLang(player, "cosmetics.spray-msg")));
                     return;
                 }
-                SpraysUtil.cooldown.remove(p.getName());
+                SpraysUtil.cooldown.remove(player.getName());
             }
             // The player is no longer in the cool down or it's the first time
-            else if (ShopKeeperHandler1058.arenas.containsKey(p.getWorld().getName())) {
+            else if (ShopKeeperHandler1058.arenas.containsKey(player.getWorld().getName())) {
 
-                SpraysUtil.cooldown.put(p.getName(), System.currentTimeMillis() + 3000L);
+                SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
                 // Player is no longer in cooldown
                 SpraysUtil.cooldown.remove(player.getName());
-            } else if (ShopKeeperHandler.arenas.containsKey(player.getWorld().getName())) {
+            } else if (ShopKeeperHandler1058.arenas.containsKey(player.getWorld().getName())) {
                 // Player is not in cooldown or it's the first time
                 SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
                 view.removeRenderer(view.getRenderers().get(0));
