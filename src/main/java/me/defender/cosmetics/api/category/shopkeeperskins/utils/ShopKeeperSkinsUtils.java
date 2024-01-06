@@ -46,17 +46,15 @@ public class ShopKeeperSkinsUtils {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(ent, "");
         npc.setBukkitEntityType(ent);
+        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
+        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+
+        npc.spawn(loc);
         npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
         npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
         npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
         npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
         npc.data().setPersistent(NPC.Metadata.SILENT, true);
-
-
-        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
-        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
-
-        npc.spawn(loc);
 
         new BukkitRunnable() {
             int tick = ticks;

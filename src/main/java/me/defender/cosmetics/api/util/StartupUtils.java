@@ -107,6 +107,7 @@ public class StartupUtils
                 HCore.registerListeners(new BedDestroyHandler1058());
                 HCore.registerListeners(new WoodSkinHandler1058());
                 HCore.registerListeners(new IslandTopperHandler1058());
+                HCore.registerListeners(new GameListener());
             } else {
                 HCore.registerListeners(new WoodSkinHandler2023());
                 HCore.registerListeners(new VictoryDanceHandler2023());

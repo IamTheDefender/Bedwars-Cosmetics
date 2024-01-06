@@ -41,8 +41,10 @@ public class Utility {
     }
 
     /**
+     * Planned to be removed
      * @return JavaPlugin class of Cosmetics.class
      */
+    @Deprecated
     public static Cosmetics plugin() {
         return Cosmetics.getPlugin(Cosmetics.class);
     }

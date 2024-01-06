@@ -51,6 +51,8 @@ public class Cosmetics extends JavaPlugin
     static boolean placeholderAPI;
     @Getter
     private IDatabase dataBase;
+    @Getter
+    private static Cosmetics instance;
 
 
     @Override
@@ -76,6 +78,7 @@ public class Cosmetics extends JavaPlugin
             setEnabled(false);
             return;
         }
+        instance = this;
         // Download Glyphs
         StartupUtils.downloadGlyphs();
         ConfigUtils.getBedDestroys().save();
