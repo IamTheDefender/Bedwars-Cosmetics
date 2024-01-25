@@ -1,7 +1,9 @@
 name: BW1058-Cosmetics
-version: '1.4.5'
+version: '1.4.6'
 main: me.defender.cosmetics.Cosmetics
 prefix: BW1058-Cosmetics
-softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, Vault, Citizens, PlaceholderAPI, WorldEdit ]
-author: IamTheDefender
+softdepend: [ BedWars1058, BedWars2023, BedwarsProxy]
+depend: [Vault, Citizens, PlaceholderAPI, WorldEdit]
+author: IamTheDefender (iamthedefender)
 description: This addon adds a set of various cosmetics to your bedwars server
+website: https://github.com/IamTheDefender/BW1058-Cosmetics

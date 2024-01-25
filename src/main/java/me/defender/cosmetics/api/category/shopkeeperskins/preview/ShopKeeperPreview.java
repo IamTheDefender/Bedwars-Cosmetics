@@ -1,20 +1,21 @@
 package me.defender.cosmetics.api.category.shopkeeperskins.preview;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.shopkeeperskins.ShopKeeperSkin;
 import me.defender.cosmetics.api.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
 import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
-import net.minecraft.server.v1_8_R3.PacketPlayOutCamera;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -92,18 +93,18 @@ public class ShopKeeperPreview {
             player1.hidePlayer(player);
         }
 
-        CraftPlayer craftPlayer = (CraftPlayer)player;
+        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        cameraPacket.getIntegers().write(0, as.getEntityId());
 
-        PacketPlayOutCamera cameraPacket = new PacketPlayOutCamera(((CraftArmorStand) as).getHandle());
-        PacketPlayOutCamera resetPacket = new PacketPlayOutCamera(craftPlayer.getHandle());
-        craftPlayer.getHandle().playerConnection.sendPacket(cameraPacket);
+        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        resetPacket.getIntegers().write(0, player.getEntityId());
+        Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
 
         ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, finalCosmeticLocation, selected);
 
         HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
             if (!as.isDead()) as.remove();
-
-            craftPlayer.getHandle().playerConnection.sendPacket(resetPacket);
+            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 

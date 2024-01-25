@@ -3,6 +3,9 @@
 package me.defender.cosmetics.api.util;
 
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.*;
@@ -58,6 +61,7 @@ import me.defender.cosmetics.api.category.sprays.items.SprayItems;
 import me.defender.cosmetics.listener.*;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -377,5 +381,20 @@ public class StartupUtils
         location.setZ(location.getBlockZ() + 0.5);
 
         return location;
+    }
+
+    public static void addEntityHideListener(){
+        Cosmetics.getInstance().getProtocolManager().addPacketListener(new PacketAdapter(Cosmetics.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                int entityID = event.getPacket().getIntegers().read(0);
+                Player player = event.getPlayer();
+                if(Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityID)){
+                    if(!player.getUniqueId().equals(Cosmetics.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
+                        event.setCancelled(true);
+                    }
+                }
+            }
+        });
     }
 }

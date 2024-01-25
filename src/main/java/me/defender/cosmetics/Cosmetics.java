@@ -1,6 +1,8 @@
 
 package me.defender.cosmetics;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
 import com.zaxxer.hikari.HikariDataSource;
@@ -22,6 +24,8 @@ import me.defender.cosmetics.database.mysql.MySQL;
 import me.defender.cosmetics.database.sqlite.SQLite;
 import me.defender.cosmetics.support.bedwars.BedWars2023;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.FileOutputStream;
@@ -53,6 +57,10 @@ public class Cosmetics extends JavaPlugin
     private IDatabase dataBase;
     @Getter
     private static Cosmetics instance;
+    @Getter
+    private ProtocolManager protocolManager;
+    @Getter
+    private HashMap<Integer, Player> entityPlayerHashMap;
 
 
     @Override
@@ -79,6 +87,9 @@ public class Cosmetics extends JavaPlugin
             return;
         }
         instance = this;
+        protocolManager = ProtocolLibrary.getProtocolManager();
+        entityPlayerHashMap  = new HashMap<>();
+        StartupUtils.addEntityHideListener();
         // Download Glyphs
         StartupUtils.downloadGlyphs();
         ConfigUtils.getBedDestroys().save();

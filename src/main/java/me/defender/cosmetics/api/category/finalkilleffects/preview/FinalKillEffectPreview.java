@@ -1,9 +1,13 @@
 package me.defender.cosmetics.api.category.finalkilleffects.preview;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
@@ -16,14 +20,11 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.api.trait.trait.PlayerFilter;
 import net.citizensnpcs.trait.SkinTrait;
-import net.minecraft.server.v1_8_R3.PacketPlayOutCamera;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,7 +40,6 @@ import java.util.concurrent.TimeUnit;
 
 import static me.defender.cosmetics.api.util.StartupUtils.getCosmeticLocation;
 import static me.defender.cosmetics.api.util.StartupUtils.getPlayerLocation;
-import static me.defender.cosmetics.api.util.Utility.plugin;
 
 public class FinalKillEffectPreview {
 
@@ -107,15 +107,17 @@ public class FinalKillEffectPreview {
 
         sendKillEffect(player, finalCosmeticLocation);
 
-        PacketPlayOutCamera cameraPacket = new PacketPlayOutCamera(((CraftArmorStand) as).getHandle());
-        PacketPlayOutCamera resetPacket = new PacketPlayOutCamera(((CraftPlayer) player).getHandle());
+        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        cameraPacket.getIntegers().write(0, as.getEntityId());
 
-        HCore.sendPacket(player, cameraPacket);
+        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        resetPacket.getIntegers().write(0, player.getEntityId());
+        Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
 
         HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
             if (!as.isDead()) as.remove();
 
-            HCore.sendPacket(player, resetPacket);
+            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
@@ -134,9 +136,6 @@ public class FinalKillEffectPreview {
 
     public void sendKillEffect(Player player, Location location) {
         if (this.killEffect == null) return;
-
-//        World world = location.getWorld();
-
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
 
         Block block = location.getBlock();
@@ -185,23 +184,23 @@ public class FinalKillEffectPreview {
 
         victimNPC.spawn(bottomLeftLocation);
         derperinoNPC.spawn(leftLocation);
-        victimNPC.getEntity().setMetadata("NPC2", new FixedMetadataValue(plugin(), ""));
-        derperinoNPC.getEntity().setMetadata("NPC1", new FixedMetadataValue(plugin(), ""));
+        victimNPC.getEntity().setMetadata("NPC2", new FixedMetadataValue(Cosmetics.getInstance(), ""));
+        derperinoNPC.getEntity().setMetadata("NPC1", new FixedMetadataValue(Cosmetics.getInstance(), ""));
         victimNPC.getNavigator().setTarget(derperinoNPC.getEntity(), true);
 
         new BukkitRunnable() {
             @Override
             public void run() {
                 Player deperinoPlayer = (Player) derperinoNPC.getEntity();
-                deperinoPlayer.damage(1000);
+                derperinoNPC.despawn();
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         killEffect.execute(player, player, leftLocation, true);
                     }
-                }.runTask(plugin());
+                }.runTask(Cosmetics.getInstance());
             }
-        }.runTaskLaterAsynchronously(plugin(), 22L);
+        }.runTaskLaterAsynchronously(Cosmetics.getInstance(), 22L);
 
         new BukkitRunnable() {
             int tick = 5;
@@ -224,6 +223,6 @@ public class FinalKillEffectPreview {
                 }
                 tick--;
             }
-        }.runTaskTimer(plugin(), 0, 20);
+        }.runTaskTimer(Cosmetics.getInstance(), 0, 20);
     }
 }

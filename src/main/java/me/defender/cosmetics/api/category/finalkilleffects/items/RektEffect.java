@@ -1,16 +1,16 @@
 package me.defender.cosmetics.api.category.finalkilleffects.items;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
-import net.minecraft.server.v1_8_R3.EntityArmorStand;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -76,27 +76,25 @@ public class RektEffect extends FinalKillEffect {
                 }
             }.runTaskLater(plugin(), 200L);
         } else {
-            EntityArmorStand stand = new EntityArmorStand(((CraftWorld) location.getWorld()).getHandle());
-            stand.setPosition(location.getX(), location.getY() + 2, location.getZ());
-
+            ArmorStand stand = (ArmorStand) victim.getWorld().spawnEntity(location.add(0,2,0), EntityType.ARMOR_STAND);
+            Utility.entityForPlayerOnly(stand, victim);
             stand.setSmall(true);
             stand.setGravity(false);
-            stand.setInvisible(true);
+            stand.setVisible(false);
             stand.setCustomNameVisible(true);
             stand.setCustomName(ColorUtil.colored("&6" + killer.getDisplayName() + " &ehas #rekt &6Derperino " +
                     "&ehere"));
 
-            PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(stand);
-            PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(stand.getId());
-
-            HCore.sendPacket(victim, spawnPacket);
-
+             PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+            int[] entityIds = new int[] { stand.getEntityId() };
+            packet.getIntegerArrays().write(0, entityIds);
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    HCore.sendPacket(victim, destroyPacket);
+                    Cosmetics.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
+                    ProtocolLibrary.getProtocolManager().sendServerPacket(victim, packet);
                 }
-            }.runTaskLater(plugin(), 80L);
+            }.runTaskLater(Cosmetics.getInstance(), 80L);
         }
     }
 }

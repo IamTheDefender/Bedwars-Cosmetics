@@ -1,21 +1,14 @@
 package me.defender.cosmetics.api.category.finalkilleffects.items;
 
-import com.andrei1058.bedwars.api.BedWars;
-import com.andrei1058.bedwars.api.arena.IArena;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
-import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.Utility;
-import net.minecraft.server.v1_8_R3.EnumParticle;
-import net.minecraft.server.v1_8_R3.Packet;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldParticles;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;

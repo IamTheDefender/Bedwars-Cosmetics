@@ -5,6 +5,9 @@ package me.defender.cosmetics.api.util;
 
 import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.defender.cosmetics.Cosmetics;
@@ -16,9 +19,11 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
@@ -43,6 +48,7 @@ public class Utility {
     /**
      * Planned to be removed
      * @return JavaPlugin class of Cosmetics.class
+     * @deprecated use {@link Cosmetics#getInstance()}
      */
     @Deprecated
     public static Cosmetics plugin() {
@@ -175,6 +181,21 @@ public class Utility {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void entityForPlayerOnly(Entity entityToHide, Player player){
+        if(!Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityToHide.getEntityId())){
+            Cosmetics.getInstance().getEntityPlayerHashMap().put(entityToHide.getEntityId(), player);
+        }
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+        int[] entityIds = new int[] { entityToHide.getEntityId() };
+        packet.getIntegerArrays().write(0, entityIds);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if(!onlinePlayer.getUniqueId().equals(player.getUniqueId())){
+                ProtocolLibrary.getProtocolManager().sendServerPacket(onlinePlayer, packet);
+            }
         }
     }
 }

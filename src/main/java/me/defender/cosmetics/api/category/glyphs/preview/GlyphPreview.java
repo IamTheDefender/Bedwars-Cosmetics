@@ -1,9 +1,13 @@
 package me.defender.cosmetics.api.category.glyphs.preview;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.glyphs.Glyph;
 import me.defender.cosmetics.api.category.glyphs.util.ImageParticles;
 import me.defender.cosmetics.api.configuration.ConfigManager;
@@ -13,13 +17,10 @@ import me.defender.cosmetics.api.enums.FieldsType;
 import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.Utility;
-import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -106,15 +107,19 @@ public class GlyphPreview {
 
         sendGlyphParticles(player, finalCosmeticLocation, selected);
 
-        PacketPlayOutCamera cameraPacket = new PacketPlayOutCamera(((CraftArmorStand) as).getHandle());
-        PacketPlayOutCamera resetPacket = new PacketPlayOutCamera(((CraftPlayer) player).getHandle());
+        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        cameraPacket.getIntegers().write(0, as.getEntityId());
 
-        sendPacket(player, cameraPacket);
+        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        resetPacket.getIntegers().write(0, player.getEntityId());
+        Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+
 
         HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
             if (!as.isDead()) as.remove();
 
-            sendPacket(player, resetPacket);
+
+            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
@@ -178,11 +183,5 @@ public class GlyphPreview {
                         .display(player));
             }
         });
-    }
-
-    private void sendPacket(Player player, Packet<?>... packets) {
-        for (Packet<?> packet : packets) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-        }
     }
 }

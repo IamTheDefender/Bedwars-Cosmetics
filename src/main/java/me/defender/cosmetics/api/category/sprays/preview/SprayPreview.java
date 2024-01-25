@@ -1,9 +1,15 @@
 package me.defender.cosmetics.api.category.sprays.preview;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.category.sprays.Spray;
 import me.defender.cosmetics.api.category.sprays.util.CustomRenderer;
 import me.defender.cosmetics.api.configuration.ConfigManager;
@@ -14,18 +20,15 @@ import me.defender.cosmetics.api.enums.RarityType;
 import me.defender.cosmetics.api.util.StartupUtils;
 import me.defender.cosmetics.api.util.Utility;
 import me.defender.cosmetics.support.sounds.GSound;
-import net.minecraft.server.v1_8_R3.*;
-import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.*;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArmorStand;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -46,10 +49,11 @@ public class SprayPreview {
 
     private final Map<UUID, Map<Integer, org.bukkit.inventory.ItemStack>> inventories = new HashMap<>();
 
-    private EntityItemFrame frame;
+    private ItemFrame frame;
     private MapView view;
 
     private int currentID;
+    private PacketAdapter adapter;
 
     public void sendSprayPreview(Player player, String selected, InventoryGui gui){
         for (Spray spray : StartupUtils.sprayList) {
@@ -108,21 +112,26 @@ public class SprayPreview {
             player1.hidePlayer(player);
         }
 
-        sendFrame(player, itemFrameLocation, selected);
+        sendFrame(player, itemFrameLocation, selected, finalPlayerLocation);
 
-        CraftPlayer craftPlayer = (CraftPlayer)player;
+        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        cameraPacket.getIntegers().write(0, as.getEntityId());
 
-        PacketPlayOutCamera cameraPacket = new PacketPlayOutCamera(((CraftArmorStand) as).getHandle());
-        PacketPlayOutCamera resetPacket = new PacketPlayOutCamera(craftPlayer.getHandle());
+        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
+        resetPacket.getIntegers().write(0, player.getEntityId());
+        Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
 
-        sendPacket(player, cameraPacket);
 
         HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
             if (!as.isDead()) as.remove();
-            PacketPlayOutEntityDestroy itemFrameDestroyPacket = new PacketPlayOutEntityDestroy(currentID);
-            sendPacket(player, itemFrameDestroyPacket);
 
-            sendPacket(player, resetPacket);
+            PacketContainer itemFrameDestroyPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_DESTROY);
+            itemFrameDestroyPacket.getIntegerArrays().write(0, new int[]{currentID});
+            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, itemFrameDestroyPacket);
+            frame.setItem(new ItemStack(Material.AIR));
+            frame.remove();
+            Cosmetics.getInstance().getProtocolManager().removePacketListener(adapter);
+            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
@@ -145,8 +154,9 @@ public class SprayPreview {
         return bukkitItem;
     }
 
-    public void sendFrame(Player player, Location location, String selected) {
+    public void sendFrame(Player player, Location location, String selected, Location playerLocation) {
         view = Bukkit.createMap(player.getWorld());
+        playerLocation = playerLocation.clone();
 
         CustomRenderer renderer = new CustomRenderer();
         ConfigManager config = ConfigUtils.getSprays();
@@ -171,39 +181,61 @@ public class SprayPreview {
 
         view.addRenderer(renderer);
 
-        World nmsWorld = ((CraftWorld)location.getWorld()).getHandle();
 
-        ItemStack nmsItem = CraftItemStack.asNMSCopy(createMapItem());
-        org.bukkit.inventory.ItemStack bukkitItem = CraftItemStack.asBukkitCopy(nmsItem);
+        org.bukkit.inventory.ItemStack mapItem = createMapItem();
+        playerLocation.setPitch(0);
+        playerLocation.add(0, 1.5, 0);
+        Location firstBlock = playerLocation.clone().add(playerLocation.getDirection().multiply(2));
+        firstBlock.getBlock().setType(Material.BARRIER);
+        firstBlock.getChunk().load(true);
+        frame = (ItemFrame) player.getWorld().spawnEntity(firstBlock.getBlock().getRelative(getCardinalDirection(playerLocation)).getLocation(), EntityType.ITEM_FRAME);
 
-        frame = new EntityItemFrame(nmsWorld);
-        frame.setPosition(location.getX(), location.getY(), location.getZ());
-        frame.setItem(nmsItem);
 
-        currentID = frame.getId();
+        adapter = new PacketAdapter(Cosmetics.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                if(event.getPacket().getIntegers().read(0) == frame.getEntityId() &&
+                !event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
+                    event.setCancelled(true);
+                }
+            }
+        };
+        Cosmetics.getInstance().getProtocolManager().addPacketListener(adapter);
+        frame.setFacingDirection(getCardinalDirection(playerLocation), true);
+        frame.setItem(mapItem);
 
-        PacketPlayOutSpawnEntity spawnEntityPacket = new PacketPlayOutSpawnEntity(frame, 71, 0);
-        PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(frame.getId(), frame.getDataWatcher(), true);
-
-        sendPacket(player, spawnEntityPacket, metadataPacket);
         player.sendMap(view);
-
-        player.getInventory().setItem(0, bukkitItem);
+        firstBlock.getBlock().setType(Material.AIR);
+        player.getInventory().setItem(0, mapItem);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.getInventory().remove(bukkitItem);
+                player.getInventory().remove(mapItem);
             }
-        }.runTaskAsynchronously(HCore.getInstance());
-
-        Sound sound = GSound.ENTITY_SILVERFISH_HURT.parseSound();
-        player.playSound(frame.getBukkitEntity().getLocation(), sound, 10f, 10f);
+        }.runTaskAsynchronously(Cosmetics.getInstance());
+        XSound.ENTITY_SILVERFISH_HURT.play(player, 10f, 10f);
     }
 
-    private void sendPacket(Player player, Packet<?>... packets) {
-        for (Packet<?> packet : packets) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    public static BlockFace getCardinalDirection(Location location) {
+        double yaw = location.getYaw();
+
+        if (yaw < 0) {
+            yaw += 360;
+        }
+
+        // Inverted, so if facing is SOUTH it will return NORTH
+        if (yaw >= 315 || yaw < 45) {
+            return BlockFace.SOUTH;
+        } else if (yaw >= 45 && yaw < 135) {
+            return BlockFace.EAST;
+        } else if (yaw >= 135 && yaw < 225) {
+            return BlockFace.NORTH;
+        } else if (yaw >= 225) {
+            return BlockFace.WEST;
+        } else {
+            return BlockFace.SELF;
         }
     }
+
 }

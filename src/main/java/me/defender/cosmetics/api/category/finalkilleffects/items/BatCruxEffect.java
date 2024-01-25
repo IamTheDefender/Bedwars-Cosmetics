@@ -7,27 +7,11 @@ import com.hakan.core.particle.type.ParticleType;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
-import me.defender.cosmetics.api.util.DebugUtil;
 import me.defender.cosmetics.api.util.Utility;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.ai.Navigator;
-import net.citizensnpcs.api.npc.MemoryNPCDataStore;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.trait.PlayerFilter;
-import net.citizensnpcs.trait.CurrentLocation;
-import net.citizensnpcs.trait.LookClose;
-import net.citizensnpcs.trait.RotationTrait;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -94,12 +78,7 @@ public class BatCruxEffect extends FinalKillEffect {
 
         if (onlyVictim) {
             for (Bat bat : bats) {
-                PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(bat.getEntityId());
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!player.getUniqueId().equals(victim.getUniqueId())) {
-                        HCore.sendPacket(player, destroyPacket);
-                    }
-                }
+                Utility.entityForPlayerOnly(bat, victim);
             }
         }
 
@@ -109,16 +88,8 @@ public class BatCruxEffect extends FinalKillEffect {
                 if (!bats.isEmpty()) {
                     for (Bat bat : bats) {
                         Location batLocation = bat.getLocation().clone();
-                        PacketPlayOutWorldParticles particlePacket =
-                                new PacketPlayOutWorldParticles(
-                                        EnumParticle.SMOKE_LARGE,
-                                        true,
-                                        (float) batLocation.getX(),
-                                        (float) batLocation.getY(),
-                                        (float) batLocation.getZ(),
-                                        0f, 0f, 0f, (float) 1, 0
-                            );
-                        HCore.sendPacket(victim, particlePacket);
+                        Particle particle = new Particle(ParticleType.SMOKE_LARGE, 1, new Vector(0,0,0));
+                        HCore.playParticle(victim, batLocation, particle);
                     }
                 }
             }

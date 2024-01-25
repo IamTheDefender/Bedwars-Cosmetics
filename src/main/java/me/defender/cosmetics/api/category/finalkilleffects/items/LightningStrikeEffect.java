@@ -1,16 +1,19 @@
 package me.defender.cosmetics.api.category.finalkilleffects.items;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.category.finalkilleffects.FinalKillEffect;
 import me.defender.cosmetics.api.enums.RarityType;
-import net.minecraft.server.v1_8_R3.EntityLightning;
-import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityWeather;
+import me.defender.cosmetics.api.util.Utility;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,13 +58,9 @@ public class LightningStrikeEffect extends FinalKillEffect {
         if (!onlyVictim) {
             location.getWorld().strikeLightningEffect(location);
         } else {
-            EntityLightning el = new EntityLightning(
-                    ((CraftWorld) location.getWorld()).getHandle(),
-                    location.getX(),
-                    location.getY(),
-                    location.getZ());
-            PacketPlayOutSpawnEntityWeather weatherPacket = new PacketPlayOutSpawnEntityWeather(el);
-            HCore.sendPacket(victim, weatherPacket);
+            // Create a non-NMS lightning entity
+            LightningStrike lightning = location.getWorld().strikeLightningEffect(location);
+            Utility.entityForPlayerOnly(lightning, victim);
         }
     }
 }
