@@ -104,10 +104,10 @@ public class MainCommand {
                 new com.tomkeuper.bedwars.shop.ShopCache(p.getUniqueId());
                 com.tomkeuper.bedwars.shop.ShopManager.shop.open(p, com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(p.getUniqueId()), true);
             }
-            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Utility.Cosmetics.getInstance(), true));
+            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Cosmetics.getInstance(), true));
             HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
                 if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
-                    event.getPlayer().removeMetadata("bwc_quickbuy", Utility.Cosmetics.getInstance());
+                    event.getPlayer().removeMetadata("bwc_quickbuy", Cosmetics.getInstance());
                     if (!plugin.isBw2023()) {
                         PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
                         PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();

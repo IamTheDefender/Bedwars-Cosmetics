@@ -59,7 +59,7 @@ public class WitherRiderDance extends VictoryDance {
     public void execute(Player winner) {
         Wither wither = (Wither) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.WITHER);
         wither.setPassenger(winner);
-        wither.setMetadata("VD", new FixedMetadataValue(Utility.Cosmetics.getInstance(), ""));
+        wither.setMetadata("VD", new FixedMetadataValue(Cosmetics.getInstance(), ""));
         wither.setCustomName(ColorUtil.colored("&a" + winner.getName() + "'s Wither!"));
         wither.setNoDamageTicks(Integer.MAX_VALUE);
         new BukkitRunnable() {
@@ -77,7 +77,7 @@ public class WitherRiderDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 1L);
 
 
         // Event

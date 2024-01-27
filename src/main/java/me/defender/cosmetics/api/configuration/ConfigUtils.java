@@ -11,47 +11,47 @@ import java.util.Objects;
 public class ConfigUtils {
 
     public static ConfigManager getBedDestroys() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "BedBreakEffect", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "BedBreakEffect", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getDeathCries() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "DeathCries", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "DeathCries", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getFinalKillEffects() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "FinalKillEffects", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "FinalKillEffects", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getGlyphs() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "Glyphs", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "Glyphs", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getIslandToppers() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "IslandToppers", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "IslandToppers", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getKillMessages() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "KillMessages", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "KillMessages", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getProjectileTrails() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "ProjectileTrails", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "ProjectileTrails", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getShopKeeperSkins() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "ShopKeeperSkins", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "ShopKeeperSkins", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getSprays() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "Sprays", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "Sprays", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getVictoryDances() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "VictoryDances", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "VictoryDances", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getWoodSkins() {
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "WoodSkins", Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), "WoodSkins", Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
 
@@ -59,11 +59,11 @@ public class ConfigUtils {
         if(configType == ConfigType.Main_Config){
             return getMainConfig();
         }
-        return new ConfigManager(Utility.Cosmetics.getInstance(), configType.getFileName(), Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
+        return new ConfigManager(Cosmetics.getInstance(), configType.getFileName(), Cosmetics.getInstance().getDataFolder().getPath() + "/Categories");
     }
 
     public static ConfigManager getMainConfig(){
-        return new ConfigManager(Utility.Cosmetics.getInstance(), "config", Utility.Cosmetics.getInstance().getDataFolder().getPath());
+        return new ConfigManager(Cosmetics.getInstance(), "config", Cosmetics.getInstance().getDataFolder().getPath());
     }
 
     public static void saveIfNotFound(ConfigType configType, String path ,Object data){

@@ -18,7 +18,7 @@ public class DefaultsUtils {
     public void saveAllDefaults(){
         for(ConfigType type : ConfigType.values()){
             ConfigManager config = ConfigUtils.get(type);
-            InputStream defaultConfigStream = Utility.Cosmetics.getInstance().getResource(type.getFileName() + ".yml");
+            InputStream defaultConfigStream = Cosmetics.getInstance().getResource(type.getFileName() + ".yml");
             if(defaultConfigStream != null) {
                 YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
                 config.addDefaults(defaultConfig);

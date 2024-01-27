@@ -129,7 +129,7 @@ public class CategoryMenu extends InventoryGui {
                 rarityMap.put(item, rarity);
             }
         }
-        if(Utility.Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
+        if(Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
             setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> Utility.openMainMenu((Player) e.getWhoClicked()));
         }
         createPages(items, rarityMap);

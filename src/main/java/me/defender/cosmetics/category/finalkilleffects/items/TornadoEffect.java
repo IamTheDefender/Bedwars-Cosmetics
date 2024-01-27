@@ -5,6 +5,7 @@ import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
@@ -84,6 +85,6 @@ public class TornadoEffect extends FinalKillEffect {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 2L, 0L);
+        }.runTaskTimer(Cosmetics.getInstance(), 2L, 0L);
     }
 }

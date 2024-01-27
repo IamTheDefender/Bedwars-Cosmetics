@@ -80,6 +80,6 @@ public class HauntedDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 1L, 8L);
+        }.runTaskTimer(Cosmetics.getInstance(), 1L, 8L);
     }
 }

@@ -65,6 +65,6 @@ public class RainingPigsDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 1L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 1L, 1L);
     }
 }

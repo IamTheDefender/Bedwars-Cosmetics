@@ -3,6 +3,7 @@ package me.defender.cosmetics.category.victorydance.items;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
@@ -63,7 +64,7 @@ public class DragonRiderDance extends VictoryDance {
         ArmorStand stand = (ArmorStand) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
-        stand.setMetadata("FAKE_TARGET", new FixedMetadataValue(Utility.Cosmetics.getInstance(), ""));
+        stand.setMetadata("FAKE_TARGET", new FixedMetadataValue(Cosmetics.getInstance(), ""));
         // create a task to move the dragon towards the fake target
         new BukkitRunnable() {
             public void run() {
@@ -85,6 +86,6 @@ public class DragonRiderDance extends VictoryDance {
                 Fireball fireball = winner.getWorld().spawn(original, Fireball.class);
                 fireball.setDirection(direction);
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 1L);
     }
 }

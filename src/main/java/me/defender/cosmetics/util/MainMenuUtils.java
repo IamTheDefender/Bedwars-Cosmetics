@@ -206,7 +206,7 @@ public class MainMenuUtils {
                 new CategoryMenu(CosmeticsType.DeathCries, title).open(p);
                 break;
             case "Back":
-                String command = Utility.Cosmetics.getInstance().menuData.getConfig().getString("Main-Menu.Back.custom-command");
+                String command = Cosmetics.getInstance().menuData.getConfig().getString("Main-Menu.Back.custom-command");
                 if(command == null) {
                     p.getOpenInventory().close();
                 }else{

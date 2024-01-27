@@ -59,7 +59,7 @@ public class NightShiftDance extends VictoryDance {
                     }
                     winner.getWorld().setTime(time);
                 }
-            }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 8L);
+            }.runTaskTimer(Cosmetics.getInstance(), 0L, 8L);
         } else {
             winner.getWorld().setTime(winner.getWorld().getTime());
         }

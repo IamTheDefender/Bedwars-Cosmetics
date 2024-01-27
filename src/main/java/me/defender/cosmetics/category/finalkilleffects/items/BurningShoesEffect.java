@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
@@ -77,6 +78,6 @@ public class BurningShoesEffect extends FinalKillEffect {
                     }
                 }
             }
-        }).runTaskTimer(Utility.Cosmetics.getInstance(), 1L, 1L);
+        }).runTaskTimer(Cosmetics.getInstance(), 1L, 1L);
     }
 }

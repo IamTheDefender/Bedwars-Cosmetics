@@ -2,11 +2,11 @@ package me.defender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.util.Utility;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -65,6 +65,6 @@ public class ColdSnapDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 0L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 0L);
     }
 }

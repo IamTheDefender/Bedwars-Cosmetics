@@ -78,7 +78,7 @@ public class SpraysUtil
                     }
                 } else {
                     sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
-                    File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Utility.Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+                    File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
                     if (!renderer.load(file)) {
                         player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
                         Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid!");

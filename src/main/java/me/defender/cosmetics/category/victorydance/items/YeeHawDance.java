@@ -74,7 +74,7 @@ public class YeeHawDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 1L);
 
         // Horse Hit Event
         HCore.registerEvent(EntityDamageEvent.class).filter(event -> !horse.isDead()).consume((event) -> {
