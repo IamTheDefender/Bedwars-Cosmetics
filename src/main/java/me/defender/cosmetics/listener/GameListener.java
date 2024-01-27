@@ -3,7 +3,6 @@ package me.defender.cosmetics.listener;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.World;

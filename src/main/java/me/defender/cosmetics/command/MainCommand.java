@@ -13,14 +13,14 @@ import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.enums.ConfigType;
-import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.util.StartupUtils;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.util.MainMenuUtils;
+import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
 import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.api.util.Utility;
+import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -104,10 +104,10 @@ public class MainCommand {
                 new com.tomkeuper.bedwars.shop.ShopCache(p.getUniqueId());
                 com.tomkeuper.bedwars.shop.ShopManager.shop.open(p, com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(p.getUniqueId()), true);
             }
-            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Utility.plugin(), true));
+            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Utility.Cosmetics.getInstance(), true));
             HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
                 if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
-                    event.getPlayer().removeMetadata("bwc_quickbuy", Utility.plugin());
+                    event.getPlayer().removeMetadata("bwc_quickbuy", Utility.Cosmetics.getInstance());
                     if (!plugin.isBw2023()) {
                         PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
                         PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();

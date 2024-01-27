@@ -9,14 +9,14 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.Setter;
 import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.category.victorydances.VictoryDance;
-import me.defender.cosmetics.api.util.StartupUtils;
+import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
+import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.api.configuration.ConfigUtils;
-import me.defender.cosmetics.api.util.MainMenuUtils;
+import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.api.configuration.DefaultsUtils;
-import me.defender.cosmetics.api.util.Utility;
+import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.command.MainCommand;
-import me.defender.cosmetics.config.MainMenuData;
+import me.defender.cosmetics.util.config.MainMenuData;
 import me.defender.cosmetics.database.IDatabase;
 import me.defender.cosmetics.database.PlayerData;
 import me.defender.cosmetics.database.PlayerOwnedData;
@@ -24,15 +24,9 @@ import me.defender.cosmetics.database.mysql.MySQL;
 import me.defender.cosmetics.database.sqlite.SQLite;
 import me.defender.cosmetics.support.bedwars.BedWars2023;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -109,19 +103,14 @@ public class Cosmetics extends JavaPlugin
         this.menuData = new MainMenuData(this);
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
+        getLogger().info("Loading " + (new BwcAPI().isMySQL() ? "MySQL" : "SQLite") + " database...");
         if(new BwcAPI().isMySQL()){
-            getLogger().info("Loading MySQL database..");
-            MySQL mySQL = new MySQL(this);
-            db = mySQL.dataSource;
-            dataBase = mySQL;
-            dbConnection = mySQL.getConnection();
+            dataBase = new MySQL(this);
         }else{
-            getLogger().info("Loading SQLite database..");
-            SQLite sqLite = new SQLite(this);
-            db = sqLite.dataSource;
-            dataBase = sqLite;
-            dbConnection = sqLite.getConnection();
+            dataBase = new SQLite(this);
         }
+        db = dataBase.getDataSource();
+        dbConnection = dataBase.getConnection();
 
         // Load all the list
         Utility.playerDataList = new HashMap<>();
@@ -148,7 +137,7 @@ public class Cosmetics extends JavaPlugin
         VictoryDance.getDefault(null);
 
         HCore.asyncScheduler().every(5, TimeUnit.SECONDS).run(() -> {
-            try (Connection connection = db.getConnection()){
+            try (Connection connection = dataBase.getConnection()){
                 connection.createStatement();
             }catch (Exception e){
                 dataBase.connect();

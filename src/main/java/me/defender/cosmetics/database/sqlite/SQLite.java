@@ -14,6 +14,7 @@ import java.sql.Statement;
 public class SQLite implements IDatabase {
 
     private final JavaPlugin plugin;
+    @Getter
     public HikariDataSource dataSource;
     @Getter
     public Connection connection;

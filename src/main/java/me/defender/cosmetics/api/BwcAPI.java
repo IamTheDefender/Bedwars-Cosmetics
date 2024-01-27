@@ -1,34 +1,30 @@
 package me.defender.cosmetics.api;
 
-import com.andrei1058.bedwars.api.BedWars;
 import com.hakan.core.HCore;
-import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.util.Utility;
+import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.database.PlayerData;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import static me.defender.cosmetics.api.util.Utility.plugin;
-
 public class BwcAPI {
-    private final Boolean enabledMySQL = plugin().getConfig().getBoolean("mysql.enable");
 
     /**
      * Check if MySQL is enabled.
      * @return true if enabled.
      */
     public Boolean isMySQL() {
-        return enabledMySQL;
+        return  Cosmetics.getInstance().getConfig().getBoolean("mysql.enable");
     }
 
     /**
      * Get the selected cosmetic for a player.
-     * @param p   Player.
-     * @param cos Cosmetic type.
-     *
-     * @return    String.
+     * @param p   Player
+     * @param cos Cosmetic type
+     * @return    String
      */
     public String getSelectedCosmetic(Player p, CosmeticsType cos){
         if(p == null){

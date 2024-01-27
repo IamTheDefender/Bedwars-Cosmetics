@@ -7,20 +7,20 @@ import com.hakan.core.ui.inventory.item.ClickableItem;
 import com.hakan.core.ui.inventory.pagination.Pagination;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.category.deathcries.preview.DeathCryPreview;
-import me.defender.cosmetics.api.category.finalkilleffects.preview.FinalKillEffectPreview;
-import me.defender.cosmetics.api.category.glyphs.preview.GlyphPreview;
-import me.defender.cosmetics.api.category.islandtoppers.preview.IslandTopperPreview;
-import me.defender.cosmetics.api.category.killmessage.preview.KillMessagePreview;
-import me.defender.cosmetics.api.category.shopkeeperskins.preview.ShopKeeperPreview;
-import me.defender.cosmetics.api.category.sprays.preview.SprayPreview;
-import me.defender.cosmetics.api.enums.CosmeticsType;
-import me.defender.cosmetics.api.enums.RarityType;
+import me.defender.cosmetics.category.deathcries.preview.DeathCryPreview;
+import me.defender.cosmetics.category.finalkilleffects.preview.FinalKillEffectPreview;
+import me.defender.cosmetics.category.glyphs.preview.GlyphPreview;
+import me.defender.cosmetics.category.islandtoppers.preview.IslandTopperPreview;
+import me.defender.cosmetics.category.killmessage.preview.KillMessagePreview;
+import me.defender.cosmetics.category.shopkeeperskins.preview.ShopKeeperPreview;
+import me.defender.cosmetics.category.sprays.preview.SprayPreview;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.event.CosmeticPurchaseEvent;
-import me.defender.cosmetics.api.util.StringUtils;
-import me.defender.cosmetics.api.util.VaultUtils;
+import me.defender.cosmetics.util.StringUtils;
+import me.defender.cosmetics.util.VaultUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.util.Utility;
+import me.defender.cosmetics.util.Utility;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -129,7 +129,7 @@ public class CategoryMenu extends InventoryGui {
                 rarityMap.put(item, rarity);
             }
         }
-        if(Utility.plugin().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
+        if(Utility.Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
             setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> Utility.openMainMenu((Player) e.getWhoClicked()));
         }
         createPages(items, rarityMap);

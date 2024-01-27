@@ -1,7 +1,7 @@
 package me.defender.cosmetics.api.configuration;
 
-import me.defender.cosmetics.api.enums.ConfigType;
-import me.defender.cosmetics.api.util.Utility;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.util.Utility;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.InputStream;
@@ -18,7 +18,7 @@ public class DefaultsUtils {
     public void saveAllDefaults(){
         for(ConfigType type : ConfigType.values()){
             ConfigManager config = ConfigUtils.get(type);
-            InputStream defaultConfigStream = Utility.plugin().getResource(type.getFileName() + ".yml");
+            InputStream defaultConfigStream = Utility.Cosmetics.getInstance().getResource(type.getFileName() + ".yml");
             if(defaultConfigStream != null) {
                 YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
                 config.addDefaults(defaultConfig);

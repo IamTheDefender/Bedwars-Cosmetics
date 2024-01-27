@@ -21,7 +21,7 @@ public class PlayerData {
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
-        connection = Cosmetics.getDbConnection();
+        connection = Cosmetics.getInstance().getDataBase().getConnection();
         load();
     }
 

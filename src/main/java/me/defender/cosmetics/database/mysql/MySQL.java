@@ -13,6 +13,7 @@ import java.sql.Statement;
 
 public class MySQL implements IDatabase {
 
+    @Getter
     public HikariDataSource dataSource;
     @Getter
     public Connection connection;

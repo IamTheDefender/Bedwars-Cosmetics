@@ -1,6 +1,6 @@
 package me.defender.cosmetics.api.event;
 
-import me.defender.cosmetics.api.enums.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
