@@ -1,6 +1,7 @@
 package me.defender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.cosmetics.RarityType;
@@ -80,6 +81,6 @@ public class HauntedDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 1L, 8L);
+        }.runTaskTimer(Cosmetics.getInstance(), 1L, 8L);
     }
 }

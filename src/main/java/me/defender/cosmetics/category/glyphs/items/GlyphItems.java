@@ -1,12 +1,12 @@
 package me.defender.cosmetics.category.glyphs.items;
 
 import com.hakan.core.HCore;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.Glyph;
 import me.defender.cosmetics.category.glyphs.util.glyphUtil;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -68,7 +68,7 @@ public class GlyphItems {
                 @Override
                 public void execute(Player player, Location location) {
                     String fileLocation = config.getString(path + "file");
-                    File file = new File(Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs/" + fileLocation);
+                    File file = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs/" + fileLocation);
                     HCore.asyncScheduler().every(500, TimeUnit.MILLISECONDS).limit(10).run(()-> {
                         glyphUtil.sendGlyphs(file, location);
                             });

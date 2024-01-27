@@ -13,12 +13,11 @@ import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.Spray;
 import me.defender.cosmetics.category.sprays.util.CustomRenderer;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
 import org.bukkit.*;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -169,7 +168,7 @@ public class SprayPreview {
                 return;
             }
         } else {
-            File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Utility.Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+            File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
             if (!renderer.load(file)) {
                 player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
                 Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + selected + " Check if the File in Sprays.yml is valid!");

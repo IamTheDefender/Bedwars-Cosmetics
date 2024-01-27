@@ -3,6 +3,7 @@ package me.defender.cosmetics.category.victorydance.items;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.cosmetics.RarityType;
@@ -59,7 +60,7 @@ public class WitherRiderDance extends VictoryDance {
     public void execute(Player winner) {
         Wither wither = (Wither) winner.getWorld().spawnEntity(winner.getLocation(), EntityType.WITHER);
         wither.setPassenger(winner);
-        wither.setMetadata("VD", new FixedMetadataValue(Utility.Cosmetics.getInstance(), ""));
+        wither.setMetadata("VD", new FixedMetadataValue(Cosmetics.getInstance(), ""));
         wither.setCustomName(ColorUtil.colored("&a" + winner.getName() + "'s Wither!"));
         wither.setNoDamageTicks(Integer.MAX_VALUE);
         new BukkitRunnable() {
@@ -77,7 +78,7 @@ public class WitherRiderDance extends VictoryDance {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 1L);
 
 
         // Event

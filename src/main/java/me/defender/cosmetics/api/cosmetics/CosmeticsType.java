@@ -2,7 +2,7 @@ package me.defender.cosmetics.api.cosmetics;
 
 
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 
 import java.util.List;
 

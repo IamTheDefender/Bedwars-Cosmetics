@@ -2,6 +2,7 @@ package me.defender.cosmetics.menu;
 
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.util.Utility;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class MainMenu extends InventoryGui {
 
-    FileConfiguration config = Utility.Cosmetics.getInstance().menuData.getConfig();
+    FileConfiguration config = Cosmetics.getInstance().menuData.getConfig();
 
     public MainMenu(Player player) {
         super("none", Utility.getMSGLang(player, "cosmetics.gui-title") , 6, InventoryType.CHEST);

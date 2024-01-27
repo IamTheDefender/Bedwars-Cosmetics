@@ -3,6 +3,7 @@ package me.defender.cosmetics.category.victorydance.items;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
@@ -61,12 +62,12 @@ public class FireworksDance extends VictoryDance {
                         public void run() {
                             UsefulUtilsVD.spawnFireWorks(winner, 1, Color.ORANGE, Color.YELLOW, loc, false);
                         }
-                    }.runTaskLater(Utility.Cosmetics.getInstance(), 300L);
+                    }.runTaskLater(Cosmetics.getInstance(), 300L);
                 }
                 else {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 0L, 60L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 60L);
     }
 }

@@ -3,6 +3,7 @@ package me.defender.cosmetics.category.victorydance.items;
 import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
@@ -89,7 +90,7 @@ class GuardianTriangle {
             }
 
             // Make guardians float and attack player with beams
-            Bukkit.getScheduler().runTaskTimer(Utility.Cosmetics.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskTimer(Cosmetics.getInstance(), () -> {
                 if (!stopped) {
                     for (Entity guardian : guardians) {
                         ((Guardian) guardian).setNoDamageTicks(Integer.MAX_VALUE);

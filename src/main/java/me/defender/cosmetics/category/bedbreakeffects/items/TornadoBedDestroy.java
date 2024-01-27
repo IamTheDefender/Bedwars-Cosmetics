@@ -4,6 +4,7 @@ import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.Utility;
@@ -83,7 +84,7 @@ public class TornadoBedDestroy extends BedDestroy {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 2L, 0L);
+        }.runTaskTimer(Cosmetics.getInstance(), 2L, 0L);
     }
 
     @Override
@@ -111,6 +112,6 @@ public class TornadoBedDestroy extends BedDestroy {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Utility.Cosmetics.getInstance(), 2L, 0L);
+        }.runTaskTimer(Cosmetics.getInstance(), 2L, 0L);
     }
 }

@@ -6,6 +6,7 @@ import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.ui.inventory.item.ClickableItem;
 import com.hakan.core.ui.inventory.pagination.Pagination;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.category.deathcries.preview.DeathCryPreview;
 import me.defender.cosmetics.category.finalkilleffects.preview.FinalKillEffectPreview;
@@ -129,7 +130,7 @@ public class CategoryMenu extends InventoryGui {
                 rarityMap.put(item, rarity);
             }
         }
-        if(Utility.Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
+        if(Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
             setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> Utility.openMainMenu((Player) e.getWhoClicked()));
         }
         createPages(items, rarityMap);

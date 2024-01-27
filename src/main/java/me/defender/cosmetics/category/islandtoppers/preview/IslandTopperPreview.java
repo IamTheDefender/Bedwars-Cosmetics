@@ -17,12 +17,11 @@ import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
 import me.defender.cosmetics.category.islandtoppers.util.BlockData;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -142,7 +141,7 @@ public class IslandTopperPreview {
             return;
         }
 
-        File file = new File(Utility.Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/" + topperFileName);
+        File file = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/" + topperFileName);
         if(!file.exists()){
             Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
             return;
@@ -161,7 +160,7 @@ public class IslandTopperPreview {
             Vector newOrigin = new Vector(location.getX(), location.getY(), location.getZ());
             newOrigin = newOrigin.add(clipboard.getOffset());
 
-            boolean order = Utility.Cosmetics.getInstance().getConfig().getBoolean("island-toppers.order");
+            boolean order = Cosmetics.getInstance().getConfig().getBoolean("island-toppers.order");
 
             if (!order){
                 HashMap<Location, BlockData> blockLocations = new HashMap<>();
