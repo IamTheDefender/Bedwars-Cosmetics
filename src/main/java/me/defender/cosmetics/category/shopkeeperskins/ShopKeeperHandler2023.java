@@ -2,7 +2,9 @@ package me.defender.cosmetics.category.shopkeeperskins;
 
 import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
+import com.tomkeuper.bedwars.api.arena.GameState;
 import com.tomkeuper.bedwars.api.arena.team.ITeam;
+import com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
@@ -12,6 +14,7 @@ import me.defender.cosmetics.util.MathUtil;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -25,6 +28,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 import static me.defender.cosmetics.util.Utility.plugin;
+import static org.bukkit.Bukkit.getServer;
 
 public class ShopKeeperHandler2023 implements Listener {
 
@@ -75,6 +79,24 @@ public class ShopKeeperHandler2023 implements Listener {
                 }
             }.runTaskLater(Cosmetics.getInstance(), 30L);
         }
+    }
+
+    @EventHandler
+    public void onGameStartEvent(GameStateChangeEvent event){
+        if(event.getNewState() != GameState.playing) return;
+        getServer().getScheduler().runTaskLater(Cosmetics.getInstance(), () -> {
+            World world = event.getArena().getWorld();
+            for (Entity entity : world.getEntities()) {
+                boolean isCitizensNPC = entity.hasMetadata("NPC");
+                if(!entity.isDead() && isCitizensNPC){
+                    NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
+                    npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.SILENT, true);
+                }
+            }
+        }, 40L);
     }
 
     @EventHandler

@@ -10,6 +10,7 @@ import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.cosmetics.category.*;
+import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
 import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
 import me.defender.cosmetics.category.bedbreakeffects.items.*;
@@ -43,8 +44,10 @@ import me.defender.cosmetics.category.woodskin.WoodSkinHandler1058;
 import me.defender.cosmetics.category.woodskin.WoodSkinHandler2023;
 import me.defender.cosmetics.category.woodskin.items.*;
 import me.defender.cosmetics.category.woodskin.items.log.*;
+import me.defender.cosmetics.handler.bedwars1058.BW1058Handler;
+import me.defender.cosmetics.handler.bedwars1058.BW1058ProxyHandler;
+import me.defender.cosmetics.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.listener.CosmeticPurchaseListener;
-import me.defender.cosmetics.listener.GameListener;
 import me.defender.cosmetics.listener.PlayerJoinListener;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.Bukkit;
@@ -85,43 +88,13 @@ public class StartupUtils
     public static boolean isBw2023 = false;
 
     /**
-     This method is used to register all events for the plugin.
-     It includes registering listeners for the ShopKeeperSkin, GlyphHandler, KillMessageHandler, ProjectileHandler,
-     VictoryDanceHandler, FinalKillEffectHandler, BedDestroyHandler, WoodSkins, IslandTopperHandler, PlayerLeaveListener,
-     CosmeticPurchaseListener, PlayerJoinListener, DeathCryHandler and SpraysHandler classes.
-     @author defender
+     Register events and handler
+      @author defender
      */
     public static void registerEvents() {
-        if(!new BwcAPI().isProxy()){
-            if (!Cosmetics.getInstance().isBw2023()){
-                HCore.registerListeners(new ShopKeeperHandler1058());
-                HCore.registerListeners(new GlyphHandler1058());
-                HCore.registerListeners(new KillMessageHandler1058());
-                HCore.registerListeners(new VictoryDanceHandler1058());
-                HCore.registerListeners(new FinalKillEffectHandler1058());
-                HCore.registerListeners(new BedDestroyHandler1058());
-                HCore.registerListeners(new WoodSkinHandler1058());
-                HCore.registerListeners(new IslandTopperHandler1058());
-                HCore.registerListeners(new GameListener());
-            } else {
-                HCore.registerListeners(new WoodSkinHandler2023());
-                HCore.registerListeners(new VictoryDanceHandler2023());
-                HCore.registerListeners(new ShopKeeperHandler2023());
-                HCore.registerListeners(new KillMessageHandler2023());
-                HCore.registerListeners(new IslandTopperHandler2023());
-                HCore.registerListeners(new GlyphHandler2023());
-                HCore.registerListeners(new FinalKillEffectHandler2023());
-                HCore.registerListeners(new BedDestroyHandler2023());
-            }
-            HCore.registerListeners(new ProjectileHandler(Cosmetics.getInstance()));
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            HCore.registerListeners(new DeathCryHandler1058());
-            HCore.registerListeners(new SpraysHandler1058());
-        } else {
-            HCore.registerListeners(new SpraysHandler2023());
-            HCore.registerListeners(new DeathCryHandler2023());
-        }
+        BwcAPI api = new BwcAPI();
+        IHandler handler = (api.isProxy() ? (Cosmetics.getInstance().isBw2023() ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : new BW1058Handler());
+        handler.register();
         HCore.registerListeners(new CosmeticPurchaseListener());
         HCore.registerListeners(new PlayerJoinListener());
     }
