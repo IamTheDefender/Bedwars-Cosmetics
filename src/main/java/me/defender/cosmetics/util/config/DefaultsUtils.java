@@ -1,7 +1,7 @@
-package me.defender.cosmetics.api.configuration;
+package me.defender.cosmetics.util.config;
 
-import me.defender.cosmetics.util.config.ConfigType;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.InputStream;

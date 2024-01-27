@@ -8,7 +8,7 @@ import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

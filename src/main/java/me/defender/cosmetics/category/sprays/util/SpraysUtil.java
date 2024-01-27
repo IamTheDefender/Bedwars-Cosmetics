@@ -6,10 +6,11 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
@@ -78,7 +79,7 @@ public class SpraysUtil
                     }
                 } else {
                     sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
-                    File file = new File(System.getProperty("user.dir") + "/plugins/BW1058-Cosmetics/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+                    File file = new File(Cosmetics.getInstance().getDataFolder().getAbsolutePath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
                     if (!renderer.load(file)) {
                         player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
                         Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid!");

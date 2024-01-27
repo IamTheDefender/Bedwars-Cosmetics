@@ -2,6 +2,7 @@ package me.defender.cosmetics.menu;
 
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.util.Utility;

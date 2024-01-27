@@ -7,6 +7,7 @@ import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.schematic.SchematicFormat;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -6,6 +6,7 @@ import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.ui.inventory.item.ClickableItem;
 import com.hakan.core.ui.inventory.pagination.Pagination;
 import com.hakan.core.utils.ColorUtil;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.category.deathcries.preview.DeathCryPreview;
 import me.defender.cosmetics.category.finalkilleffects.preview.FinalKillEffectPreview;

@@ -1,6 +1,8 @@
-package me.defender.cosmetics.api.configuration;
+package me.defender.cosmetics.util.config;
 
 
+import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.config.ConfigType;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.util.Utility;

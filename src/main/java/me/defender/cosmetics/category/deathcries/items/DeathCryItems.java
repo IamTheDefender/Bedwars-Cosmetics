@@ -5,7 +5,7 @@ import me.defender.cosmetics.api.cosmetics.category.DeathCry;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.StringUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;

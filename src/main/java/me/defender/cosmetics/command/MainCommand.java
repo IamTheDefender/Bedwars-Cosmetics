@@ -18,7 +18,7 @@ import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.util.MainMenuUtils;
-import me.defender.cosmetics.api.configuration.ConfigUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.menu.MainMenu;
 import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
