@@ -117,8 +117,6 @@ public class Cosmetics extends JavaPlugin
         dbConnection = dataBase.getConnection();
 
         // Load all the list
-        Utility.playerDataList = new HashMap<>();
-        Utility.playerOwnedDataList = new HashMap<>();
         StartupUtils.loadLists();
         getLogger().info("Cosmetics list successfully loaded.");
 
@@ -165,10 +163,10 @@ public class Cosmetics extends JavaPlugin
         if(!new BwcAPI().isMySQL()){
             getLogger().info("Saving player data to SQLite database...");
             getLogger().info("Please wait it may take some time!");
-            for(PlayerData playerData : Utility.playerDataList.values()){
+            for(PlayerData playerData : getPlayerManager().getPlayerDataHashMap().values()){
                 playerData.save();
             }
-            for (PlayerOwnedData playerOwnedData : Utility.playerOwnedDataList.values()){
+            for (PlayerOwnedData playerOwnedData : getPlayerManager().getPlayerOwnedDataHashMap().values()) {
                 playerOwnedData.save();
             }
             getLogger().info("Player data saved to SQLite database!");

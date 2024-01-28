@@ -30,7 +30,7 @@ public class BwcAPI {
         if(p == null){
             return null;
         }
-        PlayerData playerData = Utility.playerDataList.get(p.getUniqueId());
+        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 return playerData.getBedDestroy();
@@ -65,7 +65,7 @@ public class BwcAPI {
      * @param value Cosmetic value.
      */
     public void setSelectedCosmetic(Player p, CosmeticsType cos, String value){
-        PlayerData playerData = Utility.playerDataList.get(p.getUniqueId());
+        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 playerData.setBedDestroy(value);
@@ -101,7 +101,6 @@ public class BwcAPI {
                 playerData.setWoodSkin(value);
                 break;
         }
-        Utility.playerDataList.replace(p.getUniqueId(), playerData);
         // Ran ASYNC
         HCore.asyncScheduler().run(playerData::save);
     }

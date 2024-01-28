@@ -3,6 +3,7 @@ package me.defender.cosmetics.manager;
 import me.defender.cosmetics.database.PlayerData;
 import me.defender.cosmetics.database.PlayerOwnedData;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -17,6 +18,13 @@ public class PlayerManager {
 
     }
 
+    public HashMap<UUID, PlayerData> getPlayerDataHashMap() {
+        return (HashMap<UUID, PlayerData>) Collections.unmodifiableMap(playerDataHashMap);
+    }
+
+    public HashMap<UUID, PlayerOwnedData> getPlayerOwnedDataHashMap() {
+        return (HashMap<UUID, PlayerOwnedData>) Collections.unmodifiableMap(playerOwnedDataHashMap);
+    }
 
     public void addPlayerData(PlayerData playerData) {
         playerDataHashMap.put(playerData.getUuid(), playerData);

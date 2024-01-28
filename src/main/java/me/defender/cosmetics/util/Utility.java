@@ -29,10 +29,6 @@ import java.util.*;
 
 
 public class Utility {
-    public static Map<UUID, PlayerData> playerDataList;
-    public static Map<UUID, PlayerOwnedData> playerOwnedDataList;
-
-
     /**
      * @param s the main string for example "Click me"
      * @param st the message when they hover.

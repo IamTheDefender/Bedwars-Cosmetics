@@ -88,7 +88,7 @@ public class MainMenuUtils {
 
     public static List<String> formatLore(List<String> lores, Player p){
         BwcAPI api = new BwcAPI();
-        PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(p.getUniqueId());
+        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
 
         try {
             lores = lores.stream()

@@ -34,8 +34,7 @@ public class PlayerJoinListener implements Listener {
 
         // Saving for MySQL is different
         if (api.isMySQL()) {
-            PlayerData playerData = new PlayerData(event.getPlayer().getUniqueId());
-            Utility.playerDataList.put(event.getPlayer().getUniqueId(), playerData);
+            PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(event.getPlayer().getUniqueId());
             if (!playerData.exists()) {
                 playerData.setBedDestroy(BedDestroy.getDefault(event.getPlayer()).getIdentifier());
                 playerData.setDeathCry(DeathCry.getDefault(event.getPlayer()).getIdentifier());
@@ -50,15 +49,13 @@ public class PlayerJoinListener implements Listener {
                 playerData.setWoodSkin(WoodSkin.getDefault(event.getPlayer()).getIdentifier());
                 playerData.createData();
             }
-            Utility.playerDataList.put(event.getPlayer().getUniqueId(), playerData);
-            PlayerOwnedData playerOwnedData = new PlayerOwnedData(event.getPlayer().getUniqueId());
-            Utility.playerOwnedDataList.put(event.getPlayer().getUniqueId(), playerOwnedData);
+            PlayerOwnedData playerOwnedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(event.getPlayer().getUniqueId());
             playerOwnedData.updateOwned();
         }
 
         // Saving for SQLite is different, workaround for SQLite database is busy
         if(!api.isMySQL()) {
-            if (!Utility.playerDataList.containsKey(event.getPlayer().getUniqueId())) {
+            if (!Cosmetics.getInstance().getPlayerManager().getPlayerDataHashMap().containsKey(event.getPlayer().getUniqueId())) {
                 PlayerData playerData = new PlayerData(event.getPlayer().getUniqueId());
                 if (!playerData.exists()) {
                     playerData.setBedDestroy(BedDestroy.getDefault(event.getPlayer()).getIdentifier());
@@ -74,15 +71,14 @@ public class PlayerJoinListener implements Listener {
                     playerData.setWoodSkin(WoodSkin.getDefault(event.getPlayer()).getIdentifier());
                     playerData.createData();
                 }
-                Utility.playerDataList.put(event.getPlayer().getUniqueId(), playerData);
+                Cosmetics.getInstance().getPlayerManager().addPlayerData(playerData);
             }
 
-            if (!Utility.playerOwnedDataList.containsKey(event.getPlayer().getUniqueId())) {
-                PlayerOwnedData playerOwnedData = new PlayerOwnedData(event.getPlayer().getUniqueId());
-                Utility.playerOwnedDataList.put(event.getPlayer().getUniqueId(), playerOwnedData);
+            if (!Cosmetics.getInstance().getPlayerManager().getPlayerOwnedDataHashMap().containsKey(event.getPlayer().getUniqueId())) {
+                PlayerOwnedData playerOwnedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(event.getPlayer().getUniqueId());
                 playerOwnedData.updateOwned();
             } else {
-                Utility.playerOwnedDataList.get(event.getPlayer().getUniqueId()).updateOwned();
+              Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(event.getPlayer().getUniqueId()).updateOwned();
             }
         }
     }

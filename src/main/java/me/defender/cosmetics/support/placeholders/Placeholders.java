@@ -42,7 +42,7 @@ public class Placeholders extends PlaceholderExpansion {
 
     public String onPlaceholderRequest(Player player, String placeholder) {
         BwcAPI api = new BwcAPI();
-        PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(player.getUniqueId());
+        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(player.getUniqueId());
         switch (placeholder.toLowerCase()) {
             case "selected_dc":
                 return api.getSelectedCosmetic(player, CosmeticsType.DeathCries);
