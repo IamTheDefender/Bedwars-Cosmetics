@@ -14,6 +14,7 @@ import java.util.UUID;
 
 public class PlayerData {
 
+    @Getter
     private final UUID uuid;
     @Getter @Setter
     private String woodSkin, bedDestroy, victoryDance, shopkeeperSkin, glyph, spray, projectileTrail, killMessage, finalKillEffect, islandTopper, deathCry;

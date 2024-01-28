@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
+import me.defender.cosmetics.manager.PlayerManager;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.MainMenuUtils;
@@ -56,6 +57,8 @@ public class Cosmetics extends JavaPlugin
     @Getter
     private HashMap<Integer, Player> entityPlayerHashMap;
 
+    @Getter
+    private PlayerManager playerManager;
 
     @Override
     public void onEnable() {
@@ -68,7 +71,7 @@ public class Cosmetics extends JavaPlugin
         if (StartupUtils.isBw2023) {
             BedWars2023 bedWars2023 = new BedWars2023(this);
             bedWars2023.start();
-        } else {
+        } else if(!new BwcAPI().isProxy()) {
             this.bedWars1058API = Bukkit.getServer().getServicesManager().getRegistration(com.andrei1058.bedwars.api.BedWars.class).getProvider();
         }
 
@@ -83,6 +86,7 @@ public class Cosmetics extends JavaPlugin
         instance = this;
         protocolManager = ProtocolLibrary.getProtocolManager();
         entityPlayerHashMap  = new HashMap<>();
+        playerManager = new PlayerManager();
         StartupUtils.addEntityHideListener();
         // Download Glyphs
         StartupUtils.downloadGlyphs();
@@ -141,6 +145,12 @@ public class Cosmetics extends JavaPlugin
                 connection.createStatement();
             }catch (Exception e){
                 dataBase.connect();
+            }
+        });
+
+        HCore.asyncScheduler().every(5 * 20L).run(() -> {
+            for (Player onlinePlayer : getServer().getOnlinePlayers()) {
+                getPlayerManager().getPlayerOwnedData(onlinePlayer.getUniqueId()).updateOwned();
             }
         });
 

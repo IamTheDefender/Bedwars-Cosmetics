@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class PlayerOwnedData{
+    @Getter
     private final UUID uuid;
     private final Connection connection;
     @Getter @Setter
