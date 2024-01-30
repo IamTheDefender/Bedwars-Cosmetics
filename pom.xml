@@ -54,7 +54,6 @@
                                 <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
                                 <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
                                 <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
-                                <exclude>com/hakan/core/scoreboard</exclude>
                             </excludes>
                         </filter>
                     </filters>
