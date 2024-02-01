@@ -126,7 +126,7 @@ public class MainMenuUtils {
 
     public static void openMenus(Player p, String name){
         String title = null;
-        Boolean placeholder = Cosmetics.isPlaceholderAPI();
+        boolean placeholder = Cosmetics.isPlaceholderAPI();
         switch (name) {
             case "Sprays":
                 title = CosmeticsType.Sprays.getFormatedName();
