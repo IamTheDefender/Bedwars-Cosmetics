@@ -1,4 +1,4 @@
-package me.defender.cosmetics.support.bedwars;
+package me.defender.cosmetics.support.bedwars.handler.bedwars2023;
 
 import com.tomkeuper.bedwars.api.addon.Addon;
 import me.defender.cosmetics.Cosmetics;

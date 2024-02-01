@@ -6,13 +6,11 @@ import com.tomkeuper.bedwars.api.arena.GameState;
 import com.tomkeuper.bedwars.api.arena.team.ITeam;
 import com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.MathUtil;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
@@ -27,7 +25,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
-import static me.defender.cosmetics.util.Utility.plugin;
 import static org.bukkit.Bukkit.getServer;
 
 public class ShopKeeperHandler2023 implements Listener {
@@ -58,7 +55,7 @@ public class ShopKeeperHandler2023 implements Listener {
 
                         // Choose random player from the team
                         Player player = team.getMembers().get(MathUtil.getRandom(0, team.getMembers().size() -1));
-                        String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
+                        String skin = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
                         DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {

@@ -7,7 +7,11 @@ import com.hakan.core.ui.inventory.item.ClickableItem;
 import com.hakan.core.ui.inventory.pagination.Pagination;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
+import me.defender.cosmetics.api.configuration.ConfigManager;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.event.CosmeticPurchaseEvent;
 import me.defender.cosmetics.category.deathcries.preview.DeathCryPreview;
 import me.defender.cosmetics.category.finalkilleffects.preview.FinalKillEffectPreview;
 import me.defender.cosmetics.category.glyphs.preview.GlyphPreview;
@@ -15,13 +19,9 @@ import me.defender.cosmetics.category.islandtoppers.preview.IslandTopperPreview;
 import me.defender.cosmetics.category.killmessage.preview.KillMessagePreview;
 import me.defender.cosmetics.category.shopkeeperskins.preview.ShopKeeperPreview;
 import me.defender.cosmetics.category.sprays.preview.SprayPreview;
-import me.defender.cosmetics.api.cosmetics.CosmeticsType;
-import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.api.event.CosmeticPurchaseEvent;
 import me.defender.cosmetics.util.StringUtils;
-import me.defender.cosmetics.util.VaultUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.VaultUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -267,7 +267,8 @@ public class CategoryMenu extends InventoryGui {
 
 
     public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price){
-        String selected = new BwcAPI().getSelectedCosmetic(p, type);
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        String selected = api.getSelectedCosmetic(p, type);
         if(selected.equals(unformattedName)){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.selected"));
         }
@@ -283,7 +284,7 @@ public class CategoryMenu extends InventoryGui {
             }
         }
 
-        if(new BwcAPI().getEco().getBalance(p) >= price){
+        if(Cosmetics.getInstance().getEconomy().getBalance(p) >= price){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.click-to-purchase"));
         }
 
@@ -291,7 +292,7 @@ public class CategoryMenu extends InventoryGui {
     }
 
     public int onClick(Player p, CosmeticsType type, int price, String id, boolean isOnlyForCheck) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         String selected = api.getSelectedCosmetic(p, type);
         String permissionFormat = type.getPermissionFormat();
         Economy eco = VaultUtils.getEconomy();

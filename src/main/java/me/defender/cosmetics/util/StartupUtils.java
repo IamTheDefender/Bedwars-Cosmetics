@@ -8,47 +8,26 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.*;
 import me.defender.cosmetics.api.handler.IHandler;
-import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
-import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
 import me.defender.cosmetics.category.bedbreakeffects.items.*;
-import me.defender.cosmetics.category.deathcries.DeathCryHandler1058;
-import me.defender.cosmetics.category.deathcries.DeathCryHandler2023;
 import me.defender.cosmetics.category.deathcries.items.DeathCryItems;
-import me.defender.cosmetics.category.finalkilleffects.FinalKillEffectHandler1058;
-import me.defender.cosmetics.category.finalkilleffects.FinalKillEffectHandler2023;
 import me.defender.cosmetics.category.finalkilleffects.items.*;
-import me.defender.cosmetics.category.glyphs.GlyphHandler1058;
-import me.defender.cosmetics.category.glyphs.GlyphHandler2023;
 import me.defender.cosmetics.category.glyphs.items.GlyphItems;
-import me.defender.cosmetics.category.islandtoppers.IslandTopperHandler1058;
-import me.defender.cosmetics.category.islandtoppers.IslandTopperHandler2023;
 import me.defender.cosmetics.category.islandtoppers.items.IslandTopperItems;
-import me.defender.cosmetics.category.killmessage.KillMessageHandler1058;
-import me.defender.cosmetics.category.killmessage.KillMessageHandler2023;
 import me.defender.cosmetics.category.killmessage.items.KillMessageItems;
-import me.defender.cosmetics.category.projectiletrails.ProjectileHandler;
 import me.defender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler2023;
 import me.defender.cosmetics.category.shopkeeperskins.items.ShopKeeperItems;
-import me.defender.cosmetics.category.sprays.SpraysHandler1058;
-import me.defender.cosmetics.category.sprays.SpraysHandler2023;
 import me.defender.cosmetics.category.sprays.items.SprayItems;
-import me.defender.cosmetics.category.victorydance.VictoryDanceHandler1058;
-import me.defender.cosmetics.category.victorydance.VictoryDanceHandler2023;
 import me.defender.cosmetics.category.victorydance.items.*;
-import me.defender.cosmetics.category.woodskin.WoodSkinHandler1058;
-import me.defender.cosmetics.category.woodskin.WoodSkinHandler2023;
 import me.defender.cosmetics.category.woodskin.items.*;
 import me.defender.cosmetics.category.woodskin.items.log.*;
-import me.defender.cosmetics.handler.bedwars1058.BW1058Handler;
-import me.defender.cosmetics.handler.bedwars1058.BW1058ProxyHandler;
-import me.defender.cosmetics.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.listener.CosmeticPurchaseListener;
 import me.defender.cosmetics.listener.PlayerJoinListener;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -92,7 +71,7 @@ public class StartupUtils
       @author defender
      */
     public static void registerEvents() {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         IHandler handler = (api.isProxy() ? (Cosmetics.getInstance().isBw2023() ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : new BW1058Handler());
         handler.register();
         HCore.registerListeners(new CosmeticPurchaseListener());
@@ -192,7 +171,7 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if(!isPluginEnabled("BedWars1058") && !new BwcAPI().isProxy()){
+            if(!isPluginEnabled("BedWars1058") && !Cosmetics.getInstance().getApi().isProxy()){
                 log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
                 return false;
             }

@@ -11,21 +11,20 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.List;
 
 
 public class Utility {
@@ -65,7 +64,7 @@ public class Utility {
      * @return the result
      */
     public static String getMSGLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy()) {
             if (!Cosmetics.getInstance().isBw2023()){
                 return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
@@ -87,7 +86,7 @@ public class Utility {
      * @return the result
      */
     public static List<String> getListLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
+       CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy()) {
             return BedWarsProxy.getAPI().getLanguageUtil().getList(p, path);
         }
@@ -104,7 +103,7 @@ public class Utility {
      * @param ob object
      */
     public static void saveIfNotExistsLang(String path, Object ob) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy()) {
             BedWarsProxy.getAPI().getLanguageUtil().saveIfNotExists(path, ob);
             return;
@@ -122,7 +121,7 @@ public class Utility {
      * @return true if player is in arena, false otherwise.
      */
     public static boolean isInArena(Player p) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy())
             return false;
         if (!Cosmetics.getInstance().isBw2023()){

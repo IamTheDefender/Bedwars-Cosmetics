@@ -5,23 +5,19 @@ import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
 import com.hakan.core.utils.ColorUtil;
-import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.util.Utility;
 import org.bukkit.Location;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class BatCruxEffect extends FinalKillEffect {
     @Override

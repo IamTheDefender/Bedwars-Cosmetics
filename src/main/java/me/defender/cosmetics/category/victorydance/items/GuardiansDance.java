@@ -4,9 +4,8 @@ import com.andrei1058.bedwars.api.events.player.PlayerLeaveArenaEvent;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -66,9 +65,9 @@ public class GuardiansDance extends VictoryDance {
 
 class GuardianTriangle {
     private final Player player;
-    private Location playerLocation;
+    private final Location playerLocation;
     private boolean stopped;
-    private List<Entity> guardians;
+    private final List<Entity> guardians;
 
     public GuardianTriangle(Player player1) {
         this.playerLocation = player1.getLocation();

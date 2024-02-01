@@ -1,4 +1,4 @@
-package me.defender.cosmetics.handler.bedwars1058;
+package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import me.defender.cosmetics.api.handler.IHandler;
 

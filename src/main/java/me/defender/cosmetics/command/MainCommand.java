@@ -13,15 +13,14 @@ import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigType;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
-import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.util.MainMenuUtils;
-import me.defender.cosmetics.util.config.ConfigUtils;
-import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.menu.CategoryMenu;
+import me.defender.cosmetics.menu.MainMenu;
+import me.defender.cosmetics.util.MainMenuUtils;
+import me.defender.cosmetics.util.StartupUtils;
+import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,7 +45,7 @@ import java.util.UUID;
 
 public class MainCommand {
 
-    private Cosmetics plugin;
+    private final Cosmetics plugin;
 
     public MainCommand(Cosmetics plugin) {
         this.plugin = plugin;
@@ -150,7 +149,7 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "Invalid argument: " + String.join(", ", availableArgs));
             return;
         }
-        new BwcAPI().setSelectedCosmetic(player, CosmeticsType.valueOf(arg), cosmeticID);
+        plugin.getApi().setSelectedCosmetic(player, CosmeticsType.valueOf(arg), cosmeticID);
         sender.sendMessage(ColorUtil.colored("&aSuccess! Note, this command will not check if cosmeticsID is valid!"));
 
     }
@@ -417,8 +416,6 @@ public class MainCommand {
             return;
         }
         Player p = (Player) sender;
-        BwcAPI api = new BwcAPI();
-
         if (!plugin.isBw2023()){
             ISetupSession setupSession = plugin.getBedWars1058API().getSetupSession(p.getUniqueId());
 

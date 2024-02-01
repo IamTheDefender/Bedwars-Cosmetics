@@ -4,12 +4,12 @@ package me.defender.cosmetics.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.data.PlayerOwnedData;
 import me.defender.cosmetics.menu.CategoryMenu;
-import me.defender.cosmetics.database.PlayerOwnedData;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -87,7 +87,7 @@ public class MainMenuUtils {
 
 
     public static List<String> formatLore(List<String> lores, Player p){
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
 
         try {
@@ -147,7 +147,7 @@ public class MainMenuUtils {
                 if (placeholder){
                     title = PlaceholderAPI.setPlaceholders(p, title);
                 }
-                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);;
+                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);
                 break;
             case "Kill-Messages":
                 title = CosmeticsType.KillMessage.getFormatedName();

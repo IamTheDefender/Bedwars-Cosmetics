@@ -1,12 +1,13 @@
-package me.defender.cosmetics.manager;
+package me.defender.cosmetics.data.manager;
 
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
+import lombok.Getter;
+import me.defender.cosmetics.data.PlayerData;
+import me.defender.cosmetics.data.PlayerOwnedData;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
+@Getter
 public class PlayerManager {
 
     private final HashMap<UUID, PlayerData> playerDataHashMap;
@@ -18,13 +19,6 @@ public class PlayerManager {
 
     }
 
-    public HashMap<UUID, PlayerData> getPlayerDataHashMap() {
-        return (HashMap<UUID, PlayerData>) Collections.unmodifiableMap(playerDataHashMap);
-    }
-
-    public HashMap<UUID, PlayerOwnedData> getPlayerOwnedDataHashMap() {
-        return (HashMap<UUID, PlayerOwnedData>) Collections.unmodifiableMap(playerOwnedDataHashMap);
-    }
 
     public void addPlayerData(PlayerData playerData) {
         playerDataHashMap.put(playerData.getUuid(), playerData);
@@ -44,6 +38,11 @@ public class PlayerManager {
     }
 
     public PlayerOwnedData getPlayerOwnedData(UUID uuid) {
+        if(!playerOwnedDataHashMap.containsKey(uuid)){
+            PlayerOwnedData playerOwnedData = new PlayerOwnedData(uuid);
+            playerOwnedData.load();
+            playerOwnedDataHashMap.put(uuid, playerOwnedData);
+        }
         return playerOwnedDataHashMap.get(uuid);
     }
 }

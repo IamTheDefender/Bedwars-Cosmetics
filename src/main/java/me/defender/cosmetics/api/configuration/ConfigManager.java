@@ -1,11 +1,5 @@
 package me.defender.cosmetics.api.configuration;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.util.SkullUtil;
 import org.bukkit.Bukkit;
@@ -13,6 +7,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 // Why copy code from bedwars1058 Config Manager?
 // well because proxy have PluginConfig and bedwars1058 have ConfigManager

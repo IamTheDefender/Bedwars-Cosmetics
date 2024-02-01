@@ -40,7 +40,7 @@ public class BurningShoesEffect extends FinalKillEffect {
 
     @Override
     public List<String> getLore() {
-        return Arrays.asList("&7Makes your shoes burn!");
+        return List.of("&7Makes your shoes burn!");
     }
 
     @Override

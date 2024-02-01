@@ -4,15 +4,13 @@ package me.defender.cosmetics.category.killmessage;
 
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.category.killmessage.util.KillMessageUtils;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.category.killmessage.util.KillMessageUtils;
 import me.defender.cosmetics.util.DebugUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class KillMessageHandler1058 implements Listener
 {
@@ -24,7 +22,7 @@ public class KillMessageHandler1058 implements Listener
         boolean isKillMessagesEnabled = Cosmetics.getInstance().getConfig().getBoolean("kill-messages.enabled");
         if (!isKillMessagesEnabled) return;
 
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
 
         // Death Cries disabling sound stuff
         if (!api.getSelectedCosmetic(e.getVictim(), CosmeticsType.DeathCries).equals("NONE")) {
@@ -35,7 +33,7 @@ public class KillMessageHandler1058 implements Listener
         ChatColor color3 = e.getArena().getTeam(e.getVictim()).getColor().chat();
 
         // KILL MESSAGES!
-        if(new BwcAPI().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage).equals("Default")){
+        if(Cosmetics.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage).equals("Default")){
             return;
         }
 
@@ -44,7 +42,7 @@ public class KillMessageHandler1058 implements Listener
         // Get the final kill flag based on the kill cause
         boolean isFinalKill = e.getCause().isFinalKill();
 
-        String selected = new BwcAPI().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage);
+        String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage);
 
         // Send the appropriate kill message to all players in the arena
         switch (e.getCause()) {

@@ -1,7 +1,7 @@
 package me.defender.cosmetics.api.event;
 
 import lombok.Getter;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -33,7 +33,7 @@ public class BedBreakEffectExecuteEvent extends Event implements Cancellable {
     public BedBreakEffectExecuteEvent(Player WhoBroke){
         this.cancelled = false;
         this.WhoBrokeTheBed = WhoBroke;
-        this.selected = new BwcAPI().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
+        this.selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
     }
 
 

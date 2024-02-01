@@ -5,11 +5,9 @@ import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.XTag;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -23,8 +21,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 
-import static me.defender.cosmetics.util.Utility.plugin;
-
 public class WoodSkinHandler2023 implements Listener {
 
     @EventHandler
@@ -35,7 +31,7 @@ public class WoodSkinHandler2023 implements Listener {
         if (!isWoodSkinsEnabled) return;
 
         if(!XTag.PLANKS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType())) || !XTag.LOGS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType()))) return;
-        String selected = new BwcAPI().getSelectedCosmetic(e.getPlayer(), CosmeticsType.WoodSkins);
+        String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(e.getPlayer(), CosmeticsType.WoodSkins);
         for(WoodSkin woodSkin : StartupUtils.woodSkinsList){
             if(woodSkin.getIdentifier().equals(selected)){
                 ItemStack stack = woodSkin.woodSkin();
@@ -55,7 +51,7 @@ public class WoodSkinHandler2023 implements Listener {
 
         Player p = e.getBuyer();
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
-            String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
+            String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
 
             com.tomkeuper.bedwars.api.BedWars bedwarsAPI = Cosmetics.getInstance().getBedWars2023API();
             String iso =  bedwarsAPI.getLangIso(p);

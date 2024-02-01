@@ -1,8 +1,8 @@
 package me.defender.cosmetics.category.woodskin.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;

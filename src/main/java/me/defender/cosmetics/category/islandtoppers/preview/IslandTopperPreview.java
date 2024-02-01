@@ -8,20 +8,20 @@ import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
-import com.sk89q.worldedit.*;
+import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.SchematicFormat;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
-import me.defender.cosmetics.category.islandtoppers.util.BlockData;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
+import me.defender.cosmetics.category.islandtoppers.util.BlockData;
 import me.defender.cosmetics.util.StartupUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,7 +38,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import static me.defender.cosmetics.util.StartupUtils.*;
+
+import static me.defender.cosmetics.util.StartupUtils.getCosmeticLocation;
+import static me.defender.cosmetics.util.StartupUtils.getPlayerLocation;
 
 public class IslandTopperPreview {
 

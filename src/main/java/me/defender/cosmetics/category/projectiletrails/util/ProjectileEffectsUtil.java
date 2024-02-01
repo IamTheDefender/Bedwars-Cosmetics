@@ -3,7 +3,7 @@ package me.defender.cosmetics.category.projectiletrails.util;
 import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.category.ProjectileTrail;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
@@ -26,7 +26,7 @@ public class ProjectileEffectsUtil {
 	 */
 	public static void sendEffect(Entity e, Player p) {
 		CosmeticsType type = CosmeticsType.ProjectileTrails;
-		String selected = new BwcAPI().getSelectedCosmetic(p, type);
+		String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, type);
 		String effect = ConfigUtils.getProjectileTrails().getString(type.getSectionKey() + "." + selected + ".particle");
 		Color color = ConfigUtils.getProjectileTrails().getYml().getColor(type.getSectionKey() + "." + selected + ".color");
 		ProjectileTrail projectileTrail = null;

@@ -2,8 +2,8 @@ package me.defender.cosmetics.category.bedbreakeffects.items;
 
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Color;
 import org.bukkit.Location;

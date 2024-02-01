@@ -1,9 +1,9 @@
 package me.defender.cosmetics.category.deathcries.preview;
 
 import com.cryptomorin.xseries.XSound;
-import me.defender.cosmetics.api.cosmetics.category.DeathCry;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.DeathCry;
 import me.defender.cosmetics.util.StartupUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

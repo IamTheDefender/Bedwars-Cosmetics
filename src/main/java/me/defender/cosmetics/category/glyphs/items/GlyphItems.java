@@ -2,10 +2,10 @@ package me.defender.cosmetics.category.glyphs.items;
 
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.configuration.ConfigManager;
+import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.Glyph;
 import me.defender.cosmetics.category.glyphs.util.glyphUtil;
-import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;

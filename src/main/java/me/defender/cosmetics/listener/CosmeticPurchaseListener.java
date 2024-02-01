@@ -2,8 +2,6 @@ package me.defender.cosmetics.listener;
 
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.event.CosmeticPurchaseEvent;
-import me.defender.cosmetics.util.Utility;
-import me.defender.cosmetics.database.PlayerOwnedData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

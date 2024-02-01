@@ -1,13 +1,12 @@
 package me.defender.cosmetics.category.islandtoppers.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DummyTopper extends IslandTopper {
@@ -33,7 +32,7 @@ public class DummyTopper extends IslandTopper {
 
     @Override
     public List<String> getLore() {
-        return Arrays.asList("Island Toppers are DISABLED for some reason!");
+        return List.of("Island Toppers are DISABLED for some reason!");
     }
 
     @Override

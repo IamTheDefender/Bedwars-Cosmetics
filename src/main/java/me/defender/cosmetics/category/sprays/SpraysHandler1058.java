@@ -5,19 +5,15 @@ package me.defender.cosmetics.category.sprays;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.Spray;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.Spray;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class SpraysHandler1058 implements Listener
 {
@@ -32,7 +28,7 @@ public class SpraysHandler1058 implements Listener
         if (e.getRightClicked() instanceof ItemFrame) {
             ItemFrame itemFrame = (ItemFrame) e.getRightClicked();
             if(itemFrame.getItem() == null) return;
-            String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.Sprays);
+            String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.Sprays);
             if(itemFrame.getItem().getType() == Material.AIR || itemFrame.getItem().getType() == Material.MAP || itemFrame.getItem().getType() == Material.EMPTY_MAP) {
                 for(Spray spray : StartupUtils.sprayList){
                     if(spray.getIdentifier().equals(selected)){

@@ -2,10 +2,10 @@ package me.defender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
+import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
-import me.defender.cosmetics.api.cosmetics.RarityType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;

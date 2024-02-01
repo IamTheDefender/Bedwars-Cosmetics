@@ -2,11 +2,11 @@ package me.defender.cosmetics.category.killmessage.util;
 
 import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.KillMessage;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.KillMessage;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.ChatColor;
@@ -59,7 +59,7 @@ public class KillMessageUtils {
      * @param oldMessage        never used, leave as null.
      */
     public static void sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type, String oldMessage, boolean preview, String previewID, String previewKillerName) {
-        String selectedMessage = new BwcAPI().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        String selectedMessage = Cosmetics.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
         List<String> messages;
         if (preview) {
             messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + previewID + "." + type + "-Kill");
@@ -107,9 +107,9 @@ public class KillMessageUtils {
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
      */
     public static String sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
-        String selectedMessage = new BwcAPI().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        String selectedMessage = Cosmetics.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
         if(victim.equalsIgnoreCase(killer.getName())) type = "Void";
-        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");;
+        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {
                 if (killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE) return null;

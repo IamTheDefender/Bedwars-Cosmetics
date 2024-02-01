@@ -1,8 +1,8 @@
 package me.defender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

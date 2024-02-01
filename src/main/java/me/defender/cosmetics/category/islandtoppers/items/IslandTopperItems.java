@@ -2,10 +2,10 @@ package me.defender.cosmetics.category.islandtoppers.items;
 
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.configuration.ConfigManager;
+import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
 import me.defender.cosmetics.category.islandtoppers.util.IslandToppersUtil;
-import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

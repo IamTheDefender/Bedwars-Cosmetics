@@ -3,7 +3,7 @@
 package me.defender.cosmetics.listener;
 
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.api.cosmetics.category.DeathCry;
 import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
@@ -15,9 +15,8 @@ import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
 import me.defender.cosmetics.api.cosmetics.category.Spray;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
-import me.defender.cosmetics.util.Utility;
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
+import me.defender.cosmetics.data.PlayerData;
+import me.defender.cosmetics.data.PlayerOwnedData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,7 +29,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
 
         // Saving for MySQL is different
         if (api.isMySQL()) {

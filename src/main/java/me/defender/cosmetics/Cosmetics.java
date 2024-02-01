@@ -5,33 +5,33 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.Setter;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
-import me.defender.cosmetics.manager.PlayerManager;
+import me.defender.cosmetics.api.database.DatabaseType;
+import me.defender.cosmetics.data.manager.PlayerManager;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.util.config.DefaultsUtils;
-import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.command.MainCommand;
 import me.defender.cosmetics.util.config.MainMenuData;
-import me.defender.cosmetics.database.IDatabase;
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
-import me.defender.cosmetics.database.mysql.MySQL;
-import me.defender.cosmetics.database.sqlite.SQLite;
-import me.defender.cosmetics.support.bedwars.BedWars2023;
+import me.defender.cosmetics.api.database.IDatabase;
+import me.defender.cosmetics.data.PlayerData;
+import me.defender.cosmetics.data.PlayerOwnedData;
+import me.defender.cosmetics.data.database.MySQL;
+import me.defender.cosmetics.data.database.SQLite;
+import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BedWars2023;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 
 public class Cosmetics extends JavaPlugin
 {
@@ -42,14 +42,11 @@ public class Cosmetics extends JavaPlugin
     @Getter
     private com.andrei1058.bedwars.api.BedWars bedWars1058API;
     public MainMenuData menuData;
-    public static HikariDataSource db;
-    @Getter
-    public static Connection dbConnection;
     public boolean dependenciesMissing = false;
     @Getter
     static boolean placeholderAPI;
     @Getter
-    private IDatabase dataBase;
+    private IDatabase remoteDatabase;
     @Getter
     private static Cosmetics instance;
     @Getter
@@ -59,6 +56,10 @@ public class Cosmetics extends JavaPlugin
 
     @Getter
     private PlayerManager playerManager;
+    @Getter
+    private CosmeticsAPI api;
+    @Getter
+    private Economy economy;
 
     @Override
     public void onEnable() {
@@ -71,7 +72,7 @@ public class Cosmetics extends JavaPlugin
         if (StartupUtils.isBw2023) {
             BedWars2023 bedWars2023 = new BedWars2023(this);
             bedWars2023.start();
-        } else if(!new BwcAPI().isProxy()) {
+        } else if(!api.isProxy()) {
             this.bedWars1058API = Bukkit.getServer().getServicesManager().getRegistration(com.andrei1058.bedwars.api.BedWars.class).getProvider();
         }
 
@@ -84,6 +85,9 @@ public class Cosmetics extends JavaPlugin
             return;
         }
         instance = this;
+        api = Cosmetics.getInstance().getApi();
+        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        economy = rsp.getProvider();
         protocolManager = ProtocolLibrary.getProtocolManager();
         entityPlayerHashMap  = new HashMap<>();
         playerManager = new PlayerManager();
@@ -107,14 +111,12 @@ public class Cosmetics extends JavaPlugin
         this.menuData = new MainMenuData(this);
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
-        getLogger().info("Loading " + (new BwcAPI().isMySQL() ? "MySQL" : "SQLite") + " database...");
-        if(new BwcAPI().isMySQL()){
-            dataBase = new MySQL(this);
+        getLogger().info("Loading " + (api.isMySQL() ? "MySQL" : "SQLite") + " database...");
+        if(api.isMySQL()){
+            remoteDatabase = new MySQL(this);
         }else{
-            dataBase = new SQLite(this);
+            remoteDatabase = new SQLite(this);
         }
-        db = dataBase.getDataSource();
-        dbConnection = dataBase.getConnection();
 
         // Load all the list
         StartupUtils.loadLists();
@@ -138,11 +140,11 @@ public class Cosmetics extends JavaPlugin
         // This is a check to make sure victory dance config doesn't have any issues.
         VictoryDance.getDefault(null);
 
-        HCore.asyncScheduler().every(5, TimeUnit.SECONDS).run(() -> {
-            try (Connection connection = dataBase.getConnection()){
+        HCore.asyncScheduler().every(5L).run(() -> {
+            try (Connection connection = remoteDatabase.getConnection()){
                 connection.createStatement();
             }catch (Exception e){
-                dataBase.connect();
+                remoteDatabase.connect();
             }
         });
 
@@ -160,7 +162,7 @@ public class Cosmetics extends JavaPlugin
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
         }
-        if(!new BwcAPI().isMySQL()){
+        if(remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
             getLogger().info("Saving player data to SQLite database...");
             getLogger().info("Please wait it may take some time!");
             for(PlayerData playerData : getPlayerManager().getPlayerDataHashMap().values()){
@@ -172,16 +174,10 @@ public class Cosmetics extends JavaPlugin
             getLogger().info("Player data saved to SQLite database!");
         }
         try {
-            db.getConnection().close();
+            remoteDatabase.getConnection().close();
         } catch (SQLException e) {
             getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
         }
-    }
-
-
-
-    public static HikariDataSource getDB(){
-        return db;
     }
 
     public static void setPlaceholderAPI(boolean placeholderAPI) {
@@ -191,6 +187,7 @@ public class Cosmetics extends JavaPlugin
     public boolean isBw2023() {
         return getBedWars2023API() != null;
     }
+
 
 
 }

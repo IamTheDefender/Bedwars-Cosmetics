@@ -1,9 +1,10 @@
-package me.defender.cosmetics.database.sqlite;
+package me.defender.cosmetics.data.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
-import me.defender.cosmetics.database.IDatabase;
+import me.defender.cosmetics.api.database.DatabaseType;
+import me.defender.cosmetics.api.database.IDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,8 +17,6 @@ public class SQLite implements IDatabase {
     private final JavaPlugin plugin;
     @Getter
     public HikariDataSource dataSource;
-    @Getter
-    public Connection connection;
     public SQLite(JavaPlugin plugin){
         this.plugin = plugin;
         connect();
@@ -25,8 +24,22 @@ public class SQLite implements IDatabase {
     }
 
 
+    @Override
+    public DatabaseType getDatabaseType() {
+        return DatabaseType.SQLITE;
+    }
+
     public void connect(){
-        if(dataSource == null){
+        boolean needConnecting = dataSource == null;
+        if(!needConnecting){
+            try {
+                dataSource.getConnection().createStatement();
+            } catch (SQLException e) {
+                needConnecting = true;
+            }
+        }
+
+        if(needConnecting){
             String jdbcUrl = "jdbc:sqlite:" + plugin.getDataFolder().getPath() + "/playerData.db";
             try{
                 Class.forName("org.sqlite.JDBC");
@@ -38,12 +51,12 @@ public class SQLite implements IDatabase {
             config.setUsername("");
             config.setPassword("");
             config.setConnectionTestQuery("SELECT 1");
-            config.setConnectionTimeout(500000);
+            config.setConnectionTimeout(Integer.MAX_VALUE);
             config.setMaximumPoolSize(100);
             config.setPoolName("COSMETICS-SQLITE");
             dataSource = new HikariDataSource(config);
             try {
-                connection = dataSource.getConnection();
+                dataSource.getConnection();
             } catch (SQLException e) {
                 Bukkit.getLogger().severe("There was an error getting the connection for database! error: " + e.getMessage());
             }
@@ -88,4 +101,12 @@ public class SQLite implements IDatabase {
         }
     }
 
+    @Override
+    public Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
