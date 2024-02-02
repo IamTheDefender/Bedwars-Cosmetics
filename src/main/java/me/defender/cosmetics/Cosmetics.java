@@ -4,9 +4,7 @@ package me.defender.cosmetics;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.hakan.core.HCore;
-import com.tomkeuper.bedwars.api.BedWars;
 import lombok.Getter;
-import lombok.Setter;
 import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.database.DatabaseType;
@@ -27,7 +25,6 @@ import me.defender.cosmetics.data.PlayerData;
 import me.defender.cosmetics.data.PlayerOwnedData;
 import me.defender.cosmetics.data.database.MySQL;
 import me.defender.cosmetics.data.database.SQLite;
-import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BedWars2023;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -68,6 +65,7 @@ public class Cosmetics extends JavaPlugin {
         }catch (IllegalStateException ignored){
             getLogger().severe("BW1058-Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
             setEnabled(false);
+            dependenciesMissing = true;
             return;
         }
         instance = this;
