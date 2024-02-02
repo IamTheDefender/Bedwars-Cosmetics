@@ -2,6 +2,8 @@ package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.andrei1058.bedwars.proxy.api.BedWars;
+import java.io.File;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
 import org.bukkit.entity.Player;
 
@@ -27,6 +29,11 @@ public class BW1058ProxyHandler implements IHandler {
     @Override
     public IArenaUtil getArenaUtil() {
         return null;
+    }
+
+    @Override
+    public String getAddonPath() {
+        return BedWarsProxy.getPlugin().getDataFolder() + File.separator + "Addons" + File.separator + Cosmetics.getInstance().getDescription().getName();
     }
 
     @Override

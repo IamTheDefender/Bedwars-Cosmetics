@@ -147,7 +147,7 @@ public class GlyphPreview {
         }
 
         File file = new File(
-                Cosmetics.getInstance().getDataFolder().getPath() +
+                Cosmetics.getInstance().getHandler().getAddonPath() +
                         "/Glyphs/" +
                         glyphFile);
 

@@ -20,6 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,6 +96,11 @@ public class BW1058Handler implements IHandler {
                 Language.saveIfNotExists(path, data);
             }
         };
+    }
+
+    @Override
+    public String getAddonPath() {
+        return api.getAddonsPath().getPath() + File.separator + Cosmetics.getInstance().getDescription().getName();
     }
 
     @Override

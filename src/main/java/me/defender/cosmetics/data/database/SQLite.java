@@ -3,6 +3,7 @@ package me.defender.cosmetics.data.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.database.DatabaseType;
 import me.defender.cosmetics.api.database.IDatabase;
 import org.bukkit.Bukkit;
@@ -14,10 +15,10 @@ import java.sql.Statement;
 
 public class SQLite implements IDatabase {
 
-    private final JavaPlugin plugin;
+    private final Cosmetics plugin;
     @Getter
     public HikariDataSource dataSource;
-    public SQLite(JavaPlugin plugin){
+    public SQLite(Cosmetics plugin){
         this.plugin = plugin;
         connect();
         createTable();
@@ -40,7 +41,7 @@ public class SQLite implements IDatabase {
         }
 
         if(needConnecting){
-            String jdbcUrl = "jdbc:sqlite:" + plugin.getDataFolder().getPath() + "/playerData.db";
+            String jdbcUrl = "jdbc:sqlite:" + plugin.getHandler().getAddonPath() + "/cosmeticsData.db";
             try{
                 Class.forName("org.sqlite.JDBC");
             }catch (ClassNotFoundException e) {

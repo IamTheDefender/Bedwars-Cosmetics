@@ -143,7 +143,7 @@ public class IslandTopperPreview {
             return;
         }
 
-        File file = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/" + topperFileName);
+        File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + topperFileName);
         if(!file.exists()){
             Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
             return;

@@ -25,7 +25,7 @@ public class MainMenuData
     
     public void reloadcfg() {
         if (this.cfgfile == null) {
-            this.cfgfile = new File(this.plugin.getDataFolder(), "MainMenu.yml");
+            this.cfgfile = new File(new File(plugin.getHandler().getAddonPath()), "MainMenu.yml");
         }
         this.datacfg = YamlConfiguration.loadConfiguration(this.cfgfile);
         final InputStream defaultStream = this.plugin.getResource("MainMenu.yml");
@@ -56,7 +56,7 @@ public class MainMenuData
     
     public void savedefaultcfg() {
         if (this.cfgfile == null) {
-            this.cfgfile = new File(this.plugin.getDataFolder(), "MainMenu.yml");
+            this.cfgfile = new File(new File(plugin.getHandler().getAddonPath()), "MainMenu.yml");
         }
         if (!this.cfgfile.exists()) {
             this.plugin.saveResource("MainMenu.yml", false);

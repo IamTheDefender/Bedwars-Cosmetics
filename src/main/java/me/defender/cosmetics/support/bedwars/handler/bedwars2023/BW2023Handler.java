@@ -3,6 +3,7 @@ package me.defender.cosmetics.support.bedwars.handler.bedwars2023;
 import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
 import com.tomkeuper.bedwars.api.language.Language;
+import java.io.File;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
 import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
@@ -98,6 +99,11 @@ public class BW2023Handler implements IHandler {
                 Language.saveIfNotExists(path, data);
             }
         };
+    }
+
+    @Override
+    public String getAddonPath() {
+        return api.getAddonsPath().getPath() + File.separator + Cosmetics.getInstance().getDescription().getName();
     }
 
     @Override

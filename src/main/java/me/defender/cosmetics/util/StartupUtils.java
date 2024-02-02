@@ -82,15 +82,15 @@ public class StartupUtils
      If the folders do not exist, they will be created.
      */
     public static void createFolders() {
-        File spraysFolder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir"));
+        File spraysFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir"));
         if (!spraysFolder.exists()) {
             spraysFolder.mkdirs();
         }
-        File islandToppersFolder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers");
+        File islandToppersFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers");
         if (!islandToppersFolder.exists()) {
             islandToppersFolder.mkdirs();
         }
-        File cubeFile = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/cube.schematic");
+        File cubeFile = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/cube.schematic");
         // Save if not found
         if(cubeFile.exists()) return;
         try {
@@ -106,17 +106,17 @@ public class StartupUtils
      * in the folder and remove the temp.zip.
      */
     public static void downloadGlyphs() {
-        File folder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs");
+        File folder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs");
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        final String temp = Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs/temp.zip";
+        final String temp = Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs/temp.zip";
         final File tempFile = new File(temp);
         if (tempFile.exists()) {
             tempFile.delete();
         }
         String[] filesInFolder = folder.list();
-        if (filesInFolder != null && filesInFolder.length == 0) {
+        if (filesInFolder != null && filesInFolder.length != 0) {
             return;
         }
         JavaPlugin plugin = Cosmetics.getInstance();

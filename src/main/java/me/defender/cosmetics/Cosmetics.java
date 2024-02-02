@@ -69,7 +69,7 @@ public class Cosmetics extends JavaPlugin {
             return;
         }
         instance = this;
-        api = Cosmetics.getInstance().getApi();
+        api = new BwcAPI();
         if(!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);

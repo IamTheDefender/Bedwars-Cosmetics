@@ -73,7 +73,7 @@ public class IslandTopperItems {
                         Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
                         return;
                     }
-                    File file = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/" + fileName);
+                    File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + fileName);
                     if(!file.exists()){
                         Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
                         return;

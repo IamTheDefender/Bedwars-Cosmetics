@@ -10,5 +10,6 @@ public interface IHandler {
     IScoreboardUtil getScoreboardUtil();
     IArenaUtil getArenaUtil();
     ILanguage getLanguageUtil();
+    String getAddonPath();
 
 }
