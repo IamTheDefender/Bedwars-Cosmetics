@@ -20,7 +20,6 @@ import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.MainMenuUtils;
 import me.defender.cosmetics.util.config.DefaultsUtils;
 import me.defender.cosmetics.command.MainCommand;
-import me.defender.cosmetics.util.config.MainMenuData;
 import me.defender.cosmetics.api.database.IDatabase;
 import me.defender.cosmetics.data.PlayerData;
 import me.defender.cosmetics.data.PlayerOwnedData;
