@@ -1,10 +1,11 @@
 package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
-import me.defender.cosmetics.api.handler.IArenaUtil;
-import me.defender.cosmetics.api.handler.IHandler;
-import me.defender.cosmetics.api.handler.IScoreboardUtil;
-import me.defender.cosmetics.api.handler.ISetupSession;
+import com.andrei1058.bedwars.proxy.BedWarsProxy;
+import com.andrei1058.bedwars.proxy.api.BedWars;
+import me.defender.cosmetics.api.handler.*;
+import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BW1058ProxyHandler implements IHandler {
@@ -26,5 +27,26 @@ public class BW1058ProxyHandler implements IHandler {
     @Override
     public IArenaUtil getArenaUtil() {
         return null;
+    }
+
+    @Override
+    public ILanguage getLanguageUtil() {
+        BedWars.LanguageUtil languageUtil = BedWarsProxy.getAPI().getLanguageUtil();
+        return new ILanguage() {
+            @Override
+            public String getMessage(Player player, String path) {
+                return languageUtil.getMsg(player, path);
+            }
+
+            @Override
+            public List<String> getMessageList(Player player, String path) {
+                return languageUtil.getList(player, path);
+            }
+
+            @Override
+            public void saveIfNotExists(String path, Object data) {
+                languageUtil.saveIfNotExists(path, data);
+            }
+        };
     }
 }

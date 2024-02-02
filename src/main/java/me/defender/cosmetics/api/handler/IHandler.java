@@ -9,5 +9,6 @@ public interface IHandler {
     ISetupSession getSetupSession(UUID playerUUID);
     IScoreboardUtil getScoreboardUtil();
     IArenaUtil getArenaUtil();
+    ILanguage getLanguageUtil();
 
 }

@@ -65,18 +65,7 @@ public class Utility {
      */
     public static String getMSGLang(Player p, String path) {
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        if (api.isProxy()) {
-            if (!Cosmetics.getInstance().isBw2023()){
-                return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
-            } else {
-                return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-            }
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getMsg(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-        }
+        return api.getHandler().getLanguageUtil().getMessage(p, path);
     }
 
     /**
@@ -87,14 +76,7 @@ public class Utility {
      */
     public static List<String> getListLang(Player p, String path) {
        CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        if (api.isProxy()) {
-            return BedWarsProxy.getAPI().getLanguageUtil().getList(p, path);
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getList(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getList(p, path);
-        }
+       return api.getHandler().getLanguageUtil().getMessageList(p, path);
     }
 
     /**
@@ -104,15 +86,7 @@ public class Utility {
      */
     public static void saveIfNotExistsLang(String path, Object ob) {
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        if (api.isProxy()) {
-            BedWarsProxy.getAPI().getLanguageUtil().saveIfNotExists(path, ob);
-            return;
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            Language.saveIfNotExists(path, ob);
-        } else {
-            com.tomkeuper.bedwars.api.language.Language.saveIfNotExists(path, ob);
-        }
+        api.getHandler().getLanguageUtil().saveIfNotExists(path, ob);
     }
 
     /**

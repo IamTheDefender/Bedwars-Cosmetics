@@ -1,6 +1,7 @@
 package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.language.Language;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
@@ -72,6 +73,26 @@ public class BW1058Handler implements IHandler {
             @Override
             public void removePlayerScoreboard(Player player) {
                 api.getScoreboardUtil().removePlayerScoreboard(player);
+            }
+        };
+    }
+
+    @Override
+    public ILanguage getLanguageUtil() {
+        return new ILanguage() {
+            @Override
+            public String getMessage(Player player, String path) {
+                return api.getPlayerLanguage(player).getString(path);
+            }
+
+            @Override
+            public List<String> getMessageList(Player player, String path) {
+                return api.getPlayerLanguage(player).getList(path);
+            }
+
+            @Override
+            public void saveIfNotExists(String path, Object data) {
+                Language.saveIfNotExists(path, data);
             }
         };
     }

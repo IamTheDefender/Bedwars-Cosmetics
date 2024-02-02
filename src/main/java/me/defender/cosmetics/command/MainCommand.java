@@ -85,45 +85,6 @@ public class MainCommand {
     }
 
     @SubCommand(
-            args = "quickbuy",
-            permission = "bwcosmetics.quickbuy",
-            permissionMessage = "§cYou don't have permission to do that!"
-    )
-    public void quickbuyCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            p.sendMessage(ColorUtil.colored("&cThis command currently doesn't work! use at your own risk."));
-
-            if (!plugin.isBw2023()){
-                new PlayerQuickBuyCache(p);
-                new ShopCache(p.getUniqueId());
-                ShopManager.shop.open(p, PlayerQuickBuyCache.getQuickBuyCache(p.getUniqueId()), true);
-            } else {
-                new com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache(p);
-                new com.tomkeuper.bedwars.shop.ShopCache(p.getUniqueId());
-                com.tomkeuper.bedwars.shop.ShopManager.shop.open(p, com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(p.getUniqueId()), true);
-            }
-            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Cosmetics.getInstance(), true));
-            HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
-                if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
-                    event.getPlayer().removeMetadata("bwc_quickbuy", Cosmetics.getInstance());
-                    if (!plugin.isBw2023()) {
-                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
-                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
-                        ShopCache.getShopCache(event.getPlayer().getUniqueId()).destroy();
-                    } else {
-                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
-                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
-                        com.tomkeuper.bedwars.shop.ShopCache.getInstance().getShopCache(event.getPlayer().getUniqueId()).destroy();
-                    }
-                }
-            }));
-        }else {
-            sender.sendMessage(ChatColor.RED + "You need to be in-game!");
-        }
-    }
-
-    @SubCommand(
             args = "set",
             permission = "bwcosmetics.admin",
             permissionMessage = "§cYou don't have permission to do that!"

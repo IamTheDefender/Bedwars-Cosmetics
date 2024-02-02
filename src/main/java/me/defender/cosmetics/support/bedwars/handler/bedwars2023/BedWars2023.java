@@ -1,5 +1,6 @@
 package me.defender.cosmetics.support.bedwars.handler.bedwars2023;
 
+import com.tomkeuper.bedwars.BedWars;
 import me.defender.cosmetics.Cosmetics;
 import org.bukkit.Bukkit;
 
@@ -12,8 +13,7 @@ public class BedWars2023 {
 
     public void start() {
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") != null) {
-            plugin.setBedWars2023API(plugin.getServer().getServicesManager().getRegistration(com.tomkeuper.bedwars.api.BedWars.class).getProvider());
-            plugin.getBedWars2023API().getAddonsUtil().registerAddon(new BedWars2023Addon(plugin));
+            BedWars.getAPI().getAddonsUtil().registerAddon(new BedWars2023Addon(plugin));
         }
     }
 }
