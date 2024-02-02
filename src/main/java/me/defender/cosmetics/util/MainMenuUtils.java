@@ -4,12 +4,12 @@ package me.defender.cosmetics.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.data.PlayerOwnedData;
 import me.defender.cosmetics.menu.CategoryMenu;
-import me.defender.cosmetics.database.PlayerOwnedData;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -87,8 +87,8 @@ public class MainMenuUtils {
 
 
     public static List<String> formatLore(List<String> lores, Player p){
-        BwcAPI api = new BwcAPI();
-        PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(p.getUniqueId());
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
 
         try {
             lores = lores.stream()
@@ -126,7 +126,7 @@ public class MainMenuUtils {
 
     public static void openMenus(Player p, String name){
         String title = null;
-        Boolean placeholder = Cosmetics.isPlaceholderAPI();
+        boolean placeholder = Cosmetics.isPlaceholderAPI();
         switch (name) {
             case "Sprays":
                 title = CosmeticsType.Sprays.getFormatedName();
@@ -147,7 +147,7 @@ public class MainMenuUtils {
                 if (placeholder){
                     title = PlaceholderAPI.setPlaceholders(p, title);
                 }
-                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);;
+                new CategoryMenu(CosmeticsType.FinalKillEffects, title).open(p);
                 break;
             case "Kill-Messages":
                 title = CosmeticsType.KillMessage.getFormatedName();
@@ -206,7 +206,7 @@ public class MainMenuUtils {
                 new CategoryMenu(CosmeticsType.DeathCries, title).open(p);
                 break;
             case "Back":
-                String command = Cosmetics.getInstance().menuData.getConfig().getString("Main-Menu.Back.custom-command");
+                String command = Cosmetics.getInstance().menuData.getString("Main-Menu.Back.custom-command");
                 if(command == null) {
                     p.getOpenInventory().close();
                 }else{

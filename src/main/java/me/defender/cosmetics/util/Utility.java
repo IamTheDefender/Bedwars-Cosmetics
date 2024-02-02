@@ -11,28 +11,23 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.List;
 
 
 public class Utility {
-    public static Map<UUID, PlayerData> playerDataList;
-    public static Map<UUID, PlayerOwnedData> playerOwnedDataList;
-
-
     /**
      * @param s the main string for example "Click me"
      * @param st the message when they hover.
@@ -69,19 +64,8 @@ public class Utility {
      * @return the result
      */
     public static String getMSGLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            if (!Cosmetics.getInstance().isBw2023()){
-                return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
-            } else {
-                return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-            }
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getMsg(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-        }
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        return api.getHandler().getLanguageUtil().getMessage(p, path);
     }
 
     /**
@@ -91,15 +75,8 @@ public class Utility {
      * @return the result
      */
     public static List<String> getListLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            return BedWarsProxy.getAPI().getLanguageUtil().getList(p, path);
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getList(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getList(p, path);
-        }
+       CosmeticsAPI api = Cosmetics.getInstance().getApi();
+       return api.getHandler().getLanguageUtil().getMessageList(p, path);
     }
 
     /**
@@ -108,16 +85,8 @@ public class Utility {
      * @param ob object
      */
     public static void saveIfNotExistsLang(String path, Object ob) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            BedWarsProxy.getAPI().getLanguageUtil().saveIfNotExists(path, ob);
-            return;
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            Language.saveIfNotExists(path, ob);
-        } else {
-            com.tomkeuper.bedwars.api.language.Language.saveIfNotExists(path, ob);
-        }
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        api.getHandler().getLanguageUtil().saveIfNotExists(path, ob);
     }
 
     /**
@@ -126,14 +95,10 @@ public class Utility {
      * @return true if player is in arena, false otherwise.
      */
     public static boolean isInArena(Player p) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy())
             return false;
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Cosmetics.getInstance().getBedWars1058API().getArenaUtil().getArenaByPlayer(p) != null;
-        } else {
-            return Cosmetics.getInstance().getBedWars2023API().getArenaUtil().getArenaByPlayer(p) != null;
-        }
+        return Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(p) != null;
     }
 
 

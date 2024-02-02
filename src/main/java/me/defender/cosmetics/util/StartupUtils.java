@@ -8,44 +8,26 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.*;
-import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
-import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
+import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.category.bedbreakeffects.items.*;
-import me.defender.cosmetics.category.deathcries.DeathCryHandler1058;
-import me.defender.cosmetics.category.deathcries.DeathCryHandler2023;
 import me.defender.cosmetics.category.deathcries.items.DeathCryItems;
-import me.defender.cosmetics.category.finalkilleffects.FinalKillEffectHandler1058;
-import me.defender.cosmetics.category.finalkilleffects.FinalKillEffectHandler2023;
 import me.defender.cosmetics.category.finalkilleffects.items.*;
-import me.defender.cosmetics.category.glyphs.GlyphHandler1058;
-import me.defender.cosmetics.category.glyphs.GlyphHandler2023;
 import me.defender.cosmetics.category.glyphs.items.GlyphItems;
-import me.defender.cosmetics.category.islandtoppers.IslandTopperHandler1058;
-import me.defender.cosmetics.category.islandtoppers.IslandTopperHandler2023;
 import me.defender.cosmetics.category.islandtoppers.items.IslandTopperItems;
-import me.defender.cosmetics.category.killmessage.KillMessageHandler1058;
-import me.defender.cosmetics.category.killmessage.KillMessageHandler2023;
 import me.defender.cosmetics.category.killmessage.items.KillMessageItems;
-import me.defender.cosmetics.category.projectiletrails.ProjectileHandler;
 import me.defender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler2023;
 import me.defender.cosmetics.category.shopkeeperskins.items.ShopKeeperItems;
-import me.defender.cosmetics.category.sprays.SpraysHandler1058;
-import me.defender.cosmetics.category.sprays.SpraysHandler2023;
 import me.defender.cosmetics.category.sprays.items.SprayItems;
-import me.defender.cosmetics.category.victorydance.VictoryDanceHandler1058;
-import me.defender.cosmetics.category.victorydance.VictoryDanceHandler2023;
 import me.defender.cosmetics.category.victorydance.items.*;
-import me.defender.cosmetics.category.woodskin.WoodSkinHandler1058;
-import me.defender.cosmetics.category.woodskin.WoodSkinHandler2023;
 import me.defender.cosmetics.category.woodskin.items.*;
 import me.defender.cosmetics.category.woodskin.items.log.*;
 import me.defender.cosmetics.listener.CosmeticPurchaseListener;
-import me.defender.cosmetics.listener.GameListener;
 import me.defender.cosmetics.listener.PlayerJoinListener;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.support.placeholders.Placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -82,46 +64,13 @@ public class StartupUtils
     public static List<ShopKeeperSkin> shopKeeperSkinList;
     public static List<IslandTopper> islandTopperList;
 
-    public static boolean isBw2023 = false;
+    public static boolean isBw2023 = Bukkit.getPluginManager().getPlugin("BedWars2023") != null;
 
     /**
-     This method is used to register all events for the plugin.
-     It includes registering listeners for the ShopKeeperSkin, GlyphHandler, KillMessageHandler, ProjectileHandler,
-     VictoryDanceHandler, FinalKillEffectHandler, BedDestroyHandler, WoodSkins, IslandTopperHandler, PlayerLeaveListener,
-     CosmeticPurchaseListener, PlayerJoinListener, DeathCryHandler and SpraysHandler classes.
-     @author defender
+     Register events and handler
+      @author defender
      */
     public static void registerEvents() {
-        if(!new BwcAPI().isProxy()){
-            if (!Cosmetics.getInstance().isBw2023()){
-                HCore.registerListeners(new ShopKeeperHandler1058());
-                HCore.registerListeners(new GlyphHandler1058());
-                HCore.registerListeners(new KillMessageHandler1058());
-                HCore.registerListeners(new VictoryDanceHandler1058());
-                HCore.registerListeners(new FinalKillEffectHandler1058());
-                HCore.registerListeners(new BedDestroyHandler1058());
-                HCore.registerListeners(new WoodSkinHandler1058());
-                HCore.registerListeners(new IslandTopperHandler1058());
-                HCore.registerListeners(new GameListener());
-            } else {
-                HCore.registerListeners(new WoodSkinHandler2023());
-                HCore.registerListeners(new VictoryDanceHandler2023());
-                HCore.registerListeners(new ShopKeeperHandler2023());
-                HCore.registerListeners(new KillMessageHandler2023());
-                HCore.registerListeners(new IslandTopperHandler2023());
-                HCore.registerListeners(new GlyphHandler2023());
-                HCore.registerListeners(new FinalKillEffectHandler2023());
-                HCore.registerListeners(new BedDestroyHandler2023());
-            }
-            HCore.registerListeners(new ProjectileHandler(Cosmetics.getInstance()));
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            HCore.registerListeners(new DeathCryHandler1058());
-            HCore.registerListeners(new SpraysHandler1058());
-        } else {
-            HCore.registerListeners(new SpraysHandler2023());
-            HCore.registerListeners(new DeathCryHandler2023());
-        }
         HCore.registerListeners(new CosmeticPurchaseListener());
         HCore.registerListeners(new PlayerJoinListener());
     }
@@ -133,15 +82,15 @@ public class StartupUtils
      If the folders do not exist, they will be created.
      */
     public static void createFolders() {
-        File spraysFolder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir"));
+        File spraysFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir"));
         if (!spraysFolder.exists()) {
             spraysFolder.mkdirs();
         }
-        File islandToppersFolder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers");
+        File islandToppersFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers");
         if (!islandToppersFolder.exists()) {
             islandToppersFolder.mkdirs();
         }
-        File cubeFile = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/IslandToppers/cube.schematic");
+        File cubeFile = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/cube.schematic");
         // Save if not found
         if(cubeFile.exists()) return;
         try {
@@ -157,17 +106,17 @@ public class StartupUtils
      * in the folder and remove the temp.zip.
      */
     public static void downloadGlyphs() {
-        File folder = new File(Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs");
+        File folder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs");
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        final String temp = Cosmetics.getInstance().getDataFolder().getPath() + "/Glyphs/temp.zip";
+        final String temp = Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs/temp.zip";
         final File tempFile = new File(temp);
         if (tempFile.exists()) {
             tempFile.delete();
         }
         String[] filesInFolder = folder.list();
-        if (filesInFolder != null && filesInFolder.length == 0) {
+        if (filesInFolder != null && filesInFolder.length != 0) {
             return;
         }
         JavaPlugin plugin = Cosmetics.getInstance();
@@ -219,7 +168,7 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if(!isPluginEnabled("BedWars1058") && !new BwcAPI().isProxy()){
+            if(!isPluginEnabled("BedWars1058") && !Cosmetics.getInstance().getApi().isProxy()){
                 log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
                 return false;
             }

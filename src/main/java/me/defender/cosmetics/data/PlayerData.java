@@ -1,6 +1,5 @@
-package me.defender.cosmetics.database;
+package me.defender.cosmetics.data;
 
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.Setter;
 import me.defender.cosmetics.Cosmetics;
@@ -14,6 +13,7 @@ import java.util.UUID;
 
 public class PlayerData {
 
+    @Getter
     private final UUID uuid;
     @Getter @Setter
     private String woodSkin, bedDestroy, victoryDance, shopkeeperSkin, glyph, spray, projectileTrail, killMessage, finalKillEffect, islandTopper, deathCry;
@@ -21,7 +21,7 @@ public class PlayerData {
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
-        connection = Cosmetics.getInstance().getDataBase().getConnection();
+        connection = Cosmetics.getInstance().getRemoteDatabase().getConnection();
         load();
     }
 

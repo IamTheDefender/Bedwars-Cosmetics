@@ -4,22 +4,19 @@ package me.defender.cosmetics.category.victorydance;
 
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.event.VictoryDancesExecuteEvent;
-import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.DebugUtil;
+import me.defender.cosmetics.util.StartupUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.util.UUID;
-
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class VictoryDanceHandler1058 implements Listener {
     @EventHandler
@@ -30,7 +27,7 @@ public class VictoryDanceHandler1058 implements Listener {
 
         for (UUID uuid : e.getWinners()) {
              Player p = Bukkit.getPlayer(uuid);
-            String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.VictoryDances);
+            String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.VictoryDances);
             VictoryDancesExecuteEvent event = new VictoryDancesExecuteEvent(p);
             Bukkit.getPluginManager().callEvent(event);
 

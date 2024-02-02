@@ -1,16 +1,15 @@
 package me.defender.cosmetics.category.deathcries.items;
 
 import com.cryptomorin.xseries.XSound;
-import me.defender.cosmetics.api.cosmetics.category.DeathCry;
-import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.util.StringUtils;
 import me.defender.cosmetics.api.configuration.ConfigManager;
+import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.DeathCry;
+import me.defender.cosmetics.util.StringUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DeathCryItems {
@@ -49,7 +48,7 @@ public class DeathCryItems {
                     if(getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7Death Cry.");
                     }
-                    return Arrays.asList("&7Select " + getDisplayName() + " as your Death cry");
+                    return List.of("&7Select " + getDisplayName() + " as your Death cry");
                 }
 
                 @Override

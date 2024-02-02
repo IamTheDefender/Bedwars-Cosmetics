@@ -2,13 +2,11 @@
 
 package me.defender.cosmetics.category.islandtoppers.util;
 
-import com.andrei1058.bedwars.api.arena.IArena;
 import com.sk89q.worldedit.*;
-import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.schematic.SchematicFormat;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.api.handler.IArenaHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,36 +31,18 @@ public class IslandToppersUtil
                 Bukkit.getLogger().severe("Schematic format is null! most probably file is invalid! (" + file.getName() + ")");
                 return;
             }
-            if (!Cosmetics.getInstance().isBw2023()){
-                IArena arena = Cosmetics.getInstance().getBedWars1058API().getArenaUtil().getArenaByPlayer(p);
-                if(arena != null) {
-                    Block block = arena.getTeam(p).getBed().getBlock();
-                    if (block.getType() == Material.BED_BLOCK){
-                        if (block.getState().getData() instanceof Directional){
-                            Directional directional = (Directional) block.getState().getData();
-                            CuboidClipboard clipboard = schematicFormat.load(file);
-                            clipboard = flipDirection(clipboard, directional.getFacing());
-                            // Move the schematic to the target location
-                            clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
-                            // Paste the schematic
-                            clipboard.paste(editSession, new Vector(loc.getX(), loc.getY(), loc.getZ()), true);
-                        }
-                    }
-                }
-            } else {
-                com.tomkeuper.bedwars.api.arena.IArena arena = Cosmetics.getInstance().getBedWars2023API().getArenaUtil().getArenaByPlayer(p);
-                if(arena != null) {
-                    Block block = arena.getTeam(p).getBed().getBlock();
-                    if (block.getType() == Material.BED_BLOCK){
-                        if (block.getState().getData() instanceof Directional){
-                            Directional directional = (Directional) block.getState().getData();
-                            CuboidClipboard clipboard = schematicFormat.load(file);
-                            clipboard = flipDirection(clipboard, directional.getFacing());
-                            // Move the schematic to the target location
-                            clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
-                            // Paste the schematic
-                            clipboard.paste(editSession, new Vector(loc.getX(), loc.getY(), loc.getZ()), true);
-                        }
+            IArenaHandler arena = Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(p);
+            if(arena != null) {
+                Block block = arena.getTeam(p).getBed().getBlock();
+                if (block.getType() == Material.BED_BLOCK){
+                    if (block.getState().getData() instanceof Directional){
+                        Directional directional = (Directional) block.getState().getData();
+                        CuboidClipboard clipboard = schematicFormat.load(file);
+                        clipboard = flipDirection(clipboard, directional.getFacing());
+                        // Move the schematic to the target location
+                        clipboard.setOrigin(new Vector(loc.getX(), loc.getY(), loc.getZ()));
+                        // Paste the schematic
+                        clipboard.paste(editSession, new Vector(loc.getX(), loc.getY(), loc.getZ()), true);
                     }
                 }
             }

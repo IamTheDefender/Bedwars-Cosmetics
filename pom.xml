@@ -54,7 +54,6 @@
                                 <exclude>com/cryptomorin/xseries/NMSExtras*</exclude>
                                 <exclude>com/cryptomorin/xseries/NoteBlockMusic*</exclude>
                                 <exclude>com/cryptomorin/xseries/SkullCacheListener*</exclude>
-                                <exclude>com/hakan/core/scoreboard</exclude>
                             </excludes>
                         </filter>
                     </filters>
@@ -156,17 +155,13 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.github.hakan-krgn.hCore</groupId>
             <artifactId>hCore-bukkit</artifactId>
             <version>0.7.3.3</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -196,6 +191,13 @@
             <artifactId>ProtocolLib</artifactId>
             <version>5.1.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.tompkeuper</groupId>
+            <artifactId>bedwars2023-proxy</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/proxy-plugin-1.0-SNAPSHOT (1).jar</systemPath>
         </dependency>
     </dependencies>
 </project>

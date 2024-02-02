@@ -17,7 +17,7 @@ import java.util.List;
 
 public class MainMenu extends InventoryGui {
 
-    FileConfiguration config = Cosmetics.getInstance().menuData.getConfig();
+    FileConfiguration config = Cosmetics.getInstance().menuData.getYml();
 
     public MainMenu(Player player) {
         super("none", Utility.getMSGLang(player, "cosmetics.gui-title") , 6, InventoryType.CHEST);

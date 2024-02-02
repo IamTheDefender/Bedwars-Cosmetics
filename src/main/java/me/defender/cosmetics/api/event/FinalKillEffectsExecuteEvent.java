@@ -16,7 +16,7 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
      * @return Player
      */
     @Getter
-    private Player victim;
+    private final Player victim;
     /**
      * -- GETTER --
      *  Get the killer.
@@ -24,7 +24,7 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
      * @return Player
      */
     @Getter
-    private Player killer;
+    private final Player killer;
 
     /**
      * -- GETTER --
@@ -33,7 +33,7 @@ public class FinalKillEffectsExecuteEvent extends Event implements Cancellable {
      * @return String
      */
     @Getter
-    private String selected;
+    private final String selected;
     public FinalKillEffectsExecuteEvent(Player victim, Player killer, String selected){
         this.cancelled = false;
         this.victim = victim;

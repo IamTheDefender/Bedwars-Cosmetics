@@ -1,11 +1,10 @@
 package me.defender.cosmetics.category.shopkeeperskins.utils;
 
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
@@ -20,7 +19,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class ShopKeeperSkinsUtils {
 
@@ -158,7 +160,7 @@ public class ShopKeeperSkinsUtils {
      */
     public static void spawnShopKeeperNPC(Player p, Location loc, Location loc1) {
         Cosmetics plugin = Cosmetics.getInstance();
-        String skin = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
+        String skin = plugin.getApi().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
         String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");

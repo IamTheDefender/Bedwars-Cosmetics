@@ -2,11 +2,10 @@ package me.defender.cosmetics.support.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.data.PlayerOwnedData;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.Utility;
-import me.defender.cosmetics.database.PlayerOwnedData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,8 +40,8 @@ public class Placeholders extends PlaceholderExpansion {
 
 
     public String onPlaceholderRequest(Player player, String placeholder) {
-        BwcAPI api = new BwcAPI();
-        PlayerOwnedData ownedData = Utility.playerOwnedDataList.get(player.getUniqueId());
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(player.getUniqueId());
         switch (placeholder.toLowerCase()) {
             case "selected_dc":
                 return api.getSelectedCosmetic(player, CosmeticsType.DeathCries);

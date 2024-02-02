@@ -1,7 +1,7 @@
 package me.defender.cosmetics.api.event;
 
 import lombok.Getter;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -33,7 +33,7 @@ public class VictoryDancesExecuteEvent extends Event implements Cancellable {
     public VictoryDancesExecuteEvent(Player winner){
         this.cancelled = false;
         this.player = winner;
-        this.selected = new BwcAPI().getSelectedCosmetic(winner, CosmeticsType.VictoryDances);
+        this.selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(winner, CosmeticsType.VictoryDances);
     }
 
     @Override

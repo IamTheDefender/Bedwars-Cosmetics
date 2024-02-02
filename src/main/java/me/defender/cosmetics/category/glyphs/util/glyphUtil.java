@@ -3,6 +3,7 @@
 package me.defender.cosmetics.category.glyphs.util;
 
 import com.hakan.core.HCore;
+import me.defender.cosmetics.Cosmetics;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import xyz.xenondevs.particle.ParticleBuilder;
@@ -25,7 +26,7 @@ public class glyphUtil
         try {
             image = ImageIO.read(file);
         } catch (final IOException e) {
-            Logger.getLogger("Minecraft").log(Level.SEVERE, "UNABLE TO READ FILE! GLYPHUTIL()");
+            Cosmetics.getInstance().getLogger().log(Level.SEVERE, "UNABLE TO READ FILE! GLYPHUTIL()");
         }
         ImageParticles particles = new ImageParticles(image, 1);
         particles.setAnchor(50, 10);

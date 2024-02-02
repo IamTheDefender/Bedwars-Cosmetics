@@ -1,9 +1,10 @@
-package me.defender.cosmetics.database.mysql;
+package me.defender.cosmetics.data.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
-import me.defender.cosmetics.database.IDatabase;
+import me.defender.cosmetics.api.database.DatabaseType;
+import me.defender.cosmetics.api.database.IDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,8 +16,6 @@ public class MySQL implements IDatabase {
 
     @Getter
     public HikariDataSource dataSource;
-    @Getter
-    public Connection connection;
     private final JavaPlugin plugin;
 
     public MySQL(JavaPlugin plugin){
@@ -29,8 +28,21 @@ public class MySQL implements IDatabase {
         createTable();
     }
 
+    @Override
+    public DatabaseType getDatabaseType() {
+        return DatabaseType.MYSQL;
+    }
+
     public void connect(){
-        if(dataSource == null){
+        boolean needConnecting = dataSource == null;
+        if(!needConnecting) {
+            try (Connection connection = getConnection()) {
+                connection.createStatement();
+            } catch (Exception e) {
+                needConnecting = true;
+            }
+        }
+        if(needConnecting){
             String host = plugin.getConfig().getString("mysql.host");
             String database = plugin.getConfig().getString("mysql.database");
             String username = plugin.getConfig().getString("mysql.username");
@@ -44,7 +56,7 @@ public class MySQL implements IDatabase {
             config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" );
             config.setPoolName("BW1058Cosmetics-MySQLPool");
             config.setMaximumPoolSize(maxpoolsize);
-            config.setMaxLifetime(1800000);
+            config.setMaxLifetime(Integer.MAX_VALUE);
             config.setUsername(username);
             config.setPassword(password);
             config.addDataSourceProperty("characterEncoding", "utf8");
@@ -57,7 +69,7 @@ public class MySQL implements IDatabase {
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
             dataSource = new HikariDataSource(config);
             try {
-                connection = dataSource.getConnection();
+                dataSource.getConnection();
             } catch (SQLException e) {
                 Bukkit.getLogger().severe("There was an issue while getting connection for the database! error: " + e.getMessage());
             }
@@ -69,8 +81,7 @@ public class MySQL implements IDatabase {
     public void createTable(){
         if(dataSource != null){
             try {
-                connection = dataSource.getConnection();
-                Statement statement = connection.createStatement();
+                Statement statement = getConnection().createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS cosmetics_player_data (" +
                         "uuid VARCHAR(36) PRIMARY KEY," +
                         "bed_destroy VARCHAR(36)," +
@@ -105,4 +116,12 @@ public class MySQL implements IDatabase {
         }
     }
 
+    @Override
+    public Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

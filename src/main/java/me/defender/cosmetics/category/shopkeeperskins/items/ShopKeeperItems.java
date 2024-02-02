@@ -1,13 +1,13 @@
 package me.defender.cosmetics.category.shopkeeperskins.items;
 
-import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.StringUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

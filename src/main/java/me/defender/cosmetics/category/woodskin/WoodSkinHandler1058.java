@@ -9,9 +9,8 @@ import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.XTag;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.Utility;
 import org.bukkit.Bukkit;
@@ -27,8 +26,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 
-import static me.defender.cosmetics.util.Utility.plugin;
-
 public class WoodSkinHandler1058 implements Listener
 {
 
@@ -40,7 +37,7 @@ public class WoodSkinHandler1058 implements Listener
         if (!isWoodSkinsEnabled) return;
 
         if(!XTag.PLANKS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType())) || !XTag.LOGS.isTagged(XMaterial.matchXMaterial(e.getBlock().getType()))) return;
-        String selected = new BwcAPI().getSelectedCosmetic(e.getPlayer(), CosmeticsType.WoodSkins);
+        String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(e.getPlayer(), CosmeticsType.WoodSkins);
         for(WoodSkin woodSkin : StartupUtils.woodSkinsList){
             if(woodSkin.getIdentifier().equals(selected)){
                 ItemStack stack = woodSkin.woodSkin();
@@ -61,13 +58,12 @@ public class WoodSkinHandler1058 implements Listener
 
         Player p = e.getBuyer();
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
-             String selected = new BwcAPI().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
+             String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
             
-            BedWars bedwarsAPI = Cosmetics.getInstance().getBedWars1058API();
-            String iso =  bedwarsAPI.getLangIso(p);
-            String msg = bedwarsAPI.getLanguageByIso(iso).getString("shop-new-purchase");
-            String prefix = bedwarsAPI.getLanguageByIso(iso).getString("prefix");
-            String nopemsg = bedwarsAPI.getLanguageByIso(iso).getString("shop-insuff-money");
+            BedWars bedwarsAPI = com.andrei1058.bedwars.BedWars.getAPI();
+            String msg = Utility.getMSGLang(p, "shop-new-purchase");
+            String prefix = Utility.getMSGLang(p, "prefix");
+            String nopemsg = Utility.getMSGLang(p, "not-enough-money");
             
             
             File sounds = new File(Bukkit.getPluginManager().getPlugin("BedWars1058").getDataFolder(), "sounds.yml");
