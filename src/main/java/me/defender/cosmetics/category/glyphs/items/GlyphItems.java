@@ -69,7 +69,7 @@ public class GlyphItems {
                 public void execute(Player player, Location location) {
                     String fileLocation = config.getString(path + "file");
                     File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs/" + fileLocation);
-                    HCore.asyncScheduler().every(500, TimeUnit.MILLISECONDS).limit(10).run(()-> {
+                    HCore.asyncScheduler().every(100, TimeUnit.MILLISECONDS).limit(10).run(()-> {
                         glyphUtil.sendGlyphs(file, location);
                             });
                 }
