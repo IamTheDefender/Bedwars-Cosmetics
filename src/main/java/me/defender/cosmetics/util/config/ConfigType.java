@@ -13,7 +13,8 @@ public enum ConfigType {
     VICTORY_DANCES("VictoryDances"),
     WOOD_SKINS("WoodSkins"),
 
-    Main_Config("config");
+    Main_Config("config"),
+    Main_Menu("MainMenu");
 
     private final String fileName;
 

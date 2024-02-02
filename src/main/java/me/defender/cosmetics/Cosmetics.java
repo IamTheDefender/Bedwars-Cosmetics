@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.hakan.core.HCore;
 import lombok.Getter;
 import me.defender.cosmetics.api.CosmeticsAPI;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.database.DatabaseType;
 import me.defender.cosmetics.api.handler.IHandler;
@@ -36,7 +37,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class Cosmetics extends JavaPlugin {
-    public MainMenuData menuData;
+    @Getter
+    public ConfigManager menuData;
     public boolean dependenciesMissing = false;
     @Getter
     static boolean placeholderAPI;
@@ -103,7 +105,7 @@ public class Cosmetics extends JavaPlugin {
         ConfigUtils.getMainConfig().save();
         ConfigUtils.addExtrasToLang();
 
-        this.menuData = new MainMenuData(this);
+        this.menuData = new ConfigManager(this, "MainMenu", getHandler().getAddonPath());
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
         getLogger().info("Loading " + (api.isMySQL() ? "MySQL" : "SQLite") + " database...");

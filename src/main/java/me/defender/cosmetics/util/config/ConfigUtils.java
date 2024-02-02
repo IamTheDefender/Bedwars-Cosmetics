@@ -60,6 +60,9 @@ public class ConfigUtils {
         if(configType == ConfigType.Main_Config){
             return getMainConfig();
         }
+        if(configType == ConfigType.Main_Menu){
+            return Cosmetics.getInstance().menuData;
+        }
         return new ConfigManager(Cosmetics.getInstance(), configType.getFileName(), Cosmetics.getInstance().getHandler().getAddonPath() + "/Categories");
     }
 

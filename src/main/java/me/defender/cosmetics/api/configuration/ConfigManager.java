@@ -111,7 +111,9 @@ public class ConfigManager {
             int damage = Integer.parseInt(data[1]);
             item = XMaterial.matchXMaterial(material.toUpperCase()).get().parseItem();
             assert item != null;
-            item.setDurability((short) damage);
+            if(damage != 0){
+                item.setDurability((short) damage);
+            }
         } catch (NoSuchElementException e2) {
             e2.printStackTrace();
             Bukkit.getLogger().severe("Looks like the material " + material + " is invalid!");
