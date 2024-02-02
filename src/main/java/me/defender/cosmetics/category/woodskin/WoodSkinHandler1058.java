@@ -12,6 +12,7 @@ import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.util.StartupUtils;
+import me.defender.cosmetics.util.Utility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -59,11 +60,10 @@ public class WoodSkinHandler1058 implements Listener
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
              String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
             
-            BedWars bedwarsAPI = Cosmetics.getInstance().getBedWars1058API();
-            String iso =  bedwarsAPI.getLangIso(p);
-            String msg = bedwarsAPI.getLanguageByIso(iso).getString("shop-new-purchase");
-            String prefix = bedwarsAPI.getLanguageByIso(iso).getString("prefix");
-            String nopemsg = bedwarsAPI.getLanguageByIso(iso).getString("shop-insuff-money");
+            BedWars bedwarsAPI = com.andrei1058.bedwars.BedWars.getAPI();
+            String msg = Utility.getMSGLang(p, "shop-new-purchase");
+            String prefix = Utility.getMSGLang(p, "prefix");
+            String nopemsg = Utility.getMSGLang(p, "not-enough-money");
             
             
             File sounds = new File(Bukkit.getPluginManager().getPlugin("BedWars1058").getDataFolder(), "sounds.yml");

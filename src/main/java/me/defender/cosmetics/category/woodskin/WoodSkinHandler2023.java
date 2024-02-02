@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.cryptomorin.xseries.XTag;
 import com.hakan.core.utils.ColorUtil;
+import com.tomkeuper.bedwars.BedWars;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
@@ -53,7 +54,7 @@ public class WoodSkinHandler2023 implements Listener {
         if (e.getCategoryContent().getItemStack(p).getType() == Material.WOOD) {
             String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
 
-            com.tomkeuper.bedwars.api.BedWars bedwarsAPI = Cosmetics.getInstance().getBedWars2023API();
+            com.tomkeuper.bedwars.api.BedWars bedwarsAPI = BedWars.getAPI();
             String iso =  bedwarsAPI.getLangIso(p);
             String msg = bedwarsAPI.getLanguageByIso(iso).getString("shop-new-purchase");
             String prefix = bedwarsAPI.getLanguageByIso(iso).getString("prefix");

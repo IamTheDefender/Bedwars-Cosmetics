@@ -124,11 +124,7 @@ public class Utility {
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy())
             return false;
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Cosmetics.getInstance().getBedWars1058API().getArenaUtil().getArenaByPlayer(p) != null;
-        } else {
-            return Cosmetics.getInstance().getBedWars2023API().getArenaUtil().getArenaByPlayer(p) != null;
-        }
+        return Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(p) != null;
     }
 
 

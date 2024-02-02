@@ -155,17 +155,13 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.github.hakan-krgn.hCore</groupId>
             <artifactId>hCore-bukkit</artifactId>
             <version>0.7.3.3</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>

@@ -1,8 +1,9 @@
 package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
+import com.andrei1058.bedwars.api.BedWars;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.handler.IHandler;
+import me.defender.cosmetics.api.handler.*;
 import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
 import me.defender.cosmetics.category.deathcries.DeathCryHandler1058;
 import me.defender.cosmetics.category.finalkilleffects.FinalKillEffectHandler1058;
@@ -14,8 +15,16 @@ import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.category.sprays.SpraysHandler1058;
 import me.defender.cosmetics.category.victorydance.VictoryDanceHandler1058;
 import me.defender.cosmetics.category.woodskin.WoodSkinHandler1058;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.UUID;
 
 public class BW1058Handler implements IHandler {
+
+    private BedWars api = com.andrei1058.bedwars.BedWars.getAPI();
 
     @Override
     public void register() {
@@ -30,5 +39,68 @@ public class BW1058Handler implements IHandler {
         HCore.registerListeners(new ProjectileHandler(Cosmetics.getInstance()));
         HCore.registerListeners(new DeathCryHandler1058());
         HCore.registerListeners(new SpraysHandler1058());
+    }
+
+    @Override
+    public IArenaUtil getArenaUtil() {
+        return player -> {
+            if(api.getArenaUtil().getArenaByPlayer(player) == null) return null;
+
+            return (IArenaHandler) player1 -> new ITeamHandler() {
+                @Override
+                public Location getBed() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getBed().getBlock().getLocation();
+                }
+
+                @Override
+                public List<Player> getPlayers() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getMembers();
+                }
+            };
+        };
+    }
+
+    @Override
+    public IScoreboardUtil getScoreboardUtil() {
+        return new IScoreboardUtil() {
+
+            @Override
+            public void giveScoreboard(Player player, boolean b) {
+                api.getScoreboardUtil().givePlayerScoreboard(player, b);
+            }
+
+            @Override
+            public void removePlayerScoreboard(Player player) {
+                api.getScoreboardUtil().removePlayerScoreboard(player);
+            }
+        };
+    }
+
+    @Override
+    public ISetupSession getSetupSession(UUID playerUUID) {
+        com.andrei1058.bedwars.api.server.ISetupSession session = api.getSetupSession(playerUUID);
+        if(session == null) return null;
+        ISetupSession cosmeticsSessionHandler = new ISetupSession() {
+            @Override
+            public UUID getPlayerUUID() {
+                return session.getPlayer().getUniqueId();
+            }
+
+            @Override
+            public FileConfiguration getConfig() {
+                return session.getConfig().getYml();
+            }
+
+            @Override
+            public void saveConfigLoc(String path, Location value) {
+                session.getConfig().saveConfigLoc(path, value);
+            }
+
+            @Override
+            public void saveConfig() {
+                session.getConfig().save();
+            }
+        };
+        return cosmeticsSessionHandler;
     }
 }

@@ -8,6 +8,7 @@ import com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.MathUtil;
 import me.defender.cosmetics.util.StartupUtils;
@@ -68,9 +69,9 @@ public class ShopKeeperHandler2023 implements Listener {
                         }
 
                         for (Player p : team.getMembers()) {
-                            BedWars api = Cosmetics.getInstance().getBedWars2023API();
+                            IHandler api = Cosmetics.getInstance().getHandler();
                             api.getScoreboardUtil().removePlayerScoreboard(p);
-                            api.getScoreboardUtil().givePlayerScoreboard(p, true);
+                            api.getScoreboardUtil().giveScoreboard(p, true);
                         }
                     }
                 }

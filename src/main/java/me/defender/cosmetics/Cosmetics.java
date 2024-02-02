@@ -10,7 +10,12 @@ import lombok.Setter;
 import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.database.DatabaseType;
+import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.data.manager.PlayerManager;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BW2023Handler;
+import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.MainMenuUtils;
@@ -33,14 +38,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 
-public class Cosmetics extends JavaPlugin
-{
-
-    @Setter
-    @Getter
-    private BedWars bedWars2023API;
-    @Getter
-    private com.andrei1058.bedwars.api.BedWars bedWars1058API;
+public class Cosmetics extends JavaPlugin {
     public MainMenuData menuData;
     public boolean dependenciesMissing = false;
     @Getter
@@ -60,23 +58,11 @@ public class Cosmetics extends JavaPlugin
     private CosmeticsAPI api;
     @Getter
     private Economy economy;
+    @Getter
+    private IHandler handler;
 
     @Override
     public void onEnable() {
-        if(!StartupUtils.checkDependencies()){
-            getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
-            getServer().getPluginManager().disablePlugin(this);
-            dependenciesMissing = true;
-            return;
-        }
-        if (StartupUtils.isBw2023) {
-            BedWars2023 bedWars2023 = new BedWars2023(this);
-            bedWars2023.start();
-        } else if(!api.isProxy()) {
-            this.bedWars1058API = Bukkit.getServer().getServicesManager().getRegistration(com.andrei1058.bedwars.api.BedWars.class).getProvider();
-        }
-
-        getLogger().info("All dependencies found, continuing with plugin startup.");
         try{
             HCore.initialize(this);
         }catch (IllegalStateException ignored){
@@ -86,6 +72,17 @@ public class Cosmetics extends JavaPlugin
         }
         instance = this;
         api = Cosmetics.getInstance().getApi();
+        if(!StartupUtils.checkDependencies()){
+            getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
+            getServer().getPluginManager().disablePlugin(this);
+            dependenciesMissing = true;
+            return;
+        }
+        handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
+        handler.register();
+
+
+        getLogger().info("All dependencies found, continuing with plugin startup.");
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         economy = rsp.getProvider();
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -184,9 +181,6 @@ public class Cosmetics extends JavaPlugin
         Cosmetics.placeholderAPI = placeholderAPI;
     }
 
-    public boolean isBw2023() {
-        return getBedWars2023API() != null;
-    }
 
 
 

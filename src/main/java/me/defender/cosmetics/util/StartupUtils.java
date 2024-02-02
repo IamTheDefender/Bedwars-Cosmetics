@@ -64,16 +64,13 @@ public class StartupUtils
     public static List<ShopKeeperSkin> shopKeeperSkinList;
     public static List<IslandTopper> islandTopperList;
 
-    public static boolean isBw2023 = false;
+    public static boolean isBw2023 = Bukkit.getPluginManager().getPlugin("BedWars2023") != null;
 
     /**
      Register events and handler
       @author defender
      */
     public static void registerEvents() {
-        CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        IHandler handler = (api.isProxy() ? (Cosmetics.getInstance().isBw2023() ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : new BW1058Handler());
-        handler.register();
         HCore.registerListeners(new CosmeticPurchaseListener());
         HCore.registerListeners(new PlayerJoinListener());
     }
