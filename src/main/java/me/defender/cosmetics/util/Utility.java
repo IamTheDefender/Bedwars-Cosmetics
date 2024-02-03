@@ -3,8 +3,6 @@
 package me.defender.cosmetics.util;
 
 
-import com.andrei1058.bedwars.api.language.Language;
-import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
@@ -18,6 +16,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -53,10 +52,13 @@ public class Utility {
      * Open's the main menu for the given player
      * @param p player object
      */
-    public static void openMainMenu(Player p){
+    public static void openMainMenu(Player p) {
             new MainMenu(p).open(p);
         }
 
+    private static String c(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
     /**
      * Get Message from Language file of bedwars1058 for player object, works with Bedwars1058 and BedwarsProxy
      * @param p player object
@@ -65,7 +67,7 @@ public class Utility {
      */
     public static String getMSGLang(Player p, String path) {
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        return api.getHandler().getLanguageUtil().getMessage(p, path);
+        return c(api.getHandler().getLanguageUtil().getMessage(p, path));
     }
 
     /**
@@ -161,5 +163,9 @@ public class Utility {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(onlinePlayer, packet);
             }
         }
+    }
+
+    public static boolean isWoodOrLogBlock(Material mat) {
+        return (mat.toString().contains("WOOD") || mat.toString().contains("PLANKS") || mat.toString().contains("LOG")) && mat.isBlock();
     }
 }
