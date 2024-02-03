@@ -27,6 +27,7 @@ import me.defender.cosmetics.data.database.MySQL;
 import me.defender.cosmetics.data.database.SQLite;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -83,6 +84,12 @@ public class Cosmetics extends JavaPlugin {
 
         getLogger().info("All dependencies found, continuing with plugin startup.");
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp == null){
+            getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");
+            getServer().getPluginManager().disablePlugin(this);
+            dependenciesMissing = true;
+            return;
+        }
         economy = rsp.getProvider();
         protocolManager = ProtocolLibrary.getProtocolManager();
         entityPlayerHashMap  = new HashMap<>();
@@ -174,6 +181,21 @@ public class Cosmetics extends JavaPlugin {
         } catch (SQLException e) {
             getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
         }
+    }
+
+    @Override
+    public FileConfiguration getConfig() {
+        return ConfigUtils.getMainConfig().getYml();
+    }
+
+    @Override
+    public void reloadConfig() {
+        ConfigUtils.getMainConfig().reload();
+    }
+
+    @Override
+    public void saveConfig() {
+        ConfigUtils.getMainConfig().save();
     }
 
     public static void setPlaceholderAPI(boolean placeholderAPI) {

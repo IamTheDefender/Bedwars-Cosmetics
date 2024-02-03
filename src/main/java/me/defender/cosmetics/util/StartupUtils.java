@@ -64,7 +64,8 @@ public class StartupUtils
     public static List<ShopKeeperSkin> shopKeeperSkinList;
     public static List<IslandTopper> islandTopperList;
 
-    public static boolean isBw2023 = Bukkit.getPluginManager().getPlugin("BedWars2023") != null;
+    public static boolean isBw2023 = Bukkit.getPluginManager().getPlugin("BedWars2023") != null ||
+            Bukkit.getPluginManager().getPlugin("BWProxy2023") != null;
 
     /**
      Register events and handler
@@ -239,7 +240,7 @@ public class StartupUtils
         //Items From Config
         new DeathCryItems().registerConfigItems();
         new GlyphItems().registerConfigItems();
-        if(isPluginEnabled("WorldEdit")) {
+        if(isPluginEnabled("WorldEdit") || isPluginEnabled("FastAsyncWorldEdit")) {
             new IslandTopperItems().registerItems();
         }else{
             Bukkit.getLogger().warning("Can't find worldedit! IslandTopper will not load!");

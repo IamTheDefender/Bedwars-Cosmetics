@@ -36,7 +36,7 @@ public class MySQL implements IDatabase {
     public void connect(){
         boolean needConnecting = dataSource == null;
         if(!needConnecting) {
-            try (Connection connection = getConnection()) {
+            try (Connection connection = dataSource.getConnection()) {
                 connection.createStatement();
             } catch (Exception e) {
                 needConnecting = true;
@@ -47,13 +47,13 @@ public class MySQL implements IDatabase {
             String database = plugin.getConfig().getString("mysql.database");
             String username = plugin.getConfig().getString("mysql.username");
             String password = plugin.getConfig().getString("mysql.password");
+            boolean ssl = plugin.getConfig().getBoolean("mysql.useSSL");
             int port = plugin.getConfig().getInt("mysql.port", 3306);
             int maxpoolsize = plugin.getConfig().getInt("mysql.maxpoolsize", 50);
 
             HikariConfig config = new HikariConfig();
-
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" );
+            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" + "&enabledTLSProtocols=TLSv1.2" + "&useSSL=" + ssl);
             config.setPoolName("BW1058Cosmetics-MySQLPool");
             config.setMaximumPoolSize(maxpoolsize);
             config.setMaxLifetime(Integer.MAX_VALUE);

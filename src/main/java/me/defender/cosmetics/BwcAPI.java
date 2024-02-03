@@ -117,7 +117,8 @@ public class BwcAPI implements CosmeticsAPI {
      * @return true if running on a proxy.
      */
     public boolean isProxy(){
-        return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null;
+        return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null ||
+                Bukkit.getPluginManager().getPlugin("BWProxy2023") != null;
     }
 
     public IDatabase getDatabase(){
