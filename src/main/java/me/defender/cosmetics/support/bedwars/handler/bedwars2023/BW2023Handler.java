@@ -61,6 +61,31 @@ public class BW2023Handler implements IHandler {
                 public List<Player> getPlayers() {
                     return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getMembers();
                 }
+
+                @Override
+                public String getName() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getName();
+                }
+
+                @Override
+                public Location getTeamUpgrades() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getTeamUpgrades();
+                }
+
+                @Override
+                public Location getShop() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getShop();
+                }
+
+                @Override
+                public Location getSpawn() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getSpawn();
+                }
+
+                @Override
+                public int getSize() {
+                    return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getSize();
+                }
             };
         };
     }

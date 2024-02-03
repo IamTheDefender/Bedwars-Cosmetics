@@ -1,9 +1,9 @@
 package me.defender.cosmetics.category.bedbreakeffects.items;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -55,12 +55,9 @@ public class FireworksBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
         UsefulUtilsVD.spawnFireWorks(player, 1, Color.RED, Color.GREEN, bedLocation, false);
     }
 
-    @Override
-    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
-        UsefulUtilsVD.spawnFireWorks(player, 1, Color.RED, Color.GREEN, bedLocation, false);
-    }
+
 }

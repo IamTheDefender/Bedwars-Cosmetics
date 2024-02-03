@@ -6,6 +6,7 @@ import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.Utility;
 import me.defender.cosmetics.util.config.ConfigType;
@@ -36,9 +37,7 @@ public abstract class BedDestroy extends Cosmetics {
      * @param player player who destroyed the bed.
      * @param bedLocation location of the bed.
      */
-    public abstract void execute1058(Player player, Location bedLocation, ITeam victimTeam);
-    public abstract void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam);
-
+    public abstract void execute(Player player, Location bedLocation, ITeamHandler victimTeam);
     /**
      * Register the bed destroy effect.
      * This method should be called when the plugin is enabled.

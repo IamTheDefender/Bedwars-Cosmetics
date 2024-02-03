@@ -1,10 +1,11 @@
 package me.defender.cosmetics.category.bedbreakeffects.items;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
+
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.EntityType;
@@ -56,18 +57,11 @@ public class TheifBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
         Enderman enderman = (Enderman) player.getWorld().spawnEntity(bedLocation, EntityType.ENDERMAN);
         assert XMaterial.RED_BED.parseMaterial() != null;
         enderman.setCarriedMaterial(new MaterialData(XMaterial.RED_BED.parseMaterial()));
         HCore.syncScheduler().after(70L).run(enderman::remove);
     }
 
-    @Override
-    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
-        Enderman enderman = (Enderman) player.getWorld().spawnEntity(bedLocation, EntityType.ENDERMAN);
-        assert XMaterial.RED_BED.parseMaterial() != null;
-        enderman.setCarriedMaterial(new MaterialData(XMaterial.RED_BED.parseMaterial()));
-        HCore.syncScheduler().after(70L).run(enderman::remove);
-    }
 }

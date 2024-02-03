@@ -1,10 +1,10 @@
 package me.defender.cosmetics.category.bedbreakeffects.items;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Location;
 import org.bukkit.entity.Endermite;
@@ -59,7 +59,7 @@ public class BedBugsBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
         List<Endermite> endermites = new ArrayList<>();
         HCore.syncScheduler().every(1L).limit(4).run(() -> {
             Location loc = UsefulUtilsVD.getRandomLocation(bedLocation, 1);
@@ -72,17 +72,4 @@ public class BedBugsBedDestroy extends BedDestroy {
         });
     }
 
-    @Override
-    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
-        List<Endermite> endermites = new ArrayList<>();
-        HCore.syncScheduler().every(1L).limit(4).run(() -> {
-            Location loc = UsefulUtilsVD.getRandomLocation(bedLocation, 1);
-            Endermite mite = (Endermite) player.getWorld().spawnEntity(loc.add(0,1,0), EntityType.ENDERMITE);
-            endermites.add(mite);
-        });
-
-        HCore.syncScheduler().after(100L).run(() -> {
-            endermites.forEach(Entity::remove);
-        });
-    }
 }
