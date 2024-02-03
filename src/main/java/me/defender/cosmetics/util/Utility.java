@@ -8,6 +8,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.menu.MainMenu;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Utility {
@@ -38,15 +40,6 @@ public class Utility {
         return message;
     }
 
-    /**
-     * Planned to be removed
-     * @return JavaPlugin class of Cosmetics.class
-     * @deprecated use {@link Cosmetics#getInstance()}
-     */
-    @Deprecated
-    public static Cosmetics plugin() {
-        return Cosmetics.getPlugin(Cosmetics.class);
-    }
 
     /**
      * Open's the main menu for the given player
@@ -56,6 +49,7 @@ public class Utility {
             new MainMenu(p).open(p);
         }
 
+    @Deprecated
     private static String c(String s) {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
@@ -67,7 +61,7 @@ public class Utility {
      */
     public static String getMSGLang(Player p, String path) {
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        return c(api.getHandler().getLanguageUtil().getMessage(p, path));
+        return ColorUtil.colored(api.getHandler().getLanguageUtil().getMessage(p, path));
     }
 
     /**
@@ -78,7 +72,8 @@ public class Utility {
      */
     public static List<String> getListLang(Player p, String path) {
        CosmeticsAPI api = Cosmetics.getInstance().getApi();
-       return api.getHandler().getLanguageUtil().getMessageList(p, path);
+       return api.getHandler().getLanguageUtil().getMessageList(p, path)
+               .stream().map(ColorUtil::colored).collect(Collectors.toList());
     }
 
     /**
@@ -123,7 +118,7 @@ public class Utility {
 
             return new String[]{texture, signature};
         } catch (IOException e) {
-            System.err.println("Could not get skin data from session servers!");
+            Cosmetics.getInstance().getLogger().severe("Could not get skin data from session servers!");
             e.printStackTrace();
             return null;
         }
