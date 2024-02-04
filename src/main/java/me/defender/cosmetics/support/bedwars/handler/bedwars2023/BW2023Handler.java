@@ -4,6 +4,8 @@ import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
 import com.tomkeuper.bedwars.api.language.Language;
 import java.io.File;
+
+import com.tomkeuper.bedwars.api.server.ServerType;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
 import me.defender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
@@ -43,6 +45,13 @@ public class BW2023Handler implements IHandler {
         HCore.registerListeners(new BedDestroyHandler2023());
         HCore.registerListeners(new SpraysHandler2023());
         HCore.registerListeners(new DeathCryHandler2023());
+    }
+
+    @Override
+    public HandlerType getHandlerType() {
+        if(api.getServerType() == ServerType.SHARED) return HandlerType.SHARED;
+        if(api.getServerType() == ServerType.BUNGEE) return HandlerType.BUNGEE;
+        return HandlerType.MULTIARENA;
     }
 
 

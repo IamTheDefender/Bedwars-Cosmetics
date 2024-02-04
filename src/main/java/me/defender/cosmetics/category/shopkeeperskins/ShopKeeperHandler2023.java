@@ -1,13 +1,13 @@
 package me.defender.cosmetics.category.shopkeeperskins;
 
 import com.hakan.core.HCore;
-import com.tomkeuper.bedwars.api.BedWars;
 import com.tomkeuper.bedwars.api.arena.GameState;
 import com.tomkeuper.bedwars.api.arena.team.ITeam;
 import com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.api.handler.HandlerType;
 import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.MathUtil;
@@ -68,10 +68,13 @@ public class ShopKeeperHandler2023 implements Listener {
                             }
                         }
 
-                        for (Player p : team.getMembers()) {
-                            IHandler api = Cosmetics.getInstance().getHandler();
-                            api.getScoreboardUtil().removePlayerScoreboard(p);
-                            api.getScoreboardUtil().giveScoreboard(p, true);
+
+                        if(Cosmetics.getInstance().getHandler().getHandlerType() != HandlerType.BUNGEE){
+                            for (Player p : team.getMembers()) {
+                                IHandler handler = Cosmetics.getInstance().getHandler();
+                                handler.getScoreboardUtil().removePlayerScoreboard(p);
+                                handler.getScoreboardUtil().giveScoreboard(p, true);
+                            }
                         }
                     }
                 }

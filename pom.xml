@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.defender</groupId>
-    <artifactId>BW1058-Cosmetics</artifactId>
+    <artifactId>BedWars-Cosmetics</artifactId>
     <version>1.4.6</version>
     <packaging>jar</packaging>
 

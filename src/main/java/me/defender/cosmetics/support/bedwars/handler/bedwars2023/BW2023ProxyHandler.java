@@ -17,6 +17,11 @@ public class BW2023ProxyHandler implements IHandler {
     }
 
     @Override
+    public HandlerType getHandlerType() {
+        return HandlerType.BUNGEE;
+    }
+
+    @Override
     public String getAddonPath() {
         return BedWarsProxy.getPlugin().getDataFolder().getPath() + File.separator + "Addons" + File.separator + Cosmetics.getInstance().getDescription().getName();
     }

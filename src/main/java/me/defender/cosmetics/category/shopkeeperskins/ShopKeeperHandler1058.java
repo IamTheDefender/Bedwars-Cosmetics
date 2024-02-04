@@ -11,6 +11,7 @@ import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.api.handler.HandlerType;
 import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.MathUtil;
@@ -78,11 +79,12 @@ public class ShopKeeperHandler1058 implements Listener
                                 }
                             }
                         }
-
-                        for (Player p : team.getMembers()) {
-                            IHandler handler = plugin.getHandler();
-                            handler.getScoreboardUtil().removePlayerScoreboard(p);
-                            handler.getScoreboardUtil().giveScoreboard(p, true);
+                        if(plugin.getHandler().getHandlerType() != HandlerType.BUNGEE){
+                            for (Player p : team.getMembers()) {
+                                IHandler handler = plugin.getHandler();
+                                handler.getScoreboardUtil().removePlayerScoreboard(p);
+                                handler.getScoreboardUtil().giveScoreboard(p, true);
+                            }
                         }
                     }
                 }
