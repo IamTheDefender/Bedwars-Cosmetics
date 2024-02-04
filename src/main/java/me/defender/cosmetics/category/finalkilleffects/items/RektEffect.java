@@ -6,8 +6,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.util.Utility;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -18,8 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class RektEffect extends FinalKillEffect {
     @Override

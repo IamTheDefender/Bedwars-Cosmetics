@@ -10,6 +10,7 @@ mysql:
   database: "name"
   username: "root"
   password: "none"
+  useSSL: false
   maxpoolsize: 50
 cosmetic-preview:
   cosmetic-location:

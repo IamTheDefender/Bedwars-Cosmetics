@@ -2,7 +2,7 @@ package me.defender.cosmetics.category.finalkilleffects;
 
 import com.andrei1058.bedwars.api.events.player.PlayerKillEvent;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
@@ -15,13 +15,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import static me.defender.cosmetics.util.Utility.plugin;
-
 public class FinalKillEffectHandler1058 implements Listener {
 
     @EventHandler
     public void onFinalKill1058(PlayerKillEvent e){
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if(e.getKiller() == null) return;
 
         boolean isFinalKillEffectsEnabled = Cosmetics.getInstance().getConfig().getBoolean("final-kill-effects.enabled");

@@ -21,11 +21,11 @@ public enum CosmeticsType {
     ShopKeeperSkin("ShopKeeper Skin", ConfigUtils.getShopKeeperSkins(), shopKeeperSkinList, "shopkeeper-skins", "shopkeeperskin"),
     IslandTopper("Island Topper", ConfigUtils.getIslandToppers(), islandTopperList, "island-topper", "islandtopper");
 
-    private String formatedName;
-    private ConfigManager configManager;
-    private List<?> itemsList;
-    private String sectionKey;
-    private String permissionFormat;
+    private final String formatedName;
+    private final ConfigManager configManager;
+    private final List<?> itemsList;
+    private final String sectionKey;
+    private final String permissionFormat;
     CosmeticsType(String formatedName, ConfigManager configManager, List<?> itemsList, String sectionKey, String permissionFormat){
         this.formatedName = formatedName;
         this.configManager = configManager;

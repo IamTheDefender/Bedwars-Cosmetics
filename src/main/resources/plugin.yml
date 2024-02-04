@@ -1,9 +1,11 @@
-name: BW1058-Cosmetics
+name: Cosmetics
 version: '1.4.6'
 main: me.defender.cosmetics.Cosmetics
-prefix: BW1058-Cosmetics
-softdepend: [ BedWars1058, BedWars2023, BedwarsProxy]
-depend: [Vault, Citizens, PlaceholderAPI, WorldEdit]
+prefix: BedWars-Cosmetics
+softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, WorldEdit, FastAsyncWorldEdit]
+depend: [Vault, Citizens, PlaceholderAPI, ProtocolLib]
 author: IamTheDefender (iamthedefender)
 description: This addon adds a set of various cosmetics to your bedwars server
 website: https://github.com/IamTheDefender/BW1058-Cosmetics
+libraries:
+  - mysql:mysql-connector-java:8.0.29

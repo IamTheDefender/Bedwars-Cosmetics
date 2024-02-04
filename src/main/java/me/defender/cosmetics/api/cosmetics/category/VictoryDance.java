@@ -1,14 +1,14 @@
 package me.defender.cosmetics.api.cosmetics.category;
 
 import com.cryptomorin.xseries.XMaterial;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.Cosmetics;
-import me.defender.cosmetics.util.config.ConfigType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.defender.cosmetics.util.Utility.saveIfNotExistsLang;
 import static me.defender.cosmetics.util.config.ConfigUtils.get;
 import static me.defender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
-import static me.defender.cosmetics.util.Utility.saveIfNotExistsLang;
 
 public abstract class VictoryDance extends Cosmetics {
 

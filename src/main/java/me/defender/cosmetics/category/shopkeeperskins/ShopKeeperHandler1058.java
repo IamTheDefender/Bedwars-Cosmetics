@@ -3,19 +3,20 @@
 package me.defender.cosmetics.category.shopkeeperskins;
 
 import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import me.defender.cosmetics.api.handler.IHandler;
+import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.MathUtil;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.util.DebugUtil;
-import me.defender.cosmetics.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -29,7 +30,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.List;
 
-import static me.defender.cosmetics.util.Utility.plugin;
+import static org.bukkit.Bukkit.getServer;
 
 public class ShopKeeperHandler1058 implements Listener
 {
@@ -66,7 +67,7 @@ public class ShopKeeperHandler1058 implements Listener
 
                         // Choose random player from the team
                         Player player = team.getMembers().get(MathUtil.getRandom(0, team.getMembers().size() -1));
-                        String skin = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
+                        String skin = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
                        DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {
@@ -79,9 +80,9 @@ public class ShopKeeperHandler1058 implements Listener
                         }
 
                         for (Player p : team.getMembers()) {
-                            BedWars api = plugin.getBedWars1058API();
-                            api.getScoreboardUtil().removePlayerScoreboard(p);
-                            api.getScoreboardUtil().givePlayerScoreboard(p, true);
+                            IHandler handler = plugin.getHandler();
+                            handler.getScoreboardUtil().removePlayerScoreboard(p);
+                            handler.getScoreboardUtil().giveScoreboard(p, true);
                         }
                     }
                 }
@@ -120,5 +121,23 @@ public class ShopKeeperHandler1058 implements Listener
                 ShopKeeperHandler1058.arenas.remove(name);
             }
         }.runTaskLater(Cosmetics.getInstance(), 300L);
+    }
+
+    @EventHandler
+    public void onGameStartEvent(GameStateChangeEvent event){
+        if(event.getNewState() != GameState.playing) return;
+        getServer().getScheduler().runTaskLater(Cosmetics.getInstance(), () -> {
+            World world = event.getArena().getWorld();
+            for (Entity entity : world.getEntities()) {
+                boolean isCitizensNPC = entity.hasMetadata("NPC");
+                if(!entity.isDead() && isCitizensNPC){
+                    NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
+                    npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
+                    npc.data().setPersistent(NPC.Metadata.SILENT, true);
+                }
+            }
+        }, 40L);
     }
 }

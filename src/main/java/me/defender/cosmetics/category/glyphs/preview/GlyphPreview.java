@@ -8,14 +8,14 @@ import com.hakan.core.HCore;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.Glyph;
-import me.defender.cosmetics.category.glyphs.util.ImageParticles;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.Glyph;
+import me.defender.cosmetics.category.glyphs.util.ImageParticles;
 import me.defender.cosmetics.util.StartupUtils;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -147,7 +147,7 @@ public class GlyphPreview {
         }
 
         File file = new File(
-                Cosmetics.getInstance().getDataFolder().getPath() +
+                Cosmetics.getInstance().getHandler().getAddonPath() +
                         "/Glyphs/" +
                         glyphFile);
 

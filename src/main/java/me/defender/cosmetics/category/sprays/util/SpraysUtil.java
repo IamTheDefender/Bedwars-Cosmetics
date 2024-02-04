@@ -7,14 +7,15 @@ import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
 import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
+import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.Utility;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
-import org.bukkit.*;
+import me.defender.cosmetics.util.config.ConfigUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Rotation;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
@@ -40,7 +41,7 @@ public class SpraysUtil
     public static void spawnSprays(Player player, ItemFrame itemFrame) {
         HCore.syncScheduler().run(() -> {
             MapView view = Bukkit.createMap(player.getWorld());
-            String spray = new BwcAPI().getSelectedCosmetic(player, CosmeticsType.Sprays);
+            String spray = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.Sprays);
             ConfigManager config = ConfigUtils.getSprays();
 
             if (SpraysUtil.cooldown.containsKey(player.getName())) {
@@ -79,7 +80,7 @@ public class SpraysUtil
                     }
                 } else {
                     sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
-                    File file = new File(Cosmetics.getInstance().getDataFolder().getAbsolutePath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+                    File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
                     if (!renderer.load(file)) {
                         player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
                         Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid!");

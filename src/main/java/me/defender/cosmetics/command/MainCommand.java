@@ -1,6 +1,5 @@
 package me.defender.cosmetics.command;
 
-import com.andrei1058.bedwars.api.server.ISetupSession;
 import com.andrei1058.bedwars.shop.ShopCache;
 import com.andrei1058.bedwars.shop.ShopManager;
 import com.andrei1058.bedwars.shop.quickbuy.PlayerQuickBuyCache;
@@ -13,15 +12,15 @@ import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigType;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
-import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.api.BwcAPI;
-import me.defender.cosmetics.util.MainMenuUtils;
-import me.defender.cosmetics.util.config.ConfigUtils;
-import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.api.handler.ISetupSession;
 import me.defender.cosmetics.menu.CategoryMenu;
+import me.defender.cosmetics.menu.MainMenu;
+import me.defender.cosmetics.util.MainMenuUtils;
+import me.defender.cosmetics.util.StartupUtils;
+import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -46,7 +45,7 @@ import java.util.UUID;
 
 public class MainCommand {
 
-    private Cosmetics plugin;
+    private final Cosmetics plugin;
 
     public MainCommand(Cosmetics plugin) {
         this.plugin = plugin;
@@ -86,45 +85,6 @@ public class MainCommand {
     }
 
     @SubCommand(
-            args = "quickbuy",
-            permission = "bwcosmetics.quickbuy",
-            permissionMessage = "§cYou don't have permission to do that!"
-    )
-    public void quickbuyCommand(CommandSender sender, String[] args) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
-            p.sendMessage(ColorUtil.colored("&cThis command currently doesn't work! use at your own risk."));
-
-            if (!plugin.isBw2023()){
-                new PlayerQuickBuyCache(p);
-                new ShopCache(p.getUniqueId());
-                ShopManager.shop.open(p, PlayerQuickBuyCache.getQuickBuyCache(p.getUniqueId()), true);
-            } else {
-                new com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache(p);
-                new com.tomkeuper.bedwars.shop.ShopCache(p.getUniqueId());
-                com.tomkeuper.bedwars.shop.ShopManager.shop.open(p, com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(p.getUniqueId()), true);
-            }
-            p.setMetadata("bwc_quickbuy", new FixedMetadataValue(Cosmetics.getInstance(), true));
-            HCore.registerEvent(InventoryCloseEvent.class).limit(1).consume((event -> {
-                if(event.getPlayer().hasMetadata("bwc_quickbuy")) {
-                    event.getPlayer().removeMetadata("bwc_quickbuy", Cosmetics.getInstance());
-                    if (!plugin.isBw2023()) {
-                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
-                        PlayerQuickBuyCache.getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
-                        ShopCache.getShopCache(event.getPlayer().getUniqueId()).destroy();
-                    } else {
-                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).pushChangesToDB();
-                        com.tomkeuper.bedwars.shop.quickbuy.PlayerQuickBuyCache.getInstance().getQuickBuyCache(event.getPlayer().getUniqueId()).destroy();
-                        com.tomkeuper.bedwars.shop.ShopCache.getInstance().getShopCache(event.getPlayer().getUniqueId()).destroy();
-                    }
-                }
-            }));
-        }else {
-            sender.sendMessage(ChatColor.RED + "You need to be in-game!");
-        }
-    }
-
-    @SubCommand(
             args = "set",
             permission = "bwcosmetics.admin",
             permissionMessage = "§cYou don't have permission to do that!"
@@ -150,7 +110,7 @@ public class MainCommand {
             sender.sendMessage(ChatColor.RED + "Invalid argument: " + String.join(", ", availableArgs));
             return;
         }
-        new BwcAPI().setSelectedCosmetic(player, CosmeticsType.valueOf(arg), cosmeticID);
+        plugin.getApi().setSelectedCosmetic(player, CosmeticsType.valueOf(arg), cosmeticID);
         sender.sendMessage(ColorUtil.colored("&aSuccess! Note, this command will not check if cosmeticsID is valid!"));
 
     }
@@ -417,65 +377,34 @@ public class MainCommand {
             return;
         }
         Player p = (Player) sender;
-        BwcAPI api = new BwcAPI();
+        ISetupSession setupSession = plugin.getHandler().getSetupSession(p.getUniqueId());
 
-        if (!plugin.isBw2023()){
-            ISetupSession setupSession = plugin.getBedWars1058API().getSetupSession(p.getUniqueId());
-
-            if(setupSession == null){
-                sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
-                return;
-            }
-            String teamName = args[1];
-            String configPath = "Team." + teamName;
-            ConfigurationSection section = setupSession.getConfig().getYml().getConfigurationSection("Team." + teamName);
-            if(section == null){
-                sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
-                return;
-            }
-            setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
-            Set<UUID> players = new HashSet<>();
-            for (Player player : Bukkit.getOnlinePlayers()){
-                players.add(player.getUniqueId());
-            }
-            Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
-            ChatColor color;
-            if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
-                color = ChatColor.LIGHT_PURPLE;
-            } else {
-                color = ChatColor.valueOf(teamName.toUpperCase());
-            }
-            hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
-            sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
-        } else {
-            com.tomkeuper.bedwars.api.server.ISetupSession setupSession = plugin.getBedWars2023API().getSetupSession(p.getUniqueId());
-
-            if(setupSession == null){
-                sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
-                return;
-            }
-            String teamName = args[1];
-            String configPath = "Team." + teamName;
-            ConfigurationSection section = setupSession.getConfig().getYml().getConfigurationSection("Team." + teamName);
-            if(section == null){
-                sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
-                return;
-            }
-            setupSession.getConfig().saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
-            Set<UUID> players = new HashSet<>();
-            for (Player player : Bukkit.getOnlinePlayers()){
-                players.add(player.getUniqueId());
-            }
-            ChatColor color;
-            if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
-                color = ChatColor.LIGHT_PURPLE;
-            } else {
-                color = ChatColor.valueOf(teamName.toUpperCase());
-            }
-            Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
-            hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
-            sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
+        if(setupSession == null){
+            sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
+            return;
         }
+        String teamName = args[1];
+        String configPath = "Team." + teamName;
+        ConfigurationSection section = setupSession.getConfig().getConfigurationSection("Team." + teamName);
+        if(section == null){
+            sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
+            return;
+        }
+        setupSession.saveConfigLoc(configPath + ".IslandTopper.location", p.getLocation());
+        Set<UUID> players = new HashSet<>();
+        for (Player player : Bukkit.getOnlinePlayers()){
+            players.add(player.getUniqueId());
+        }
+        Hologram hologram = new Hologram("hologram_island_topper", p.getLocation().add(0, 3, 0), players, true, 10);
+        ChatColor color;
+        if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
+            color = ChatColor.LIGHT_PURPLE;
+        } else {
+            color = ChatColor.valueOf(teamName.toUpperCase());
+        }
+        hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
+        sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
+
     }
 
     @SubCommand(

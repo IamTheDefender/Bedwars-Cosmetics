@@ -1,9 +1,10 @@
 package me.defender.cosmetics.category.bedbreakeffects.items;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
+
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -53,12 +54,8 @@ public class LightStrikeBedDestroy extends BedDestroy {
     }
     /** {@inheritDoc} */
     @Override
-    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
         player.getWorld().strikeLightningEffect(bedLocation);
     }
 
-    @Override
-    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
-        player.getWorld().strikeLightningEffect(bedLocation);
-    }
 }

@@ -3,17 +3,19 @@ package me.defender.cosmetics.category.victorydance.items;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
-import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
-import me.defender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
+import me.defender.cosmetics.util.Utility;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ColdSnapDance extends VictoryDance {
     @Override
@@ -53,18 +55,25 @@ public class ColdSnapDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        new BukkitRunnable() {
-            public void run() {
-                final Location loc = UsefulUtilsVD.getRandomLocation(winner.getLocation(), 3);
-                if(ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
-                    if (loc.getBlock().getType() != Material.AIR) {
-                        loc.getBlock().setType(Material.ICE);
-                        winner.playSound(winner.getLocation(), XSound.BLOCK_NOTE_BLOCK_PLING.parseSound(), 1.0f, 1.0f);
-                    }
-                }else{
-                    this.cancel();
+        int duration = 8;
+        AtomicInteger radius = new AtomicInteger(2);
+        AtomicReference<Float> pitch = new AtomicReference<>(0.6f);
+
+        int task = Bukkit.getScheduler().runTaskTimer(Cosmetics.getInstance(), () -> {
+            Location loc = winner.getLocation().subtract(0, 1, 0);
+            List<Block> blocks = Utility.getSphere(loc, radius.get());
+            for (Block block : blocks) {
+                if (block.getType() != Material.AIR && block.getType() != XMaterial.PACKED_ICE.parseMaterial() && block.getType() != XMaterial.ICE.parseMaterial()) {
+                    block.setType(XMaterial.ICE.parseMaterial());
                 }
             }
-        }.runTaskTimer(Cosmetics.getInstance(), 0L, 0L);
+            XSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(winner, 1, pitch.get());
+            pitch.set(pitch.get() + 0.15f);
+            radius.addAndGet(1);
+        }, 0, 10).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(Cosmetics.getInstance(), () -> {
+            Bukkit.getScheduler().cancelTask(task);
+        }, duration * 20L + 5L);
     }
 }

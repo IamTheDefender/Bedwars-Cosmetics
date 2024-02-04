@@ -1,11 +1,11 @@
 package me.defender.cosmetics.category.sprays.items;
 
-import me.defender.cosmetics.api.cosmetics.category.Spray;
-import me.defender.cosmetics.category.sprays.util.SpraysUtil;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.Spray;
+import me.defender.cosmetics.category.sprays.util.SpraysUtil;
 import me.defender.cosmetics.util.StringUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;

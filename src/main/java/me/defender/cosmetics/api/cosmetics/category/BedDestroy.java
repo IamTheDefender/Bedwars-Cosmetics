@@ -2,14 +2,15 @@ package me.defender.cosmetics.api.cosmetics.category;
 
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XMaterial;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.Cosmetics;
-import me.defender.cosmetics.util.config.ConfigType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import me.defender.cosmetics.util.StartupUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
-import me.defender.cosmetics.util.config.ConfigUtils;
 import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.util.config.ConfigType;
+import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static me.defender.cosmetics.util.Utility.saveIfNotExistsLang;
 import static me.defender.cosmetics.util.config.ConfigUtils.get;
 import static me.defender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
-import static me.defender.cosmetics.util.Utility.saveIfNotExistsLang;
 
 /**
  * Bed destroy effect.
@@ -36,9 +37,7 @@ public abstract class BedDestroy extends Cosmetics {
      * @param player player who destroyed the bed.
      * @param bedLocation location of the bed.
      */
-    public abstract void execute1058(Player player, Location bedLocation, ITeam victimTeam);
-    public abstract void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam);
-
+    public abstract void execute(Player player, Location bedLocation, ITeamHandler victimTeam);
     /**
      * Register the bed destroy effect.
      * This method should be called when the plugin is enabled.

@@ -1,10 +1,11 @@
 package me.defender.cosmetics.category.bedbreakeffects.items;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
+
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
+import me.defender.cosmetics.api.handler.ITeamHandler;
 import me.defender.cosmetics.util.StartupUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -51,24 +52,14 @@ public class RandomBedDestroy extends BedDestroy {
     }
 
     @Override
-    public void execute1058(Player player, Location bedLocation, ITeam victimTeam) {
+    public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
             List<BedDestroy> bedDestroys = new ArrayList<>();
             for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
                 if(player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
                     bedDestroys.add(bedDestroy);
                 }
             }
-            bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute1058(player, bedLocation, victimTeam);
+            bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute(player, bedLocation, victimTeam);
     }
 
-    @Override
-    public void execute2023(Player player, Location bedLocation, com.tomkeuper.bedwars.api.arena.team.ITeam victimTeam) {
-        List<BedDestroy> bedDestroys = new ArrayList<>();
-        for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
-            if(player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
-                bedDestroys.add(bedDestroy);
-            }
-        }
-        bedDestroys.get(new Random().nextInt(bedDestroys.size())).execute2023(player, bedLocation, victimTeam);
-    }
 }

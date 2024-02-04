@@ -1,48 +1,35 @@
-package me.defender.cosmetics.database;
+package me.defender.cosmetics.data;
 
 import lombok.Getter;
 import lombok.Setter;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
-import me.defender.cosmetics.api.cosmetics.category.DeathCry;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
-import me.defender.cosmetics.api.cosmetics.category.Glyph;
-import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
-import me.defender.cosmetics.api.cosmetics.category.KillMessage;
-import me.defender.cosmetics.api.cosmetics.category.ProjectileTrail;
-import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
-import me.defender.cosmetics.api.cosmetics.category.Spray;
-import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
-import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
+import me.defender.cosmetics.api.cosmetics.category.*;
+import me.defender.cosmetics.api.database.IDatabase;
 import me.defender.cosmetics.util.StartupUtils;
 import org.bukkit.Bukkit;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class PlayerOwnedData{
+    @Getter
     private final UUID uuid;
-    private final Connection connection;
+    private final IDatabase remoteDatabase;
     @Getter @Setter
     private int bedDestroy, deathCry, finalKillEffect, glyph, islandTopper, killMessage, projectileTrail, shopkeeperSkin, spray, victoryDance, woodSkin;
 
     public PlayerOwnedData (UUID uuid) {
         this.uuid = uuid;
-        try {
-            this.connection = Cosmetics.getDB().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        this.remoteDatabase = Cosmetics.getInstance().getRemoteDatabase();
         load();
     }
 
     public void load() {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM player_owned_data WHERE uuid = ?");
+            PreparedStatement statement = remoteDatabase.getConnection().prepareStatement("SELECT * FROM player_owned_data WHERE uuid = ?");
             statement.setString(1, uuid.toString());
             ResultSet result = statement.executeQuery();
             if (result.next()) {
@@ -71,7 +58,7 @@ public class PlayerOwnedData{
         "VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);";
 
         try{
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = remoteDatabase.getConnection().prepareStatement(sql);
             statement.setString(1, uuid.toString());
             statement.executeUpdate();
             statement.close();
@@ -82,7 +69,7 @@ public class PlayerOwnedData{
 
     public void save() {
         try {
-            PreparedStatement statement = connection.prepareStatement("UPDATE player_owned_data SET bed_destroy = ?, death_cry = ?, final_kill_effect = ?, glyph = ?, island_topper = ?, kill_message = ?, projectile_trail = ?, shopkeeper_skin = ?, spray = ?, victory_dance = ?, wood_skin = ? WHERE uuid = ?;");
+            PreparedStatement statement = remoteDatabase.getConnection().prepareStatement("UPDATE player_owned_data SET bed_destroy = ?, death_cry = ?, final_kill_effect = ?, glyph = ?, island_topper = ?, kill_message = ?, projectile_trail = ?, shopkeeper_skin = ?, spray = ?, victory_dance = ?, wood_skin = ? WHERE uuid = ?;");
             statement.setInt(1, bedDestroy);
             statement.setInt(2, deathCry);
             statement.setInt(3, finalKillEffect);

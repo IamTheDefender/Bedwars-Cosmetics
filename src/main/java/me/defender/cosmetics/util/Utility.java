@@ -3,36 +3,35 @@
 package me.defender.cosmetics.util;
 
 
-import com.andrei1058.bedwars.api.language.Language;
-import com.andrei1058.bedwars.proxy.BedWarsProxy;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.hakan.core.utils.ColorUtil;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.BwcAPI;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.menu.MainMenu;
-import me.defender.cosmetics.database.PlayerData;
-import me.defender.cosmetics.database.PlayerOwnedData;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class Utility {
-    public static Map<UUID, PlayerData> playerDataList;
-    public static Map<UUID, PlayerOwnedData> playerOwnedDataList;
-
-
     /**
      * @param s the main string for example "Click me"
      * @param st the message when they hover.
@@ -44,24 +43,19 @@ public class Utility {
         return message;
     }
 
-    /**
-     * Planned to be removed
-     * @return JavaPlugin class of Cosmetics.class
-     * @deprecated use {@link Cosmetics#getInstance()}
-     */
-    @Deprecated
-    public static Cosmetics plugin() {
-        return Cosmetics.getPlugin(Cosmetics.class);
-    }
 
     /**
      * Open's the main menu for the given player
      * @param p player object
      */
-    public static void openMainMenu(Player p){
+    public static void openMainMenu(Player p) {
             new MainMenu(p).open(p);
         }
 
+    @Deprecated
+    private static String c(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
+    }
     /**
      * Get Message from Language file of bedwars1058 for player object, works with Bedwars1058 and BedwarsProxy
      * @param p player object
@@ -69,19 +63,8 @@ public class Utility {
      * @return the result
      */
     public static String getMSGLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            if (!Cosmetics.getInstance().isBw2023()){
-                return com.andrei1058.bedwars.proxy.language.Language.getMsg(p, path);
-            } else {
-                return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-            }
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getMsg(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getMsg(p, path);
-        }
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        return ColorUtil.colored(api.getHandler().getLanguageUtil().getMessage(p, path));
     }
 
     /**
@@ -91,15 +74,9 @@ public class Utility {
      * @return the result
      */
     public static List<String> getListLang(Player p, String path) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            return BedWarsProxy.getAPI().getLanguageUtil().getList(p, path);
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Language.getList(p, path);
-        } else {
-            return com.tomkeuper.bedwars.api.language.Language.getList(p, path);
-        }
+       CosmeticsAPI api = Cosmetics.getInstance().getApi();
+       return api.getHandler().getLanguageUtil().getMessageList(p, path)
+               .stream().map(ColorUtil::colored).collect(Collectors.toList());
     }
 
     /**
@@ -108,16 +85,8 @@ public class Utility {
      * @param ob object
      */
     public static void saveIfNotExistsLang(String path, Object ob) {
-        BwcAPI api = new BwcAPI();
-        if (api.isProxy()) {
-            BedWarsProxy.getAPI().getLanguageUtil().saveIfNotExists(path, ob);
-            return;
-        }
-        if (!Cosmetics.getInstance().isBw2023()){
-            Language.saveIfNotExists(path, ob);
-        } else {
-            com.tomkeuper.bedwars.api.language.Language.saveIfNotExists(path, ob);
-        }
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        api.getHandler().getLanguageUtil().saveIfNotExists(path, ob);
     }
 
     /**
@@ -126,14 +95,10 @@ public class Utility {
      * @return true if player is in arena, false otherwise.
      */
     public static boolean isInArena(Player p) {
-        BwcAPI api = new BwcAPI();
+        CosmeticsAPI api = Cosmetics.getInstance().getApi();
         if (api.isProxy())
             return false;
-        if (!Cosmetics.getInstance().isBw2023()){
-            return Cosmetics.getInstance().getBedWars1058API().getArenaUtil().getArenaByPlayer(p) != null;
-        } else {
-            return Cosmetics.getInstance().getBedWars2023API().getArenaUtil().getArenaByPlayer(p) != null;
-        }
+        return Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(p) != null;
     }
 
 
@@ -156,7 +121,7 @@ public class Utility {
 
             return new String[]{texture, signature};
         } catch (IOException e) {
-            System.err.println("Could not get skin data from session servers!");
+            Cosmetics.getInstance().getLogger().severe("Could not get skin data from session servers!");
             e.printStackTrace();
             return null;
         }
@@ -196,5 +161,23 @@ public class Utility {
                 ProtocolLibrary.getProtocolManager().sendServerPacket(onlinePlayer, packet);
             }
         }
+    }
+
+    public static boolean isWoodOrLogBlock(Material mat) {
+        return (mat.toString().contains("WOOD") || mat.toString().contains("PLANKS") || mat.toString().contains("LOG")) && mat.isBlock();
+    }
+
+    public static List<Block> getSphere(Location loc, int radius) {
+        List<Block> blocks = new ArrayList<>();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (Math.sqrt(x * x + y * y + z * z) <= radius) {
+                        blocks.add(loc.clone().add(x, y, z).getBlock());
+                    }
+                }
+            }
+        }
+        return blocks;
     }
 }

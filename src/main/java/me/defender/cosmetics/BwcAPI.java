@@ -1,23 +1,30 @@
-package me.defender.cosmetics.api;
+package me.defender.cosmetics;
 
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
+import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
-import me.defender.cosmetics.util.Utility;
-import me.defender.cosmetics.database.PlayerData;
+import me.defender.cosmetics.api.database.IDatabase;
+import me.defender.cosmetics.api.handler.IHandler;
+import me.defender.cosmetics.data.PlayerData;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class BwcAPI {
+public class BwcAPI implements CosmeticsAPI {
 
     /**
      * Check if MySQL is enabled.
      * @return true if enabled.
      */
-    public Boolean isMySQL() {
+    public boolean isMySQL() {
         return  Cosmetics.getInstance().getConfig().getBoolean("mysql.enable");
+    }
+
+    @Override
+    public IHandler getHandler() {
+        return Cosmetics.getInstance().getHandler();
     }
 
     /**
@@ -30,7 +37,7 @@ public class BwcAPI {
         if(p == null){
             return null;
         }
-        PlayerData playerData = Utility.playerDataList.get(p.getUniqueId());
+        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 return playerData.getBedDestroy();
@@ -65,7 +72,7 @@ public class BwcAPI {
      * @param value Cosmetic value.
      */
     public void setSelectedCosmetic(Player p, CosmeticsType cos, String value){
-        PlayerData playerData = Utility.playerDataList.get(p.getUniqueId());
+        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 playerData.setBedDestroy(value);
@@ -101,25 +108,20 @@ public class BwcAPI {
                 playerData.setWoodSkin(value);
                 break;
         }
-        Utility.playerDataList.replace(p.getUniqueId(), playerData);
         // Ran ASYNC
         HCore.asyncScheduler().run(playerData::save);
-    }
-
-    /**
-     * Get the vault economy.
-     * @return the vault economy.
-     */
-    public Economy getEco(){
-        final RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        return rsp.getProvider();
     }
 
     /**
      * Check if the plugin is running on a proxy.
      * @return true if running on a proxy.
      */
-    public Boolean isProxy(){
-        return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null;
+    public boolean isProxy(){
+        return Bukkit.getPluginManager().getPlugin("BedWarsProxy") != null ||
+                Bukkit.getPluginManager().getPlugin("BWProxy2023") != null;
+    }
+
+    public IDatabase getDatabase(){
+        return Cosmetics.getInstance().getRemoteDatabase();
     }
 }
