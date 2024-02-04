@@ -8,7 +8,7 @@ All contributions are welcome, after all, it is better to have all the required 
 A detailed documentaion of this plugin is provided at the [wiki](https://dev-wiki.iamthedefender.xyz/bedwars-cosmetics), please look through the wiki before reporting an issue in this GitHub Repository or the Discord Support Server.
 
 ## Support Server
-You can join our discord support server if you have issues with the plugin but please do check wiki before doing so, you can create a ticket in the discord server only if you think you need immediate help with a critical issue, I check every message whenever I have the time so don't ping me please. 
+You can join our [discord support server](discord.iamthedefender.xyz) if you have issues with the plugin but please do check wiki before doing so, you can create a ticket in the discord server only if you think you need immediate help with a critical issue, I check every message whenever I have the time so don't ping me please. 
 
 ## 3rd Party libraries
 - [HikariCP](https://github.com/brettwooldridge/HikariCP)
