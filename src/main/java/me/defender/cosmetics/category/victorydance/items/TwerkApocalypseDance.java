@@ -9,11 +9,11 @@ import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import me.defender.cosmetics.util.MathUtil;
 import me.defender.cosmetics.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -90,11 +90,11 @@ public class TwerkApocalypseDance extends VictoryDance {
             }
         });
 
-        HCore.syncScheduler().after(30, TimeUnit.SECONDS).run(() -> {
+        Bukkit.getScheduler().runTaskLater(HCore.getInstance(), () -> {
             for (NPC npc : npcs) {
-                npc.despawn(DespawnReason.PLUGIN);
+                npc.destroy();
             }
-        });
+        }, 20L * 9 + 10L);
 
     }
 }
