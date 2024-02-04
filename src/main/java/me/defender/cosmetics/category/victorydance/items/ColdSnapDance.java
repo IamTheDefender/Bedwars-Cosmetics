@@ -55,9 +55,9 @@ public class ColdSnapDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
+        int duration = 8;
         AtomicInteger radius = new AtomicInteger(2);
-        int duration = 6;
-        AtomicReference<Float> pitch = new AtomicReference<>(0.8f);
+        AtomicReference<Float> pitch = new AtomicReference<>(0.6f);
 
         int task = Bukkit.getScheduler().runTaskTimer(Cosmetics.getInstance(), () -> {
             Location loc = winner.getLocation().subtract(0, 1, 0);
@@ -68,12 +68,12 @@ public class ColdSnapDance extends VictoryDance {
                 }
             }
             XSound.ENTITY_EXPERIENCE_ORB_PICKUP.play(winner, 1, pitch.get());
-            pitch.set(pitch.get() + 0.2f);
+            pitch.set(pitch.get() + 0.15f);
             radius.addAndGet(1);
         }, 0, 10).getTaskId();
 
         Bukkit.getScheduler().runTaskLater(Cosmetics.getInstance(), () -> {
             Bukkit.getScheduler().cancelTask(task);
-        }, duration * 20L + 5);
+        }, duration * 20L + 5L);
     }
 }
