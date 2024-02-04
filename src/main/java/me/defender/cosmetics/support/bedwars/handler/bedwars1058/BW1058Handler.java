@@ -2,6 +2,7 @@ package me.defender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.language.Language;
+import com.andrei1058.bedwars.api.server.ServerType;
 import com.hakan.core.HCore;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
@@ -41,6 +42,13 @@ public class BW1058Handler implements IHandler {
         HCore.registerListeners(new ProjectileHandler(Cosmetics.getInstance()));
         HCore.registerListeners(new DeathCryHandler1058());
         HCore.registerListeners(new SpraysHandler1058());
+    }
+
+    @Override
+    public HandlerType getHandlerType() {
+        if(api.getServerType() == ServerType.SHARED) return HandlerType.SHARED;
+        if(api.getServerType() == ServerType.BUNGEE) return HandlerType.BUNGEE;
+        return HandlerType.MULTIARENA;
     }
 
     @Override

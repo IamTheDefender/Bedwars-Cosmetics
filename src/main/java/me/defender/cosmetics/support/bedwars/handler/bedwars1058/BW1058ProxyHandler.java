@@ -17,6 +17,11 @@ public class BW1058ProxyHandler implements IHandler {
     }
 
     @Override
+    public HandlerType getHandlerType() {
+        return HandlerType.BUNGEE;
+    }
+
+    @Override
     public ISetupSession getSetupSession(UUID playerUUID) {
         return null;
     }

@@ -10,7 +10,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static me.defender.cosmetics.util.Utility.plugin;
 
 public class ProjectileHandler implements Listener {
 

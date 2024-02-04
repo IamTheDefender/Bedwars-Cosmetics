@@ -11,5 +11,6 @@ public interface IHandler {
     IArenaUtil getArenaUtil();
     ILanguage getLanguageUtil();
     String getAddonPath();
+    HandlerType getHandlerType();
 
 }
