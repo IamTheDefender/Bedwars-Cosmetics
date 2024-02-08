@@ -29,6 +29,9 @@ import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
 import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
 import me.defender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
 import me.defender.cosmetics.support.placeholders.Placeholders;
+import me.defender.cosmetics.util.lib.CosmeticsLibraryManager;
+import net.byteflux.libby.BukkitLibraryManager;
+import net.byteflux.libby.Library;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -292,6 +295,22 @@ public class StartupUtils
         new SpruceLog().register();
     }
 
+
+    public static void loadLibraries() {
+        Cosmetics.getInstance().getLogger().info("Loading libraries...");
+        CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(Cosmetics.getInstance());
+        Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
+        Library particle = new Library.Builder().groupId("xyz{}xenondevs").artifactId("particle").version("1.8.4").build();
+        Library hCore = new Library.Builder().groupId("com{}github{}hakan-krgn{}hCore").artifactId("hCore-bukkit").version("0.7.3.3").build();
+        Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.0.1").build();
+        libraryManager.addMavenCentral();
+        libraryManager.addJitPack();
+        libraryManager.loadLibrary(mysql);
+        libraryManager.loadLibrary(particle);
+        libraryManager.loadLibrary(hCore);
+        libraryManager.loadLibrary(hikariCP);
+
+    }
     public static Location getCosmeticLocation() {
         World world = Bukkit.getWorld(Cosmetics.getInstance().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
         double x = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");

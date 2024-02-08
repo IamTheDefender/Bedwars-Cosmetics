@@ -53,7 +53,7 @@ public class MySQL implements IDatabase {
 
             HikariConfig config = new HikariConfig();
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" + "&enabledTLSProtocols=TLSv1.2" + "&useSSL=" + ssl);
+            config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true" + "&enabledTLSProtocols=TLSv1.2" + "&useSSL=" + ssl + "&allowPublicKeyRetrieval=true");
             config.setPoolName("BW1058Cosmetics-MySQLPool");
             config.setMaximumPoolSize(maxpoolsize);
             config.setMaxLifetime(Integer.MAX_VALUE);

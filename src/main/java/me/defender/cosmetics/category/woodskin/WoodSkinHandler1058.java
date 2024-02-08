@@ -15,6 +15,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
+
 public class WoodSkinHandler1058 implements Listener {
 
     @EventHandler
@@ -28,8 +30,9 @@ public class WoodSkinHandler1058 implements Listener {
 
         if (Utility.isWoodOrLogBlock(stack.getType())) {
             String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
-
-            XMaterial m = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase()).get();
+            Optional<XMaterial> optional = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase());
+            if(!optional.isPresent()) return;
+            XMaterial m = optional.get();
             stack.setType(m.parseMaterial());
             stack.setDurability(m.getData());
         }
@@ -56,7 +59,9 @@ public class WoodSkinHandler1058 implements Listener {
                 if (i.getType() == XMaterial.AIR.parseMaterial()) continue;
 
                 if (Utility.isWoodOrLogBlock(i.getType()) && selected != null) {
-                    XMaterial m = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase()).get();
+                    Optional<XMaterial> optional = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase());
+                    if(!optional.isPresent()) return;
+                    XMaterial m = optional.get();
                     i.setType(m.parseMaterial());
                     i.setDurability(m.getData());
                 }

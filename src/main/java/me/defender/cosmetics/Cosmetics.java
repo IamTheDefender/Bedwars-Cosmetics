@@ -32,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -62,14 +63,6 @@ public class Cosmetics extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        try{
-            HCore.initialize(this);
-        }catch (IllegalStateException ignored){
-            getLogger().severe("BW1058-Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
-            setEnabled(false);
-            dependenciesMissing = true;
-            return;
-        }
         instance = this;
         api = new BwcAPI();
         if(!StartupUtils.checkDependencies()){
@@ -80,9 +73,15 @@ public class Cosmetics extends JavaPlugin {
         }
         handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
         handler.register();
-
-
-        getLogger().info("All dependencies found, continuing with plugin startup.");
+        StartupUtils.loadLibraries();
+        try{
+            HCore.initialize(this);
+        }catch (IllegalStateException ignored){
+            getLogger().severe("BW1058-Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
+            setEnabled(false);
+            dependenciesMissing = true;
+            return;
+        }
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if(rsp == null){
             getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");
@@ -90,6 +89,9 @@ public class Cosmetics extends JavaPlugin {
             dependenciesMissing = true;
             return;
         }
+
+        getLogger().info("All dependencies found, continuing with plugin startup.");
+
         economy = rsp.getProvider();
         protocolManager = ProtocolLibrary.getProtocolManager();
         entityPlayerHashMap  = new HashMap<>();
@@ -201,6 +203,7 @@ public class Cosmetics extends JavaPlugin {
     public static void setPlaceholderAPI(boolean placeholderAPI) {
         Cosmetics.placeholderAPI = placeholderAPI;
     }
+
 
 
 

@@ -40,11 +40,6 @@
                             <!-- Be sure to change the package below -->
                             <shadedPattern>me.defender.cosmetics.support.xseries</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>com.hakan.core</pattern>
-                            <!-- Be sure to change the package below -->
-                            <shadedPattern>me.defender.cosmetics.support.hcore</shadedPattern>
-                        </relocation>
                     </relocations>
                     <filters>
                         <filter>
@@ -99,6 +94,10 @@
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
+        <repository>
+            <id>AlessioDP</id>
+            <url>https://repo.alessiodp.com/releases/</url>
+        </repository>
 
     </repositories>
 
@@ -120,6 +119,11 @@
             <artifactId>worldedit-bukkit</artifactId>
             <version>6.1.4-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.byteflux</groupId>
+            <artifactId>libby-bukkit</artifactId>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.andrei1058.bedwars</groupId>
@@ -161,7 +165,7 @@
             <groupId>com.github.hakan-krgn.hCore</groupId>
             <artifactId>hCore-bukkit</artifactId>
             <version>0.7.3.3</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.clip</groupId>
@@ -173,23 +177,25 @@
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>XSeries</artifactId>
             <version>9.2.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.0.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>xyz.xenondevs</groupId>
             <artifactId>particle</artifactId>
             <version>1.8.4</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
