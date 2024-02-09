@@ -9,6 +9,7 @@ import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
 import me.defender.cosmetics.api.database.DatabaseType;
+import me.defender.cosmetics.api.handler.HandlerType;
 import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.data.manager.PlayerManager;
 import me.defender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
@@ -72,7 +73,6 @@ public class Cosmetics extends JavaPlugin {
             return;
         }
         handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
-        handler.register();
         StartupUtils.loadLibraries();
         try{
             HCore.initialize(this);
@@ -120,9 +120,14 @@ public class Cosmetics extends JavaPlugin {
         if(api.isMySQL()){
             remoteDatabase = new MySQL(this);
         }else{
+            if(handler.getHandlerType() == HandlerType.BUNGEE){
+                getLogger().severe("You cannot use SQLite in Bungee mode!");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            }
             remoteDatabase = new SQLite(this);
         }
-
+        handler.register();
         // Load all the list
         StartupUtils.loadLists();
         getLogger().info("Cosmetics list successfully loaded.");
@@ -167,7 +172,7 @@ public class Cosmetics extends JavaPlugin {
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
         }
-        if(remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
+        if(remoteDatabase != null && remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
             getLogger().info("Saving player data to SQLite database...");
             getLogger().info("Please wait it may take some time!");
             for(PlayerData playerData : getPlayerManager().getPlayerDataHashMap().values()){
@@ -179,7 +184,9 @@ public class Cosmetics extends JavaPlugin {
             getLogger().info("Player data saved to SQLite database!");
         }
         try {
-            remoteDatabase.getConnection().close();
+           if(remoteDatabase != null){
+               remoteDatabase.getConnection().close();
+           }
         } catch (SQLException e) {
             getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
         }
