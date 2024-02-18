@@ -1,10 +1,10 @@
 package me.defender.cosmetics.category.woodskin;
 
-import com.cryptomorin.xseries.XMaterial;
 import com.andrei1058.bedwars.BedWars;
 import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.shop.IBuyItem;
 import com.andrei1058.bedwars.api.events.shop.ShopBuyEvent;
+import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.util.Utility;

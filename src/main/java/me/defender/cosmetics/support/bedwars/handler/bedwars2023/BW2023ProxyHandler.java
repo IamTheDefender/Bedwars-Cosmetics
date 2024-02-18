@@ -2,11 +2,11 @@ package me.defender.cosmetics.support.bedwars.handler.bedwars2023;
 
 import com.tomkeuper.bedwars.proxy.BedWarsProxy;
 import com.tomkeuper.bedwars.proxy.api.BedWars;
-import java.io.File;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 

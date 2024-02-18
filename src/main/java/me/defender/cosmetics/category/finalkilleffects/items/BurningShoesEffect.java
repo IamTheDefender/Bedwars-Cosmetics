@@ -5,16 +5,14 @@ import com.hakan.core.HCore;
 import com.hakan.core.particle.Particle;
 import com.hakan.core.particle.type.ParticleType;
 import me.defender.cosmetics.Cosmetics;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
-import me.defender.cosmetics.util.Utility;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class BurningShoesEffect extends FinalKillEffect {

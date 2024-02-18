@@ -1,8 +1,8 @@
 package me.defender.cosmetics.category.woodskin;
 
-import com.tomkeuper.bedwars.api.arena.IArena;
 import com.cryptomorin.xseries.XMaterial;
 import com.tomkeuper.bedwars.BedWars;
+import com.tomkeuper.bedwars.api.arena.IArena;
 import com.tomkeuper.bedwars.api.arena.shop.IBuyItem;
 import com.tomkeuper.bedwars.api.events.shop.ShopBuyEvent;
 import me.defender.cosmetics.Cosmetics;

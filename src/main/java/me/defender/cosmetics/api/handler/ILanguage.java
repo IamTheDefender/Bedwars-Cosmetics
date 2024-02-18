@@ -3,7 +3,6 @@ package me.defender.cosmetics.api.handler;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface ILanguage {
 

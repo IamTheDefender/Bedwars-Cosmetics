@@ -1,8 +1,8 @@
 package me.defender.cosmetics.category.finalkilleffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.util.Utility;
 import org.bukkit.Location;
 import org.bukkit.entity.LightningStrike;

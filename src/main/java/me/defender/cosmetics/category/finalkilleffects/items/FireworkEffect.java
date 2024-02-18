@@ -1,8 +1,8 @@
 package me.defender.cosmetics.category.finalkilleffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Color;
 import org.bukkit.Location;

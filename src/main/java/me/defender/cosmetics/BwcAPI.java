@@ -1,16 +1,13 @@
 package me.defender.cosmetics;
 
 import com.hakan.core.HCore;
-import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.CosmeticsAPI;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.database.IDatabase;
 import me.defender.cosmetics.api.handler.IHandler;
 import me.defender.cosmetics.data.PlayerData;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class BwcAPI implements CosmeticsAPI {
 

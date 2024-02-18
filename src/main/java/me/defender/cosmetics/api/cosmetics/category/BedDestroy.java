@@ -1,6 +1,5 @@
 package me.defender.cosmetics.api.cosmetics.category;
 
-import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.cryptomorin.xseries.XMaterial;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.Cosmetics;

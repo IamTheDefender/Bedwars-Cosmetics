@@ -1,9 +1,5 @@
 package me.defender.cosmetics.command;
 
-import com.andrei1058.bedwars.shop.ShopCache;
-import com.andrei1058.bedwars.shop.ShopManager;
-import com.andrei1058.bedwars.shop.quickbuy.PlayerQuickBuyCache;
-import com.hakan.core.HCore;
 import com.hakan.core.command.executors.basecommand.BaseCommand;
 import com.hakan.core.command.executors.subcommand.SubCommand;
 import com.hakan.core.hologram.Hologram;
@@ -28,8 +24,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.HashSet;
 import java.util.List;

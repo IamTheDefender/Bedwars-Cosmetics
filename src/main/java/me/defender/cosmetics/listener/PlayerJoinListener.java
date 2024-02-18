@@ -4,17 +4,7 @@ package me.defender.cosmetics.listener;
 
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.CosmeticsAPI;
-import me.defender.cosmetics.api.cosmetics.category.BedDestroy;
-import me.defender.cosmetics.api.cosmetics.category.DeathCry;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
-import me.defender.cosmetics.api.cosmetics.category.Glyph;
-import me.defender.cosmetics.api.cosmetics.category.IslandTopper;
-import me.defender.cosmetics.api.cosmetics.category.KillMessage;
-import me.defender.cosmetics.api.cosmetics.category.ProjectileTrail;
-import me.defender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
-import me.defender.cosmetics.api.cosmetics.category.Spray;
-import me.defender.cosmetics.api.cosmetics.category.VictoryDance;
-import me.defender.cosmetics.api.cosmetics.category.WoodSkin;
+import me.defender.cosmetics.api.cosmetics.category.*;
 import me.defender.cosmetics.data.PlayerData;
 import me.defender.cosmetics.data.PlayerOwnedData;
 import org.bukkit.event.EventHandler;

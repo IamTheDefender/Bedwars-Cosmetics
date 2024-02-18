@@ -7,7 +7,6 @@ import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.database.DatabaseType;
 import me.defender.cosmetics.api.database.IDatabase;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;

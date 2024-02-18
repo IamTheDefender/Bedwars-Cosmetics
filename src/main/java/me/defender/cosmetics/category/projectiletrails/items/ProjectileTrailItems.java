@@ -1,10 +1,10 @@
 package me.defender.cosmetics.category.projectiletrails.items;
 
-import me.defender.cosmetics.api.cosmetics.category.ProjectileTrail;
+import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.ProjectileTrail;
 import me.defender.cosmetics.util.StringUtils;
-import me.defender.cosmetics.api.configuration.ConfigManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

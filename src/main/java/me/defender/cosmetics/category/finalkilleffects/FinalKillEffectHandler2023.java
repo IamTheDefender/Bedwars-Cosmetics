@@ -2,10 +2,10 @@ package me.defender.cosmetics.category.finalkilleffects;
 
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.CosmeticsAPI;
-import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
+import me.defender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import me.defender.cosmetics.api.event.FinalKillEffectsExecuteEvent;
 import me.defender.cosmetics.util.DebugUtil;
 import me.defender.cosmetics.util.StartupUtils;

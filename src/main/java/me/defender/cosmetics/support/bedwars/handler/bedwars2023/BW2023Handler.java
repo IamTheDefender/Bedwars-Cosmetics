@@ -3,8 +3,6 @@ package me.defender.cosmetics.support.bedwars.handler.bedwars2023;
 import com.hakan.core.HCore;
 import com.tomkeuper.bedwars.api.BedWars;
 import com.tomkeuper.bedwars.api.language.Language;
-import java.io.File;
-
 import com.tomkeuper.bedwars.api.server.ServerType;
 import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.handler.*;
@@ -23,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 

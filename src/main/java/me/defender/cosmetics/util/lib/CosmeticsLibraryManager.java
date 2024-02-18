@@ -4,7 +4,6 @@ import me.defender.cosmetics.Cosmetics;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.classloader.URLClassLoaderHelper;
 import net.byteflux.libby.logging.adapters.JDKLogAdapter;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.net.URLClassLoader;

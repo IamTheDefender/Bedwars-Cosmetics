@@ -2,7 +2,6 @@
 
 package me.defender.cosmetics.category.shopkeeperskins;
 
-import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.arena.GameState;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.events.gameplay.GameEndEvent;
