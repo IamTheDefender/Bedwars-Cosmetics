@@ -23,11 +23,11 @@ public class SpraysHandler2023 implements Listener {
         Player p = e.getPlayer();
         if (e.getRightClicked() instanceof ItemFrame) {
             ItemFrame itemFrame = (ItemFrame) e.getRightClicked();
-            if(itemFrame.getItem() == null) return;
+            if (itemFrame.getItem() == null) return;
             String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.Sprays);
-            if(itemFrame.getItem().getType() == Material.AIR || itemFrame.getItem().getType() == Material.MAP || itemFrame.getItem().getType() == Material.EMPTY_MAP) {
+            if (itemFrame.getItem().getType() == Material.AIR || itemFrame.getItem().getType() == Material.MAP || itemFrame.getItem().getType() == Material.EMPTY_MAP) {
                 for(Spray spray : StartupUtils.sprayList){
-                    if(spray.getIdentifier().equals(selected)){
+                    if (spray.getIdentifier().equals(selected)){
                         spray.execute(p, itemFrame);
                     }
                 }
@@ -47,7 +47,7 @@ public class SpraysHandler2023 implements Listener {
             for (final Entity e : event.getArena().getWorld().getEntities()) {
                 if (e.getType() == EntityType.ITEM_FRAME) {
                     ItemFrame itemFrame = (ItemFrame) e;
-                    if(itemFrame.getItem() == null || itemFrame.getItem().getType() == Material.AIR) {
+                    if (itemFrame.getItem() == null || itemFrame.getItem().getType() == Material.AIR) {
                         ArmorStand stand = (ArmorStand) e.getWorld().spawnEntity(e.getLocation().subtract(0.0, 0.9, 0.0), EntityType.ARMOR_STAND);
                         stand.setVisible(false);
                         stand.setGravity(false);

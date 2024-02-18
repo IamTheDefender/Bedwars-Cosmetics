@@ -9,7 +9,7 @@ public class CosmeticPurchaseListener implements Listener {
 
     @EventHandler
     public void onPurchase(CosmeticPurchaseEvent e){
-        if(e.isCancelled())
+        if (e.isCancelled())
             return;
         Cosmetics.getInstance()
                 .getPlayerManager()

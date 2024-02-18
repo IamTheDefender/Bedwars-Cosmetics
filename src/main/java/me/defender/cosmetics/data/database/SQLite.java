@@ -32,7 +32,7 @@ public class SQLite implements IDatabase {
 
     public void connect(){
         boolean needConnecting = dataSource == null;
-        if(!needConnecting){
+        if (!needConnecting){
             try {
                 dataSource.getConnection().createStatement();
             } catch (SQLException e) {
@@ -40,7 +40,7 @@ public class SQLite implements IDatabase {
             }
         }
 
-        if(needConnecting){
+        if (needConnecting){
             String jdbcUrl = "jdbc:sqlite:" + plugin.getHandler().getAddonPath() + "/cosmeticsData.db";
             try{
                 Class.forName("org.sqlite.JDBC");
@@ -65,7 +65,7 @@ public class SQLite implements IDatabase {
     }
 
     public void createTable(){
-        if(dataSource != null){
+        if (dataSource != null){
             try (Connection connection = dataSource.getConnection()) {
                 Statement statement = connection.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS cosmetics_player_data (" +

@@ -136,7 +136,7 @@ public class Utility {
      */
     public static void saveFileFromInputStream(InputStream inputStream, String fileName, File folder)  {
         File file = new File(folder, fileName);
-        if(file.exists()) return;
+        if (file.exists()) return;
         try (OutputStream outputStream = Files.newOutputStream(file.toPath())) {
             byte[] buffer = new byte[1024];
             int length;
@@ -150,14 +150,14 @@ public class Utility {
 
 
     public static void entityForPlayerOnly(Entity entityToHide, Player player){
-        if(!Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityToHide.getEntityId())){
+        if (!Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityToHide.getEntityId())){
             Cosmetics.getInstance().getEntityPlayerHashMap().put(entityToHide.getEntityId(), player);
         }
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
         int[] entityIds = new int[] { entityToHide.getEntityId() };
         packet.getIntegerArrays().write(0, entityIds);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if(!onlinePlayer.getUniqueId().equals(player.getUniqueId())){
+            if (!onlinePlayer.getUniqueId().equals(player.getUniqueId())){
                 ProtocolLibrary.getProtocolManager().sendServerPacket(onlinePlayer, packet);
             }
         }

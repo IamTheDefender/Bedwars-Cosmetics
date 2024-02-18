@@ -59,7 +59,7 @@ public class CategoryMenu extends InventoryGui {
             integerList.add(Integer.parseInt(s));
         }
         slots = integerList;
-        if(slots.isEmpty()){
+        if (slots.isEmpty()){
             slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
         }
         this.page = 0;
@@ -77,7 +77,7 @@ public class CategoryMenu extends InventoryGui {
             integerList.add(Integer.parseInt(s));
         }
         slots = integerList;
-        if(slots.isEmpty()){
+        if (slots.isEmpty()){
             slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
         }
        this.page = page;
@@ -89,7 +89,7 @@ public class CategoryMenu extends InventoryGui {
         List<ClickableItem> items = new ArrayList<>();
         ConfigManager configManager = cosmeticsType.getConfig();
         ConfigurationSection section = config.getYml().getConfigurationSection(cosmeticsType.getSectionKey());
-        if(section == null) return;
+        if (section == null) return;
         Map<ClickableItem, RarityType> rarityMap = new HashMap<>();
 
         // Set up the items
@@ -108,29 +108,29 @@ public class CategoryMenu extends InventoryGui {
             // Items
             ClickableItem item = null;
             List<String> lore1 = new ArrayList<>(lore);
-            if(stack != null && !disabled) {
+            if (stack != null && !disabled) {
                 String colorCode = "&a";
                 int returnValue = onClick(player, cosmeticsType, price, id, true);
-                if(returnValue == 2){
+                if (returnValue == 2){
                     colorCode = "&c";
                 }
-                if(returnValue == -2 ){ // <- Selected
+                if (returnValue == -2 ){ // <- Selected
                     stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
                 }
                 item = new ClickableItem(HCore.itemBuilder(stack).addItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES).name(true, colorCode + formattedName).lores(true, lore1).build(), (e) -> {
-                    if(e.getClick() == ClickType.RIGHT){
+                    if (e.getClick() == ClickType.RIGHT){
                         previewClick(player, cosmeticsType, id, price);
                     }else if (e.getClick() == ClickType.LEFT){
                         onClick(player, cosmeticsType, price, id, false);
                     }
                 });
             }
-            if(item != null && !disabled) {
+            if (item != null && !disabled) {
                 items.add(item);
                 rarityMap.put(item, rarity);
             }
         }
-        if(Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
+        if (Cosmetics.getInstance().getConfig().getBoolean("BackItemInCosmeticsMenu")) {
             setItem(49, HCore.itemBuilder(Material.ARROW).name(true, "&aBack").build(), (e) -> Utility.openMainMenu((Player) e.getWhoClicked()));
         }
         createPages(items, rarityMap);
@@ -157,7 +157,7 @@ public class CategoryMenu extends InventoryGui {
 
         Map<ClickableItem, RarityType> rarityMapNew = new HashMap<>();
         for (ClickableItem value : pages.getPage(page).getItems().values()) {
-            if(value.getItem().getType() != Material.AIR) {
+            if (value.getItem().getType() != Material.AIR) {
                 rarityMapNew.put(value, rarityMap.get(value));
             }
         }
@@ -220,43 +220,43 @@ public class CategoryMenu extends InventoryGui {
 
 
         for (ClickableItem clickableItem : noneItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         for (ClickableItem clickableItem : randomItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         for (ClickableItem clickableItem : commonItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         for (ClickableItem clickableItem : rareItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         for (ClickableItem clickableItem : epicItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         for (ClickableItem clickableItem : legendaryItems) {
-            if(!isFull(toInventory())) {
+            if (!isFull(toInventory())) {
                 super.setItem(findFirstEmptySlot(toInventory()), clickableItem);
             }
         }
 
         String extrasPath = "Extras.fill-empty.";
-        if(config.getBoolean(extrasPath + "enabled")){
+        if (config.getBoolean(extrasPath + "enabled")){
             ItemStack stack = ConfigManager.getItemStack(config.getYml(), extrasPath + "item");
             while (toInventory().firstEmpty() != -1){
                 setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());
@@ -269,22 +269,22 @@ public class CategoryMenu extends InventoryGui {
     public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price){
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
         String selected = api.getSelectedCosmetic(p, type);
-        if(selected.equals(unformattedName)){
+        if (selected.equals(unformattedName)){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.selected"));
         }
 
-        if(p.hasPermission(type.getPermissionFormat() + "." + unformattedName)){
+        if (p.hasPermission(type.getPermissionFormat() + "." + unformattedName)){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.click-to-select"));
         }
 
-        if(type.getConfig().getString(type.getSectionKey() + "." + unformattedName + ".purchase-able") != null){
+        if (type.getConfig().getString(type.getSectionKey() + "." + unformattedName + ".purchase-able") != null){
             boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + unformattedName + ".purchase-able");
-            if(!purchaseAble){
+            if (!purchaseAble){
                 return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.not-purchase-able"));
             }
         }
 
-        if(Cosmetics.getInstance().getEconomy().getBalance(p) >= price){
+        if (Cosmetics.getInstance().getEconomy().getBalance(p) >= price){
             return ColorUtil.colored(Utility.getMSGLang(p, "cosmetics.click-to-purchase"));
         }
 
@@ -298,7 +298,7 @@ public class CategoryMenu extends InventoryGui {
         Economy eco = VaultUtils.getEconomy();
         Permission perm = VaultUtils.getPermissions();
         // If the player did not have the item selected.
-        if(!selected.equals(id)) {
+        if (!selected.equals(id)) {
             // Select
             if (p.hasPermission(permissionFormat + "." + id)) {
                 if (isOnlyForCheck) return 0;
@@ -307,14 +307,14 @@ public class CategoryMenu extends InventoryGui {
                 new CategoryMenu(cosmeticsType, title, page).open(p);
 
                 // Can't purchase, cuz locked
-            } else if(type.getConfig().getString(type.getSectionKey() + "." + id + ".purchase-able") != null){
+            } else if (type.getConfig().getString(type.getSectionKey() + "." + id + ".purchase-able") != null){
                 boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able");
-                if(!purchaseAble){
+                if (!purchaseAble){
                     XSound.ENTITY_VILLAGER_NO.play(p);
                 }
                 // Purchase
         } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {
-                if(isOnlyForCheck) return 1;
+                if (isOnlyForCheck) return 1;
                 CosmeticPurchaseEvent event = new CosmeticPurchaseEvent(p, type);
                 Bukkit.getServer().getPluginManager().callEvent(event);
                 if (event.isCancelled())
@@ -329,7 +329,7 @@ public class CategoryMenu extends InventoryGui {
                 new CategoryMenu(cosmeticsType, title, page).open(p);
                 // Don't have money and is purchasable
             } else {
-                if(isOnlyForCheck) return 2;
+                if (isOnlyForCheck) return 2;
                 p.playSound(p.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
             }
         }

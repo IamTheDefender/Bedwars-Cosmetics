@@ -27,12 +27,12 @@ public class IslandToppersUtil
         try {
             // Load the schematic from the file
             SchematicFormat schematicFormat = SchematicFormat.getFormat(file);
-            if(schematicFormat == null){
+            if (schematicFormat == null){
                 Bukkit.getLogger().severe("Schematic format is null! most probably file is invalid! (" + file.getName() + ")");
                 return;
             }
             IArenaHandler arena = Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(p);
-            if(arena != null) {
+            if (arena != null) {
                 Block block = arena.getTeam(p).getBed().getBlock();
                 if (block.getType() == Material.BED_BLOCK){
                     if (block.getState().getData() instanceof Directional){

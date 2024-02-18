@@ -108,7 +108,7 @@ public class KillMessageUtils {
      */
     public static String sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
         String selectedMessage = Cosmetics.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
-        if(victim.equalsIgnoreCase(killer.getName())) type = "Void";
+        if (victim.equalsIgnoreCase(killer.getName())) type = "Void";
         List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {

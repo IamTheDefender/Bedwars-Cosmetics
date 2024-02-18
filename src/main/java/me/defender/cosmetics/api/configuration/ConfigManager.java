@@ -91,7 +91,7 @@ public class ConfigManager {
     }
 
     private void setIfNotFound(String path, Object data) {
-        if(getYml().get(path) == null){
+        if (getYml().get(path) == null){
             set(path, data);
             save();
         }
@@ -102,7 +102,7 @@ public class ConfigManager {
         try {
             String[] data = getString(path).split(":", 2);
             material = data[0];
-            if(material.equalsIgnoreCase("player_head") || material.equalsIgnoreCase("skull_item")){
+            if (material.equalsIgnoreCase("player_head") || material.equalsIgnoreCase("skull_item")){
                 String[] data2 = getString(path).split(":", 3);
                 String base64 = data2[2];
                 item = getCustomSkull(base64);
@@ -111,7 +111,7 @@ public class ConfigManager {
             int damage = Integer.parseInt(data[1]);
             item = XMaterial.matchXMaterial(material.toUpperCase()).get().parseItem();
             assert item != null;
-            if(damage != 0){
+            if (damage != 0){
                 item.setDurability((short) damage);
             }
         } catch (NoSuchElementException e2) {
@@ -127,7 +127,7 @@ public class ConfigManager {
         try {
             String[] data = config.getString(path).split(":", 2);
             material = data[0];
-            if(material.equalsIgnoreCase("player_head") || material.equalsIgnoreCase("skull_item")){
+            if (material.equalsIgnoreCase("player_head") || material.equalsIgnoreCase("skull_item")){
                 String[] data2 = config.getString(path).split(":", 3);
                 String base64 = data2[2];
                 item = getCustomSkull(base64);

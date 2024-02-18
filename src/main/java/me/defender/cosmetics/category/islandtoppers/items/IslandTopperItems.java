@@ -49,7 +49,7 @@ public class IslandTopperItems {
 
                 @Override
                 public List<String> getLore() {
-                    if(getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7Island Topper.");
                     }
                     return List.of("&7Select " + getDisplayName() + " as your Island Topper!");
@@ -67,14 +67,14 @@ public class IslandTopperItems {
 
                 @Override
                 public void execute(Player player, Location topperLocation, String selected) {
-                    if(selected.equals("none")) return;
+                    if (selected.equals("none")) return;
                     String fileName = ConfigUtils.getIslandToppers().getString("island-topper." + selected + ".file");
-                    if(fileName == null){
+                    if (fileName == null){
                         Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
                         return;
                     }
                     File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + fileName);
-                    if(!file.exists()){
+                    if (!file.exists()){
                         Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
                         return;
                     }

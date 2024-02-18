@@ -93,7 +93,7 @@ public class SprayPreview {
             player.sendMessage(ColorUtil.colored("&cEither Preview location or Player location is not set! Contact the admin."));
         }
 
-        if(cosmeticLocation == null || playerLocation == null) return;
+        if (cosmeticLocation == null || playerLocation == null) return;
 
         final Location finalPlayerLocation = playerLocation;
         final Location finalCosmeticLocation = cosmeticLocation;
@@ -193,7 +193,7 @@ public class SprayPreview {
         adapter = new PacketAdapter(Cosmetics.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                if(event.getPacket().getIntegers().read(0) == frame.getEntityId() &&
+                if (event.getPacket().getIntegers().read(0) == frame.getEntityId() &&
                 !event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
                     event.setCancelled(true);
                 }

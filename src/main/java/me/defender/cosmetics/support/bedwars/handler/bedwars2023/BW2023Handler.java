@@ -49,8 +49,8 @@ public class BW2023Handler implements IHandler {
 
     @Override
     public HandlerType getHandlerType() {
-        if(api.getServerType() == ServerType.SHARED) return HandlerType.SHARED;
-        if(api.getServerType() == ServerType.BUNGEE) return HandlerType.BUNGEE;
+        if (api.getServerType() == ServerType.SHARED) return HandlerType.SHARED;
+        if (api.getServerType() == ServerType.BUNGEE) return HandlerType.BUNGEE;
         return HandlerType.MULTIARENA;
     }
 
@@ -58,7 +58,7 @@ public class BW2023Handler implements IHandler {
     @Override
     public IArenaUtil getArenaUtil() {
         return player -> {
-            if(api.getArenaUtil().getArenaByPlayer(player) == null) return null;
+            if (api.getArenaUtil().getArenaByPlayer(player) == null) return null;
 
             return (IArenaHandler) player1 -> new ITeamHandler() {
                 @Override
@@ -143,7 +143,7 @@ public class BW2023Handler implements IHandler {
     @Override
     public ISetupSession getSetupSession(UUID playerUUID) {
         com.tomkeuper.bedwars.api.server.ISetupSession session = api.getSetupSession(playerUUID);
-        if(session == null) return null;
+        if (session == null) return null;
         ISetupSession cosmeticsSessionHandler = new ISetupSession() {
             @Override
             public UUID getPlayerUUID() {

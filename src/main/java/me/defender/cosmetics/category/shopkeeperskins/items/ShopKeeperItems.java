@@ -21,7 +21,7 @@ public class ShopKeeperItems {
 
     public void registerItems(){
         ConfigurationSection section = CosmeticsType.ShopKeeperSkin.getConfig().getYml().getConfigurationSection(CosmeticsType.ShopKeeperSkin.getSectionKey());
-        if(section == null) return;
+        if (section == null) return;
         ConfigManager config = CosmeticsType.ShopKeeperSkin.getConfig();
         for(String id : section.getKeys(false)){
             String path = CosmeticsType.ShopKeeperSkin.getSectionKey() + "." + id + ".";
@@ -48,7 +48,7 @@ public class ShopKeeperItems {
 
                 @Override
                 public List<String> getLore() {
-                    if(getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7ShopKeeper Skin.");
                     }
                     return List.of("&7Select " + getDisplayName()  + " as your", "&7shopkeeper skin!");
@@ -69,11 +69,11 @@ public class ShopKeeperItems {
                     if (getField(FieldsType.RARITY, player) == RarityType.RANDOM){
                         List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
                         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-                            if(player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())){
+                            if (player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())){
                                 shopKeeperSkins.add(shopKeeperSkin);
                             }
                         }
-                        if(shopKeeperSkins.isEmpty()){
+                        if (shopKeeperSkins.isEmpty()){
                             // ShopKeeperSkin#getDefault should not return null!
                             ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation, ShopKeeperSkin.getDefault(player).getIdentifier());
                         }else{

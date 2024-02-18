@@ -38,7 +38,7 @@ public class PlayerManager {
     }
 
     public PlayerOwnedData getPlayerOwnedData(UUID uuid) {
-        if(!playerOwnedDataHashMap.containsKey(uuid)){
+        if (!playerOwnedDataHashMap.containsKey(uuid)){
             PlayerOwnedData playerOwnedData = new PlayerOwnedData(uuid);
             playerOwnedData.load();
             playerOwnedDataHashMap.put(uuid, playerOwnedData);

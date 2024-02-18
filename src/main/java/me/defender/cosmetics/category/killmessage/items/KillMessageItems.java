@@ -16,7 +16,7 @@ public class KillMessageItems {
 
     public static void registerConfigItems(){
         ConfigurationSection section = CosmeticsType.KillMessage.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessage.getSectionKey());
-        if(section == null) return;
+        if (section == null) return;
         ConfigManager config = CosmeticsType.KillMessage.getConfig();
 
         for(String id : section.getKeys(false)){

@@ -50,11 +50,11 @@ public abstract class BedDestroy extends Cosmetics {
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
         String item = null;
-        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+        if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{
             get(type).setItemStack(configPath + "item", getItem());
@@ -109,7 +109,7 @@ public abstract class BedDestroy extends Cosmetics {
      */
     public static @NotNull BedDestroy getDefault(Player player){
         for(BedDestroy bedDestroy : StartupUtils.bedDestroyList){
-            if(bedDestroy.getField(FieldsType.RARITY, player) == RarityType.NONE){
+            if (bedDestroy.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return bedDestroy;
             }
         }

@@ -21,7 +21,7 @@ public class MySQL implements IDatabase {
     public MySQL(JavaPlugin plugin){
         this.plugin = plugin;
         connect();
-        if(dataSource == null){
+        if (dataSource == null){
             Bukkit.getLogger().severe("There was an issue connecting to your MySQL database!");
             return;
         }
@@ -35,14 +35,14 @@ public class MySQL implements IDatabase {
 
     public void connect(){
         boolean needConnecting = dataSource == null;
-        if(!needConnecting) {
+        if (!needConnecting) {
             try (Connection connection = dataSource.getConnection()) {
                 connection.createStatement();
             } catch (Exception e) {
                 needConnecting = true;
             }
         }
-        if(needConnecting){
+        if (needConnecting){
             String host = plugin.getConfig().getString("mysql.host");
             String database = plugin.getConfig().getString("mysql.database");
             String username = plugin.getConfig().getString("mysql.username");
@@ -79,7 +79,7 @@ public class MySQL implements IDatabase {
 
 
     public void createTable(){
-        if(dataSource != null){
+        if (dataSource != null){
             try {
                 Statement statement = getConnection().createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS cosmetics_player_data (" +

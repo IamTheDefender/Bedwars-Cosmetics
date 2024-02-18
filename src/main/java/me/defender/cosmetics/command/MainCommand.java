@@ -368,25 +368,25 @@ public class MainCommand {
             permission = "bwcosmetics.admin"
     )
     public void setIslandTopperPostion(CommandSender sender, String[] args) {
-        if(args.length != 2){
+        if (args.length != 2){
             sender.sendMessage(ChatColor.RED + "Command usage, /bwc setIslandTopperPosition TeamName");
             return;
         }
-        if(!(sender instanceof Player) ){
+        if (!(sender instanceof Player) ){
             sender.sendMessage(ChatColor.RED + "Sorry but you need to be in-game to do that!");
             return;
         }
         Player p = (Player) sender;
         ISetupSession setupSession = plugin.getHandler().getSetupSession(p.getUniqueId());
 
-        if(setupSession == null){
+        if (setupSession == null){
             sender.sendMessage(ChatColor.RED + "You need to be in setup when you use this command!");
             return;
         }
         String teamName = args[1];
         String configPath = "Team." + teamName;
         ConfigurationSection section = setupSession.getConfig().getConfigurationSection("Team." + teamName);
-        if(section == null){
+        if (section == null){
             sender.sendMessage(ColorUtil.colored("&cYou need to setup teams before you do this command!"));
             return;
         }

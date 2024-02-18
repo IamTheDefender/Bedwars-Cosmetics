@@ -50,11 +50,11 @@ public abstract class DeathCry extends Cosmetics {
         ConfigType type = ConfigType.DEATH_CRIES;
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
-        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+        if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{
             get(type).setItemStack(configPath + "item", getItem());
@@ -69,7 +69,7 @@ public abstract class DeathCry extends Cosmetics {
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8Death Cry", ""));
         finalLore.addAll(getLore());
-        if(getRarity() != RarityType.NONE){
+        if (getRarity() != RarityType.NONE){
             finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
         }else{
             finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
@@ -118,7 +118,7 @@ public abstract class DeathCry extends Cosmetics {
      */
     public static @NotNull DeathCry getDefault(Player player){
         for(DeathCry deathCry : StartupUtils.deathCryList){
-            if(deathCry.getField(FieldsType.RARITY, player) == RarityType.NONE){
+            if (deathCry.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return deathCry;
             }
         }

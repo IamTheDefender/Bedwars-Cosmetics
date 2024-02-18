@@ -34,7 +34,7 @@ public class BwcAPI implements CosmeticsAPI {
      * @return    String
      */
     public String getSelectedCosmetic(Player p, CosmeticsType cos){
-        if(p == null){
+        if (p == null){
             return null;
         }
         PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());

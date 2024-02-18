@@ -19,7 +19,7 @@ public class FinalKillEffectHandler2023 implements Listener {
     @EventHandler
     public void onFinalKill2023(com.tomkeuper.bedwars.api.events.player.PlayerKillEvent e){
         CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        if(e.getKiller() == null) return;
+        if (e.getKiller() == null) return;
 
         boolean isFinalKillEffectsEnabled = Cosmetics.getInstance().getConfig().getBoolean("final-kill-effects.enabled");
         if (!isFinalKillEffectsEnabled) return;
@@ -30,12 +30,12 @@ public class FinalKillEffectHandler2023 implements Listener {
 
         FinalKillEffectsExecuteEvent event = new FinalKillEffectsExecuteEvent(victim, killer, selected);
         Bukkit.getPluginManager().callEvent(event);
-        if(!e.getCause().isFinalKill()) return;
+        if (!e.getCause().isFinalKill()) return;
 
 
         for(FinalKillEffect finalKillEffects : StartupUtils.finalKillList){
-            if(selected.equals(finalKillEffects.getIdentifier())){
-                if(finalKillEffects.getField(FieldsType.RARITY, e.getKiller()) == RarityType.NONE) return;
+            if (selected.equals(finalKillEffects.getIdentifier())){
+                if (finalKillEffects.getField(FieldsType.RARITY, e.getKiller()) == RarityType.NONE) return;
                 finalKillEffects.execute(e.getKiller(), e.getVictim(), e.getVictim().getLocation(), false);
             }
         }

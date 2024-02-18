@@ -28,8 +28,8 @@ public class GlyphHandler2023 implements Listener {
                 if (loc.getType() == Material.DIAMOND_BLOCK || loc.getType() == Material.EMERALD_BLOCK) {
                     DebugUtil.addMessage("Executing " + selected + " Glyph for " + e.getPlayer().getDisplayName());
                     for(Glyph glyphs1 : StartupUtils.glyphsList){
-                        if(selected.equals(glyphs1.getIdentifier())){
-                            if(glyphs1.getField(FieldsType.RARITY, e.getPlayer()) == RarityType.NONE) return;
+                        if (selected.equals(glyphs1.getIdentifier())){
+                            if (glyphs1.getField(FieldsType.RARITY, e.getPlayer()) == RarityType.NONE) return;
                             glyphs1.execute(e.getPlayer(), loc.getLocation().add(0,8,0).subtract(2,0,0));
                         }
                     }

@@ -37,11 +37,11 @@ public abstract class Spray extends Cosmetics {
         String configPath = category + "." + getIdentifier() + ".";
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
-        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+        if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{
             get(type).setItemStack(configPath + "item", getItem());
@@ -99,7 +99,7 @@ public abstract class Spray extends Cosmetics {
      */
     public static @NotNull Spray getDefault(Player player){
         for(Spray spray : StartupUtils.sprayList){
-            if(spray.getField(FieldsType.RARITY, player) == RarityType.NONE){
+            if (spray.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return spray;
             }
         }

@@ -65,7 +65,7 @@ public class WitherRiderDance extends VictoryDance {
         new BukkitRunnable() {
             public void run() {
                 if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
-                    if(wither.getPassenger() != winner){
+                    if (wither.getPassenger() != winner){
                         wither.setPassenger(winner);
                     }
                     final Vector direction = winner.getEyeLocation().clone().getDirection().normalize().multiply(0.5);

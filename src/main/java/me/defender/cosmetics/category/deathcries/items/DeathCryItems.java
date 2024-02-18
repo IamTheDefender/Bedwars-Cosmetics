@@ -45,7 +45,7 @@ public class DeathCryItems {
 
                 @Override
                 public List<String> getLore() {
-                    if(getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7Death Cry.");
                     }
                     return List.of("&7Select " + getDisplayName() + " as your Death cry");

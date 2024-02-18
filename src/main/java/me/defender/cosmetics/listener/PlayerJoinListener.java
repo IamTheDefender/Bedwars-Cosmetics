@@ -53,7 +53,7 @@ public class PlayerJoinListener implements Listener {
         }
 
         // Saving for SQLite is different, workaround for SQLite database is busy
-        if(!api.isMySQL()) {
+        if (!api.isMySQL()) {
             if (!Cosmetics.getInstance().getPlayerManager().getPlayerDataHashMap().containsKey(event.getPlayer().getUniqueId())) {
                 PlayerData playerData = new PlayerData(event.getPlayer().getUniqueId());
                 if (!playerData.exists()) {

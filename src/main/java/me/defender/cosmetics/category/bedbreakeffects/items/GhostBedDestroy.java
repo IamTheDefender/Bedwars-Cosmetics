@@ -78,7 +78,7 @@ public class GhostBedDestroy extends BedDestroy {
         });
         HCore.syncScheduler().after(8, TimeUnit.SECONDS).run(() -> {
             for(Entity entity : standsAndBats){
-                if(entity instanceof Bat) {
+                if (entity instanceof Bat) {
                     Location location = entity.getLocation();
                     HCore.playParticle(location, new Particle(ParticleType.EXPLOSION_LARGE, 0.0f, new Vector(0.0f, 0.0f, 0.0f)));
                     XSound.ENTITY_GENERIC_EXPLODE.play(location);

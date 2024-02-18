@@ -45,11 +45,11 @@ public abstract class Glyph extends Cosmetics {
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
         String item = null;
-        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+        if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{
             get(type).setItemStack(configPath + "item", getItem());
@@ -100,7 +100,7 @@ public abstract class Glyph extends Cosmetics {
      */
     public static @NotNull Glyph getDefault(Player player){
         for(Glyph glyph : StartupUtils.glyphsList){
-            if(glyph.getField(FieldsType.RARITY, player) == RarityType.NONE){
+            if (glyph.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return glyph;
             }
         }

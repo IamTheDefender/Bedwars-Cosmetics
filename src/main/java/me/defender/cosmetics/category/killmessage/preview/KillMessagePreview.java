@@ -26,8 +26,8 @@ public class KillMessagePreview {
      */
     public void sendPreviewMessage(Player player, String selected){
         for(KillMessage killMessage : StartupUtils.killMessageList){
-            if(killMessage.getIdentifier().equals(selected)){
-                if(killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
+            if (killMessage.getIdentifier().equals(selected)){
+                if (killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
             }
         }
         InventoryGui gui = HCore.getInventoryByPlayer(player);
@@ -35,7 +35,7 @@ public class KillMessagePreview {
         XSound.ENTITY_ARROW_HIT_PLAYER.play(player, 1.0f, 1.0f);
         List<String> message = Utility.getListLang(player, "cosmetics." + "kill-message" + ".preview.message");
         for (String s : message) {
-            if(s.contains("%message%")){
+            if (s.contains("%message%")){
                 KillMessageUtils.sendKillMessage(player, "Player", null, false, ChatColor.GREEN, ChatColor.GRAY, "PvP", "Old Message" ,true, selected, player.getDisplayName());
                 KillMessageUtils.sendKillMessage(player, "Player", null, false, ChatColor.GREEN, ChatColor.GRAY, "Void", "Old Message" ,true, selected, player.getDisplayName());
                 KillMessageUtils.sendKillMessage(player, "Player", null, false, ChatColor.GREEN, ChatColor.GRAY, "Shoot", "Old Message" ,true, selected, player.getDisplayName());

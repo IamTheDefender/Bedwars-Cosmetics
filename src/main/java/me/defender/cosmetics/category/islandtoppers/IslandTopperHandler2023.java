@@ -48,8 +48,8 @@ public class IslandTopperHandler2023 implements Listener {
                     }
                     String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
                     for(IslandTopper islandTopper : StartupUtils.islandTopperList){
-                        if(islandTopper.getIdentifier().equals(selected)){
-                            if(islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {
+                        if (islandTopper.getIdentifier().equals(selected)){
+                            if (islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {
                                 islandTopper.execute(player, location, selected);
                             }
                         }

@@ -85,7 +85,7 @@ public class IslandTopperPreview {
             player.sendMessage(ColorUtil.colored("&cEither Preview location or Player location is not set! Contact the admin."));
         }
 
-        if(cosmeticLocation == null || playerLocation == null) return;
+        if (cosmeticLocation == null || playerLocation == null) return;
 
         final Location finalPlayerLocation = playerLocation;
         final Location finalCosmeticLocation = cosmeticLocation;
@@ -138,20 +138,20 @@ public class IslandTopperPreview {
 
         String topperFileName = config.getString(CosmeticsType.IslandTopper.getSectionKey() + "." + selected + ".file");
 
-        if(topperFileName == null){
+        if (topperFileName == null){
             Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
             return;
         }
 
         File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + topperFileName);
-        if(!file.exists()){
+        if (!file.exists()){
             Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
             return;
         }
 
         try {
             SchematicFormat schematicFormat = SchematicFormat.getFormat(file);
-            if(schematicFormat == null){
+            if (schematicFormat == null){
                 Bukkit.getLogger().severe("Schematic format is null! most probably file is invalid! (" + file.getName() + ")");
                 return;
             }
@@ -302,25 +302,25 @@ public class IslandTopperPreview {
     private String rpGetPlayerDirection(Player playerSelf){
         String dir;
         float y = playerSelf.getLocation().getYaw();
-        if( y < 0 ){y += 360;}
+        if ( y < 0 ){y += 360;}
         y %= 360;
         int i = (int)((y+8) / 22.5);
-        if(i == 0){dir = "west";}
-        else if(i == 1){dir = "west northwest";}
-        else if(i == 2){dir = "northwest";}
-        else if(i == 3){dir = "north northwest";}
-        else if(i == 4){dir = "north";}
-        else if(i == 5){dir = "north northeast";}
-        else if(i == 6){dir = "northeast";}
-        else if(i == 7){dir = "east northeast";}
-        else if(i == 8){dir = "east";}
-        else if(i == 9){dir = "east southeast";}
-        else if(i == 10){dir = "southeast";}
-        else if(i == 11){dir = "south southeast";}
-        else if(i == 12){dir = "south";}
-        else if(i == 13){dir = "south southwest";}
-        else if(i == 14){dir = "southwest";}
-        else if(i == 15){dir = "west southwest";}
+        if (i == 0){dir = "west";}
+        else if (i == 1){dir = "west northwest";}
+        else if (i == 2){dir = "northwest";}
+        else if (i == 3){dir = "north northwest";}
+        else if (i == 4){dir = "north";}
+        else if (i == 5){dir = "north northeast";}
+        else if (i == 6){dir = "northeast";}
+        else if (i == 7){dir = "east northeast";}
+        else if (i == 8){dir = "east";}
+        else if (i == 9){dir = "east southeast";}
+        else if (i == 10){dir = "southeast";}
+        else if (i == 11){dir = "south southeast";}
+        else if (i == 12){dir = "south";}
+        else if (i == 13){dir = "south southwest";}
+        else if (i == 14){dir = "southwest";}
+        else if (i == 15){dir = "west southwest";}
         else {dir = "west";}
         return dir;
     }

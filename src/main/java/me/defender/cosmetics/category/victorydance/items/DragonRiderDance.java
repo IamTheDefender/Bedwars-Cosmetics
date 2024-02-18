@@ -79,7 +79,7 @@ public class DragonRiderDance extends VictoryDance {
                     stand.remove();
                     dragon.remove();
                 }
-                if(dragon.getPassenger() != winner){
+                if (dragon.getPassenger() != winner){
                     dragon.setPassenger(winner);
                 }
                 Fireball fireball = winner.getWorld().spawn(original, Fireball.class);

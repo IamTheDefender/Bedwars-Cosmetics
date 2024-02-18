@@ -31,11 +31,11 @@ public class ProjectileEffectsUtil {
 		Color color = ConfigUtils.getProjectileTrails().getYml().getColor(type.getSectionKey() + "." + selected + ".color");
 		ProjectileTrail projectileTrail = null;
 		for(ProjectileTrail trail : StartupUtils.projectileTrailList){
-			if(selected.equals(trail.getIdentifier())){
+			if (selected.equals(trail.getIdentifier())){
 				projectileTrail = trail;
 			}
 		}
-		if(projectileTrail != null && projectileTrail.getField(FieldsType.RARITY, p) != RarityType.NONE){
+		if (projectileTrail != null && projectileTrail.getField(FieldsType.RARITY, p) != RarityType.NONE){
 			Particle particle;
 			if (color == null) {
 				particle = new Particle(ParticleType.valueOf(effect), 1, 0, new Vector(0, 0, 0));

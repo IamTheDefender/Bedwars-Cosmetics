@@ -66,7 +66,7 @@ public class Cosmetics extends JavaPlugin {
     public void onEnable() {
         instance = this;
         api = new BwcAPI();
-        if(!StartupUtils.checkDependencies()){
+        if (!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
@@ -83,7 +83,7 @@ public class Cosmetics extends JavaPlugin {
             return;
         }
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null){
+        if (rsp == null){
             getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
@@ -117,10 +117,10 @@ public class Cosmetics extends JavaPlugin {
         ConfigUtils.addSlotsList();
         getLogger().info("Configuration file successfully loaded.");
         getLogger().info("Loading " + (api.isMySQL() ? "MySQL" : "SQLite") + " database...");
-        if(api.isMySQL()){
+        if (api.isMySQL()){
             remoteDatabase = new MySQL(this);
         }else{
-            if(handler.getHandlerType() == HandlerType.BUNGEE){
+            if (handler.getHandlerType() == HandlerType.BUNGEE){
                 getLogger().severe("You cannot use SQLite in Bungee mode!");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
@@ -168,11 +168,11 @@ public class Cosmetics extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if(dependenciesMissing){
+        if (dependenciesMissing){
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
         }
-        if(remoteDatabase != null && remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
+        if (remoteDatabase != null && remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
             getLogger().info("Saving player data to SQLite database...");
             getLogger().info("Please wait it may take some time!");
             for(PlayerData playerData : getPlayerManager().getPlayerDataHashMap().values()){
@@ -184,7 +184,7 @@ public class Cosmetics extends JavaPlugin {
             getLogger().info("Player data saved to SQLite database!");
         }
         try {
-           if(remoteDatabase != null){
+           if (remoteDatabase != null){
                remoteDatabase.getConnection().close();
            }
         } catch (SQLException e) {

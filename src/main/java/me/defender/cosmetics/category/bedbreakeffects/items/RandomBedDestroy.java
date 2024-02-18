@@ -55,7 +55,7 @@ public class RandomBedDestroy extends BedDestroy {
     public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
             List<BedDestroy> bedDestroys = new ArrayList<>();
             for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
-                if(player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
+                if (player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
                     bedDestroys.add(bedDestroy);
                 }
             }

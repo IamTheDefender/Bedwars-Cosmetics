@@ -31,13 +31,13 @@ public class VictoryDanceHandler1058 implements Listener {
             VictoryDancesExecuteEvent event = new VictoryDancesExecuteEvent(p);
             Bukkit.getPluginManager().callEvent(event);
 
-            if(event.isCancelled())
+            if (event.isCancelled())
                 return;
 
             DebugUtil.addMessage("Executing " + selected + " Victory Dance for " + p.getDisplayName());
             for(VictoryDance victoryDance : StartupUtils.victoryDancesList){
-                if(selected.equals(victoryDance.getIdentifier())){
-                    if(victoryDance.getField(FieldsType.RARITY, p) == RarityType.NONE) return;
+                if (selected.equals(victoryDance.getIdentifier())){
+                    if (victoryDance.getField(FieldsType.RARITY, p) == RarityType.NONE) return;
                     victoryDance.execute(p);
                 }
             }

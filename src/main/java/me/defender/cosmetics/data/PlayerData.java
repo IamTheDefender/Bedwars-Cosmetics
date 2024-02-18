@@ -101,7 +101,7 @@ public class PlayerData {
 
 
     public boolean exists() {
-       if(getWoodSkin() == null){
+       if (getWoodSkin() == null){
            return false;
        }else return !getWoodSkin().equals("Demo");
     }

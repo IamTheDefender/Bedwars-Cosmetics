@@ -39,11 +39,11 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         String configPath = category + "." + getIdentifier() + ".";
         saveIfNotFound(type, configPath + "price", getPrice());
          saveIfNotFound(type, configPath + "rarity", getRarity().toString());
-        if(!XMaterial.matchXMaterial(getItem()).isSupported()) {
+        if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if(XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
             get(type).setItemStack(configPath + "item", getItem(), base64());
         }else{
             get(type).setItemStack(configPath + "item", getItem());
@@ -55,7 +55,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8ShopKeeper Skins", ""));
         finalLore.addAll(getLore());
-        if(getRarity() != RarityType.NONE){
+        if (getRarity() != RarityType.NONE){
             finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
         }else{
             finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
@@ -106,7 +106,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      */
     public static @NotNull ShopKeeperSkin getDefault(Player player){
         for(ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList){
-            if(shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE){
+            if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return shopKeeperSkin;
             }
         }

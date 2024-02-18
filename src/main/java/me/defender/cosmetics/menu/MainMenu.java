@@ -47,7 +47,7 @@ public class MainMenu extends InventoryGui {
             }
         }
         String extrasPath = "Extras.fill-empty.";
-        if(config.getBoolean(extrasPath + "enabled")){
+        if (config.getBoolean(extrasPath + "enabled")){
             ItemStack stack = ConfigManager.getItemStack(config, extrasPath + "item");
             while (toInventory().firstEmpty() != -1){
                 setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());

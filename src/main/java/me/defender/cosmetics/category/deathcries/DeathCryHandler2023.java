@@ -27,7 +27,7 @@ public class DeathCryHandler2023 implements Listener {
 
         for (DeathCry deathCry : StartupUtils.deathCryList) {
             if (deathCry.getIdentifier().equals(selected)) {
-                if(deathCry.getField(FieldsType.RARITY, killed) == RarityType.NONE) return;
+                if (deathCry.getField(FieldsType.RARITY, killed) == RarityType.NONE) return;
                 try {
                     float pitch = Float.parseFloat(String.valueOf(deathCry.getField(FieldsType.PITCH, killed)));
                     float volume = Float.parseFloat(String.valueOf(deathCry.getField(FieldsType.VOLUME, killed)));

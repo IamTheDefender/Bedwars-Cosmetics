@@ -17,7 +17,7 @@ public class SprayItems {
 
     public static void registerConfigItems(){
         ConfigurationSection section = CosmeticsType.Sprays.getConfig().getYml().getConfigurationSection(CosmeticsType.Sprays.getSectionKey());
-        if(section == null) return;
+        if (section == null) return;
         ConfigManager config = CosmeticsType.Sprays.getConfig();
         for(String id : section.getKeys(false)) {
             String path = CosmeticsType.Sprays.getSectionKey() + "." + id + ".";
@@ -44,7 +44,7 @@ public class SprayItems {
 
                 @Override
                 public List<String> getLore() {
-                    if(getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7Spray.");
                     }
                     return List.of("&7Select " + getDisplayName() + " as your", "&7Spray!");

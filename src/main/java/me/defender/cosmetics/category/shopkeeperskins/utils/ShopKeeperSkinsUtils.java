@@ -168,14 +168,14 @@ public class ShopKeeperSkinsUtils {
         String etype = config.getString(key + "." + skin + ".entity-type");
         boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
 
-        if(mirror){
+        if (mirror){
             createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, true);
             return;
         }
-        if(etype != null) {
+        if (etype != null) {
             createEntityNPC(EntityType.valueOf(etype), loc1);
             createEntityNPC(EntityType.valueOf(etype), loc);
-        }else if(skinvalue != null && skinsign != null) {
+        }else if (skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, false);
         }
     }
@@ -188,14 +188,14 @@ public class ShopKeeperSkinsUtils {
         String etype = config.getString(key + "." + skin + ".entity-type");
         boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
 
-        if(mirror){
+        if (mirror){
             createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, true);
             return;
         }
-        if(etype != null) {
+        if (etype != null) {
             createEntityNPC(EntityType.valueOf(etype), loc1);
             createEntityNPC(EntityType.valueOf(etype), loc);
-        }else if(skinvalue != null && skinsign != null) {
+        }else if (skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, loc1, skinvalue, skinsign, false);
         }
     }
@@ -209,13 +209,13 @@ public class ShopKeeperSkinsUtils {
         String etype = config.getString(key + "." + skin + ".entity-type");
         boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
 
-        if(mirror){
+        if (mirror){
             createShopKeeperNPC(p, loc, skinvalue, skinsign, true, 5);
             return;
         }
-        if(etype != null) {
+        if (etype != null) {
             createEntityNPC(p, EntityType.valueOf(etype), loc, 5);
-        }else if(skinvalue != null && skinsign != null) {
+        }else if (skinvalue != null && skinsign != null) {
             createShopKeeperNPC(p, loc, skinvalue, skinsign, false, 5);
         }
     }

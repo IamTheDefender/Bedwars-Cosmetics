@@ -78,7 +78,7 @@ public class YeeHawDance extends VictoryDance {
 
         // Horse Hit Event
         HCore.registerEvent(EntityDamageEvent.class).filter(event -> !horse.isDead()).consume((event) -> {
-           if(event.getEntity() == horse){
+           if (event.getEntity() == horse){
                event.setCancelled(true);
            }
         });

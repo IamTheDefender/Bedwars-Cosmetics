@@ -15,7 +15,7 @@ public class ProjectileTrailItems {
 
     public void registerConfigItems(){
         ConfigurationSection section = CosmeticsType.ProjectileTrails.getConfig().getYml().getConfigurationSection(CosmeticsType.ProjectileTrails.getSectionKey());
-        if(section == null) return;
+        if (section == null) return;
         ConfigManager config = CosmeticsType.ProjectileTrails.getConfig();
         for(String id : section.getKeys(false)){
             String path = CosmeticsType.ProjectileTrails.getSectionKey() + "." + id + ".";
@@ -42,7 +42,7 @@ public class ProjectileTrailItems {
 
                 @Override
                 public List<String> getLore() {
-                    if(getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE){
                         return List.of("&7Selecting this option disables your", "&7Projectile Trail.");
                     }
                     return List.of("&7Select " + getDisplayName() + " as your Projectile,", "&7trail!");

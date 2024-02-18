@@ -23,7 +23,7 @@ public class BedDestroyHandler2023 implements Listener {
         BedBreakEffectExecuteEvent event = new BedBreakEffectExecuteEvent(e.getPlayer());
         Bukkit.getServer().getPluginManager().callEvent(event);
 
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
         boolean isBedDestroysEnabled = Cosmetics.getInstance().getConfig().getBoolean("bed-break-effects.enabled");
         if (!isBedDestroysEnabled) return;
 
@@ -32,8 +32,8 @@ public class BedDestroyHandler2023 implements Listener {
         Location loc = e.getVictimTeam().getBed();
 
         for(BedDestroy bedDestroy : StartupUtils.bedDestroyList){
-            if(selected.equals(bedDestroy.getIdentifier())){
-                if(bedDestroy.getField(FieldsType.RARITY, p) != RarityType.NONE) {
+            if (selected.equals(bedDestroy.getIdentifier())){
+                if (bedDestroy.getField(FieldsType.RARITY, p) != RarityType.NONE) {
                     bedDestroy.execute(p, loc, BedWarsWrapper.wrap(e.getVictimTeam()));
                 }
             }

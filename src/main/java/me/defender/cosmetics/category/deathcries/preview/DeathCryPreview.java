@@ -13,8 +13,8 @@ public class DeathCryPreview {
 
     public void sendPreviewCry(Player player, String previewID){
         for(DeathCry cry : StartupUtils.deathCryList){
-            if(cry.getIdentifier().equals(previewID)){
-                if(cry.getField(FieldsType.RARITY, player) == null || cry.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
+            if (cry.getIdentifier().equals(previewID)){
+                if (cry.getField(FieldsType.RARITY, player) == null || cry.getField(FieldsType.RARITY, player) == RarityType.NONE) return;
                 float pitch = Float.parseFloat(String.valueOf(cry.getField(FieldsType.PITCH, player)));
                 float volume = Float.parseFloat(String.valueOf(cry.getField(FieldsType.VOLUME, player)));
                 try {

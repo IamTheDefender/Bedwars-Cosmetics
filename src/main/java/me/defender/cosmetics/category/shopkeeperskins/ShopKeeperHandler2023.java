@@ -69,7 +69,7 @@ public class ShopKeeperHandler2023 implements Listener {
                         }
 
 
-                        if(Cosmetics.getInstance().getHandler().getHandlerType() != HandlerType.BUNGEE){
+                        if (Cosmetics.getInstance().getHandler().getHandlerType() != HandlerType.BUNGEE){
                             for (Player p : team.getMembers()) {
                                 IHandler handler = Cosmetics.getInstance().getHandler();
                                 handler.getScoreboardUtil().removePlayerScoreboard(p);
@@ -84,12 +84,12 @@ public class ShopKeeperHandler2023 implements Listener {
 
     @EventHandler
     public void onGameStartEvent(GameStateChangeEvent event){
-        if(event.getNewState() != GameState.playing) return;
+        if (event.getNewState() != GameState.playing) return;
         getServer().getScheduler().runTaskLater(Cosmetics.getInstance(), () -> {
             World world = event.getArena().getWorld();
             for (Entity entity : world.getEntities()) {
                 boolean isCitizensNPC = entity.hasMetadata("NPC");
-                if(!entity.isDead() && isCitizensNPC){
+                if (!entity.isDead() && isCitizensNPC){
                     NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
                     npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
                     npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
@@ -106,7 +106,7 @@ public class ShopKeeperHandler2023 implements Listener {
         boolean isShopkeepersEnabled = Cosmetics.getInstance().getConfig().getBoolean("shopkeeper-skins.enabled");
         if (!isShopkeepersEnabled) return;
 
-        if(e.getPlayer().hasMetadata("NPC2")){
+        if (e.getPlayer().hasMetadata("NPC2")){
             e.setCancelled(true);
             HCore.syncScheduler().after(2).run((() -> {
                 CitizensAPI.getNPCRegistry().getNPC(e.getPlayer()).despawn();

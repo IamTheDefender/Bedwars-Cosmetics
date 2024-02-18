@@ -76,7 +76,7 @@ public class ShopKeeperPreview {
             player.sendMessage(ColorUtil.colored("&cEither Preview location or Player location is not set! Contact the admin."));
         }
 
-        if(cosmeticLocation == null || playerLocation == null) return;
+        if (cosmeticLocation == null || playerLocation == null) return;
 
         final Location finalPlayerLocation = playerLocation;
         final Location finalCosmeticLocation = cosmeticLocation;
