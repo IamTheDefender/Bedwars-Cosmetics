@@ -96,7 +96,7 @@ public class StartupUtils
         }
         File cubeFile = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/cube.schematic");
         // Save if not found
-        if(cubeFile.exists()) return;
+        if (cubeFile.exists()) return;
         try {
             downloadFile(new URL("https://dl.dropboxusercontent.com/s/x9rmk36qa1uwrr3/idkcube.schematic"), cubeFile.getPath());
         } catch (MalformedURLException e) {
@@ -172,23 +172,23 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if(!isPluginEnabled("BedWars1058") && !Cosmetics.getInstance().getApi().isProxy()){
+            if (!isPluginEnabled("BedWars1058") && !Cosmetics.getInstance().getApi().isProxy()){
                 log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
                 return false;
             }
         } else {
             isBw2023 = true;
         }
-        if(!isPluginEnabled("Vault")){
+        if (!isPluginEnabled("Vault")){
             log.severe("Cosmetics addon requires Vault to work properly!");
             return false;
         }
-        if(!isPluginEnabled("WorldEdit") && !isPluginEnabled("FastAsyncWorldEdit")){
+        if (!isPluginEnabled("WorldEdit") && !isPluginEnabled("FastAsyncWorldEdit")){
             log.severe("Cosmetics addon requires WorldEdit to work!");
             return false;
         }
 
-        if(isPluginEnabled("PlaceholderAPI")){
+        if (isPluginEnabled("PlaceholderAPI")){
             log.info("Found PlaceholderAPI, loading placeholders!");
             new Placeholders(Cosmetics.getInstance()).register();
             Cosmetics.setPlaceholderAPI(true);
@@ -243,7 +243,7 @@ public class StartupUtils
         //Items From Config
         new DeathCryItems().registerConfigItems();
         new GlyphItems().registerConfigItems();
-        if(isPluginEnabled("WorldEdit") || isPluginEnabled("FastAsyncWorldEdit")) {
+        if (isPluginEnabled("WorldEdit") || isPluginEnabled("FastAsyncWorldEdit")) {
             new IslandTopperItems().registerItems();
         }else{
             Bukkit.getLogger().warning("Can't find worldedit! IslandTopper will not load!");
@@ -346,8 +346,8 @@ public class StartupUtils
             public void onPacketSending(PacketEvent event) {
                 int entityID = event.getPacket().getIntegers().read(0);
                 Player player = event.getPlayer();
-                if(Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityID)){
-                    if(!player.getUniqueId().equals(Cosmetics.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
+                if (Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityID)){
+                    if (!player.getUniqueId().equals(Cosmetics.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
                         event.setCancelled(true);
                     }
                 }

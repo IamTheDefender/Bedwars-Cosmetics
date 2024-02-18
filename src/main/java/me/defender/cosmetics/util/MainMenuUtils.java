@@ -75,7 +75,7 @@ public class MainMenuUtils {
         List<String> defaultList = new ArrayList<>(List.of("Sprays", "Projectile-Trails", "FinalKill-Effects", "Kill-Messages", "Glyphs", "Bed-Destroys", "Wood-Skins", "Victory-Dances", "Island-Toppers", "ShopKeeperSkins", "Death-Cries", "Back", "Balance"));
         ConfigManager config = ConfigUtils.getMainConfig();
         ConfigurationSection section = config.getYml().getConfigurationSection("Main-Menu");
-        if(section != null){
+        if (section != null){
             for (String key : section.getKeys(false)) {
                 Utility.saveIfNotExistsLang( "cosmetics.main-menu." + key + ".name", "&cName not set!");
                 Utility.saveIfNotExistsLang( "cosmetics.main-menu." + key + ".lore", List.of("&cLore not set!"));
@@ -207,7 +207,7 @@ public class MainMenuUtils {
                 break;
             case "Back":
                 String command = Cosmetics.getInstance().menuData.getString("Main-Menu.Back.custom-command");
-                if(command == null) {
+                if (command == null) {
                     p.getOpenInventory().close();
                 }else{
                     Bukkit.dispatchCommand(p, command);

@@ -19,7 +19,7 @@ public class DefaultsUtils {
         for(ConfigType type : ConfigType.values()){
             ConfigManager config = ConfigUtils.get(type);
             InputStream defaultConfigStream = Cosmetics.getInstance().getResource(type.getFileName() + ".yml");
-            if(defaultConfigStream != null) {
+            if (defaultConfigStream != null) {
                 YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultConfigStream));
                 config.addDefaults(defaultConfig);
                 config.save();
@@ -27,7 +27,7 @@ public class DefaultsUtils {
             config.reload();
             config.save();
             String extrasPath = "Extras.fill-empty.";
-            if(config.isFirstTime() && !config.getBoolean(extrasPath + "enabled")){
+            if (config.isFirstTime() && !config.getBoolean(extrasPath + "enabled")){
                 config.set(extrasPath + "enabled", true);
                 config.set(extrasPath + "item", "BLACK_STAINED_GLASS_PANE:0");
                 config.save();

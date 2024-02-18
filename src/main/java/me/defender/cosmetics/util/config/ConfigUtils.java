@@ -57,10 +57,10 @@ public class ConfigUtils {
 
 
     public static ConfigManager get(ConfigType configType){
-        if(configType == ConfigType.Main_Config){
+        if (configType == ConfigType.Main_Config){
             return getMainConfig();
         }
-        if(configType == ConfigType.Main_Menu){
+        if (configType == ConfigType.Main_Menu){
             return Cosmetics.getInstance().menuData;
         }
         return new ConfigManager(Cosmetics.getInstance(), configType.getFileName(), Cosmetics.getInstance().getHandler().getAddonPath() + "/Categories");
@@ -71,7 +71,7 @@ public class ConfigUtils {
     }
 
     public static void saveIfNotFound(ConfigType configType, String path ,Object data){
-        if(Objects.isNull(get(configType).getYml().get(path))){
+        if (Objects.isNull(get(configType).getYml().get(path))){
             get(configType).set(path, data);
             get(configType).save();
             get(configType).reload();

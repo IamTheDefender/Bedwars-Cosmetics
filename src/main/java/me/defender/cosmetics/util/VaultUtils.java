@@ -11,7 +11,7 @@ public class VaultUtils {
 
     public static Permission getPermissions() {
         RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        if(rsp == null){
+        if (rsp == null){
             getLogger().severe("You need permission plugin or this plugin will break!");
             return null;
         }
@@ -20,7 +20,7 @@ public class VaultUtils {
 
     public static Economy getEconomy() {
         RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null){
+        if (rsp == null){
             getLogger().severe("You need economy plugin or this plugin will break!");
             return null;
         }
