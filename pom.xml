@@ -6,7 +6,7 @@
 
     <groupId>me.defender</groupId>
     <artifactId>BedWars-Cosmetics</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.7</version>
     <packaging>jar</packaging>
 
     <name>Cosmetics</name>

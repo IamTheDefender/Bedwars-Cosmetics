@@ -309,6 +309,7 @@ public class StartupUtils
         libraryManager.loadLibrary(hikariCP);
 
     }
+
     public static Location getCosmeticLocation() {
         World world = Bukkit.getWorld(Cosmetics.getInstance().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
         double x = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");
