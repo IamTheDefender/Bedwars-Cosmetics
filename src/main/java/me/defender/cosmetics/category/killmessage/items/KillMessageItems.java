@@ -1,5 +1,6 @@
 package me.defender.cosmetics.category.killmessage.items;
 
+import me.defender.cosmetics.Cosmetics;
 import me.defender.cosmetics.api.configuration.ConfigManager;
 import me.defender.cosmetics.api.cosmetics.CosmeticsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
@@ -19,50 +20,54 @@ public class KillMessageItems {
         ConfigManager config = CosmeticsType.KillMessage.getConfig();
 
         for(String id : section.getKeys(false)){
-            String path = CosmeticsType.KillMessage.getSectionKey() + "." + id + ".";
-            KillMessage killMessage = new KillMessage() {
-                // Do nothing because API currently doesn't support it
-                @Override
-                public String execute(Player player) {
-                    return null;
-                }
+            try {
+                String path = CosmeticsType.KillMessage.getSectionKey() + "." + id + ".";
+                KillMessage killMessage = new KillMessage() {
+                    // Do nothing because API currently doesn't support it
+                    @Override
+                    public String execute(Player player) {
+                        return null;
+                    }
 
-                @Override
-                public ItemStack getItem() {
-                    return config.getItemStack(path + "item");
-                }
+                    @Override
+                    public ItemStack getItem() {
+                        return config.getItemStack(path + "item");
+                    }
 
-                @Override
-                public String base64() {
-                    return null;
-                }
+                    @Override
+                    public String base64() {
+                        return null;
+                    }
 
-                @Override
-                public String getIdentifier() {
-                    return id;
-                }
+                    @Override
+                    public String getIdentifier() {
+                        return id;
+                    }
 
-                @Override
-                public String getDisplayName() {
-                    return StringUtils.replaceHyphensAndCaptalizeFirstLetter(id);
-                }
+                    @Override
+                    public String getDisplayName() {
+                        return StringUtils.replaceHyphensAndCaptalizeFirstLetter(id);
+                    }
 
-                @Override
-                public List<String> getLore() {
-                    return List.of("&7Select the " + getDisplayName() + " Kill,", "&7Message for in-game chat", "&7messages!");
-                }
+                    @Override
+                    public List<String> getLore() {
+                        return List.of("&7Select the " + getDisplayName() + " Kill,", "&7Message for in-game chat", "&7messages!");
+                    }
 
-                @Override
-                public int getPrice() {
-                    return config.getInt(path + "price");
-                }
+                    @Override
+                    public int getPrice() {
+                        return config.getInt(path + "price");
+                    }
 
-                @Override
-                public RarityType getRarity() {
-                    return RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
-                }
-            };
-            killMessage.register();
+                    @Override
+                    public RarityType getRarity() {
+                        return RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
+                    }
+                };
+                killMessage.register();
+            }catch (Exception e){
+                Cosmetics.getInstance().getLogger().warning("Error while loading KillMessage: " + id);
+            }
         }
     }
 }

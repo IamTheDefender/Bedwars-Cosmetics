@@ -200,7 +200,7 @@ public class FinalKillEffectPreview {
                     }
                 }.runTask(Cosmetics.getInstance());
             }
-        }.runTaskLaterAsynchronously(Cosmetics.getInstance(), 22L);
+        }.runTaskLater(Cosmetics.getInstance(), 22L);
 
         new BukkitRunnable() {
             int tick = 5;

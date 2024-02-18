@@ -400,8 +400,13 @@ public class MainCommand {
         if (teamName.toUpperCase().equalsIgnoreCase("Pink")){
             color = ChatColor.LIGHT_PURPLE;
         } else {
-            color = ChatColor.valueOf(teamName.toUpperCase());
+            try {
+                color = ChatColor.valueOf(section.getString("Color"));
+            }catch (Exception e){
+                color = ChatColor.GOLD;
+            }
         }
+
         hologram.addLine(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
         sender.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName );
 
