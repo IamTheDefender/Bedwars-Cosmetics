@@ -300,13 +300,11 @@ public class StartupUtils
         Cosmetics.getInstance().getLogger().info("Loading libraries...");
         CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(Cosmetics.getInstance());
         Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
-        Library particle = new Library.Builder().groupId("xyz{}xenondevs").artifactId("particle").version("1.8.4").build();
         Library hCore = new Library.Builder().groupId("com{}github{}hakan-krgn{}hCore").artifactId("hCore-bukkit").version("0.7.3.3").build();
         Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.0.1").build();
         libraryManager.addMavenCentral();
         libraryManager.addJitPack();
         libraryManager.loadLibrary(mysql);
-        libraryManager.loadLibrary(particle);
         libraryManager.loadLibrary(hCore);
         libraryManager.loadLibrary(hikariCP);
 

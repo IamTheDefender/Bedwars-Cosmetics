@@ -14,6 +14,7 @@ import me.defender.cosmetics.api.cosmetics.FieldsType;
 import me.defender.cosmetics.api.cosmetics.RarityType;
 import me.defender.cosmetics.api.cosmetics.category.Glyph;
 import me.defender.cosmetics.category.glyphs.util.ImageParticles;
+import me.defender.cosmetics.category.glyphs.util.glyphUtil;
 import me.defender.cosmetics.util.StartupUtils;
 import me.defender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
@@ -27,9 +28,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import xyz.xenondevs.particle.ParticleBuilder;
-import xyz.xenondevs.particle.ParticleEffect;
-import xyz.xenondevs.particle.data.color.RegularColor;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -175,11 +173,7 @@ public class GlyphPreview {
 
         HCore.asyncScheduler().every(100, TimeUnit.MILLISECONDS).limit(50).run(()-> {
             for (Location spot : particles.keySet()) {
-                HCore.syncScheduler().run(() -> new ParticleBuilder(ParticleEffect.REDSTONE, spot)
-                        .setParticleData(new RegularColor(particles.get(spot).getRed(),
-                                particles.get(spot).getGreen(),
-                                particles.get(spot).getBlue()))
-                        .display(player));
+                HCore.syncScheduler().run(() -> glyphUtil.sendRedstoneParticle(player, spot, particles.get(spot)));
             }
         });
     }
