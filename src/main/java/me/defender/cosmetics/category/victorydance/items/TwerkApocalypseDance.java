@@ -64,11 +64,16 @@ public class TwerkApocalypseDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        List<String> values = Arrays.asList(Utility.getFromName(winner.getName()));
-        Skin skin = new Skin(values.get(0), values.get(1));
+        Skin skin = null;
+        try{
+            List<String> values = Arrays.asList(Utility.getFromName(winner.getName()));
+            skin = new Skin(values.get(0), values.get(1));
+        }catch (Exception e){}
+
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
         List<NPC> npcs = new ArrayList<>();
 
+        Skin finalSkin = skin;
         HCore.syncScheduler().every(1).limit(15).run(() -> {
             List<Block> freeBlocks = UsefulUtilsVD.getFreeBlocks(winner.getLocation());
             Location loc = freeBlocks.get(MathUtil.getRandom(0, freeBlocks.size() -1)).getLocation();
@@ -76,7 +81,9 @@ public class TwerkApocalypseDance extends VictoryDance {
 
             if (loc.getBlock().getType() == Material.AIR && loc.subtract(0,1,0).getBlock().getType() != Material.AIR) {
                 NPC npc = registry.createNPC(EntityType.PLAYER, winner.getDisplayName());
-                npc.getOrAddTrait(SkinTrait.class).setTexture(skin.getTexture(), skin.getSignature());
+                if(finalSkin != null){
+                    npc.getOrAddTrait(SkinTrait.class).setTexture(finalSkin.getTexture(), finalSkin.getSignature());
+                }
                 npc.getOrAddTrait(LookClose.class).lookClose(false);
                 npc.spawn(loc.add(0,1,0));
                 npcs.add(npc);

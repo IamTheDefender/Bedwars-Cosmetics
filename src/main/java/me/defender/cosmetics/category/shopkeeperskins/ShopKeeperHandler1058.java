@@ -78,13 +78,19 @@ public class ShopKeeperHandler1058 implements Listener
                                 }
                             }
                         }
+                        /* Useless code but might be useful later so left it here for now
                         if (plugin.getHandler().getHandlerType() != HandlerType.BUNGEE){
+
                             for (Player p : team.getMembers()) {
                                 IHandler handler = plugin.getHandler();
                                 handler.getScoreboardUtil().removePlayerScoreboard(p);
                                 handler.getScoreboardUtil().giveScoreboard(p, true);
                             }
+
+
                         }
+
+                         */
                     }
                 }
             }.runTaskLater(this.plugin, 30L);
