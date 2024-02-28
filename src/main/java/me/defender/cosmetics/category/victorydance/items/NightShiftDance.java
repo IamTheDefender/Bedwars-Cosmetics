@@ -49,19 +49,18 @@ public class NightShiftDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
-            new BukkitRunnable() {
-                long time = winner.getWorld().getTime();
-                public void run() {
-                    time += 1000;
-                    if (time > 24000) {
-                        time = 0;
-                    }
-                    winner.getWorld().setTime(time);
+        HCore.syncScheduler().every(8L).run((runnable) -> {
+                if(Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(winner) == null) {
+                    runnable.cancel();
+                    return;
                 }
-            }.runTaskTimer(Cosmetics.getInstance(), 0L, 8L);
-        } else {
-            winner.getWorld().setTime(winner.getWorld().getTime());
-        }
+
+                long time = winner.getWorld().getTime() + 1000;
+                if (time > 24000) {
+                    time = 0;
+                }
+                winner.getWorld().setTime(time);
+
+        });
     }
 }
