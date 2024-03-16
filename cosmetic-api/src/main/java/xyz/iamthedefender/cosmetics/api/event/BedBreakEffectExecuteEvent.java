@@ -1,12 +1,13 @@
 package xyz.iamthedefender.cosmetics.api.event;
 
 import lombok.Getter;
-import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+
 /**
  * This event is called when a bed break effect is executed.
 */
@@ -33,7 +34,7 @@ public class BedBreakEffectExecuteEvent extends Event implements Cancellable {
     public BedBreakEffectExecuteEvent(Player WhoBroke){
         this.cancelled = false;
         this.WhoBrokeTheBed = WhoBroke;
-        this.selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
+        this.selected = Utility.getApi().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
     }
 
 

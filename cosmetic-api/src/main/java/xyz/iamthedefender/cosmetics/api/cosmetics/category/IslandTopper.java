@@ -1,15 +1,11 @@
 package xyz.iamthedefender.cosmetics.api.cosmetics.category;
 
 import com.cryptomorin.xseries.XMaterial;
+import org.bukkit.inventory.ItemStack;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.items.DummyTopper;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,9 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class IslandTopper extends Cosmetics {
 
@@ -65,7 +64,7 @@ public abstract class IslandTopper extends Cosmetics {
         finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.islandTopperList.add(this);
+        Utility.getApi().getIslandTopperList().add(this);
     }
 
     /**
@@ -100,13 +99,52 @@ public abstract class IslandTopper extends Cosmetics {
      * @return the default topper
      */
     public static @NotNull IslandTopper getDefault(Player player){
-        for(IslandTopper islandTopper : StartupUtils.islandTopperList){
+        for(IslandTopper islandTopper : Utility.getApi().getIslandTopperList()){
             if (islandTopper.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return islandTopper;
             }
         }
         // This will never return null!
-        return new DummyTopper();
+        return new IslandTopper() {
+            @Override
+            public ItemStack getItem() {
+                return XMaterial.BARRIER.parseItem();
+            }
+
+            @Override
+            public String base64() {
+                return null;
+            }
+
+            @Override
+            public String getIdentifier() {
+                return "disabled";
+            }
+
+            @Override
+            public String getDisplayName() {
+                return "DISABLED";
+            }
+
+            @Override
+            public List<String> getLore() {
+                return List.of("Island Toppers are DISABLED for some reason!");
+            }
+
+            @Override
+            public int getPrice() {
+                return 0;
+            }
+
+            @Override
+            public RarityType getRarity() {
+                return RarityType.NONE;
+            }
+
+            @Override
+            public void execute(Player player, Location topperLocation, String selected) {
+            }
+        };
     }
 
 }

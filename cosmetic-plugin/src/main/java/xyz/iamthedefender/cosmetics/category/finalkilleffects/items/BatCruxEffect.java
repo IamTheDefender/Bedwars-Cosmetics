@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.util.EntityUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,7 +76,7 @@ public class BatCruxEffect extends FinalKillEffect {
 
         if (onlyVictim) {
             for (Bat bat : bats) {
-                Utility.entityForPlayerOnly(bat, victim);
+                EntityUtil.entityForPlayerOnly(bat, victim);
             }
         }
 

@@ -5,10 +5,6 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class VictoryDance extends Cosmetics {
 
@@ -58,7 +57,7 @@ public abstract class VictoryDance extends Cosmetics {
         finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.victoryDancesList.add(this);
+        Utility.getApi().getVictoryDanceList().add(this);
     }
 
     /**
@@ -100,7 +99,7 @@ public abstract class VictoryDance extends Cosmetics {
      */
     public static @NotNull VictoryDance getDefault(@Nullable Player player){
         try {
-            for (VictoryDance victoryDance : StartupUtils.victoryDancesList) {
+            for (VictoryDance victoryDance : Utility.getApi().getVictoryDanceList()) {
                 if (victoryDance.getField(FieldsType.RARITY, player) == RarityType.NONE) {
                     return victoryDance;
                 }

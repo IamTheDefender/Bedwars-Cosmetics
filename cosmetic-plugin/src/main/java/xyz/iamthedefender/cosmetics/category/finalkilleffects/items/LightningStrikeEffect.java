@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.util.EntityUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,7 @@ public class LightningStrikeEffect extends FinalKillEffect {
         } else {
             // Create a non-NMS lightning entity
             LightningStrike lightning = location.getWorld().strikeLightningEffect(location);
-            Utility.entityForPlayerOnly(lightning, victim);
+            EntityUtil.entityForPlayerOnly(lightning, victim);
         }
     }
 }

@@ -5,22 +5,22 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+
 
 public abstract class FinalKillEffect extends Cosmetics {
     /**
@@ -65,7 +65,7 @@ public abstract class FinalKillEffect extends Cosmetics {
         finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.finalKillList.add(this);
+        Utility.getApi().getFinalKillList().add(this);
     }
 
     /**
@@ -100,7 +100,7 @@ public abstract class FinalKillEffect extends Cosmetics {
      * @return the default final kill effect.
      */
     public static @NotNull FinalKillEffect getDefault(Player player){
-        for(FinalKillEffect finalKillEffect : StartupUtils.finalKillList){
+        for(FinalKillEffect finalKillEffect : Utility.getApi().getFinalKillList()){
             if (finalKillEffect.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return finalKillEffect;
             }

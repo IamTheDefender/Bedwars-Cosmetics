@@ -1,5 +1,6 @@
 package xyz.iamthedefender.cosmetics.api.event;
 
+import lombok.Getter;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -10,8 +11,22 @@ public class CosmeticPurchaseEvent extends Event implements Cancellable {
     private boolean isCancelled;
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
+    /**
+     * -- GETTER --
+     *  Get the player that purchased the cosmetic.
+     *
+     * @return Player
+     */
+    @Getter
     private final Player player;
 
+    /**
+     * -- GETTER --
+     *  Get the category of the cosmetic.
+     *
+     * @return CosmeticsType
+     */
+    @Getter
     private final CosmeticsType category;
 
     public CosmeticPurchaseEvent(Player p, CosmeticsType category){
@@ -32,22 +47,6 @@ public class CosmeticPurchaseEvent extends Event implements Cancellable {
     @Override
     public boolean isCancelled() {
         return isCancelled;
-    }
-
-    /**
-     * Get the player that purchased the cosmetic.
-     * @return Player
-     */
-    public Player getPlayer(){
-        return player;
-    }
-
-    /**
-     * Get the category of the cosmetic.
-     * @return CosmeticsType
-     */
-    public CosmeticsType getCategory(){
-        return category;
     }
 
     @Override

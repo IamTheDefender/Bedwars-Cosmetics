@@ -61,10 +61,12 @@ public class DeathCryItems {
                     return RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
                 }
 
+
                 @Override
                 public XSound getSound() {
                     return XSound.matchXSound(config.getString(path + "sound")).get();
                 }
+
 
                 @Override
                 public float getPitch() {

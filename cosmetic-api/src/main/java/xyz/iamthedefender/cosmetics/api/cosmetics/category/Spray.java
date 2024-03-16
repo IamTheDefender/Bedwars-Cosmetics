@@ -5,10 +5,6 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -18,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class Spray extends Cosmetics {
     private final String category = "sprays";
@@ -56,7 +55,7 @@ public abstract class Spray extends Cosmetics {
         finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.sprayList.add(this);
+        Utility.getApi().getSprayList().add(this);
     }
 
     /**
@@ -98,7 +97,7 @@ public abstract class Spray extends Cosmetics {
      * @return the default spray
      */
     public static @NotNull Spray getDefault(Player player){
-        for(Spray spray : StartupUtils.sprayList){
+        for(Spray spray : Utility.getApi().getSprayList()){
             if (spray.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return spray;
             }

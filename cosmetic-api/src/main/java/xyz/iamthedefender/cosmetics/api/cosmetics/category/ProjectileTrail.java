@@ -5,10 +5,6 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class ProjectileTrail extends Cosmetics {
     private final String category = "projectile-trails";
@@ -56,7 +55,7 @@ public abstract class ProjectileTrail extends Cosmetics {
         finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.projectileTrailList.add(this);
+        Utility.getApi().getProjectileTrailList().add(this);
     }
 
     /**
@@ -98,7 +97,7 @@ public abstract class ProjectileTrail extends Cosmetics {
      * @return the default projectile trail
      */
     public static @NotNull ProjectileTrail getDefault(Player player){
-        for(ProjectileTrail projectileTrail : StartupUtils.projectileTrailList){
+        for(ProjectileTrail projectileTrail : Utility.getApi().getProjectileTrailList()){
             if (projectileTrail.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return projectileTrail;
             }

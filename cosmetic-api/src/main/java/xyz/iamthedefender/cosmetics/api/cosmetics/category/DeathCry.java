@@ -23,10 +23,9 @@ import java.util.List;
 
 public abstract class DeathCry extends Cosmetics {
 
-    /**
-     * @return the sound of the death cry
-     */
-    public abstract XSound getSound();
+
+     public abstract XSound getSound();
+
     /**
      * @return the pitch of the sound
      */

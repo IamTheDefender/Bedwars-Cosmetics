@@ -8,6 +8,7 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -93,6 +94,12 @@ public class BwcAPI implements CosmeticsAPI {
     @Override
     public List<IslandTopper> getIslandTopperList() {
         return StartupUtils.islandTopperList;
+    }
+
+    @Override
+    public IVersionSupport getVersionSupport() {
+        // TODO
+        return null;
     }
 
     /**

@@ -5,10 +5,6 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.Utility;
-import xyz.iamthedefender.cosmetics.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.util.Utility.saveIfNotExistsLang;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.get;
-import static xyz.iamthedefender.cosmetics.util.config.ConfigUtils.saveIfNotFound;
+import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
+import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class ShopKeeperSkin extends Cosmetics {
 
@@ -62,7 +61,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
         }
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        StartupUtils.shopKeeperSkinList.add(this);
+        Utility.getApi().getShopKeeperSkinList().add(this);
     }
 
     /**
@@ -105,7 +104,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      * @return the default shopkeeper skin
      */
     public static @NotNull ShopKeeperSkin getDefault(Player player){
-        for(ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList){
+        for(ShopKeeperSkin shopKeeperSkin : Utility.getApi().getShopKeeperSkinList()){
             if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE){
                 return shopKeeperSkin;
             }

@@ -15,6 +15,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.util.EntityUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +75,7 @@ public class RektEffect extends FinalKillEffect {
             }.runTaskLater(Cosmetics.getInstance(), 200L);
         } else {
             ArmorStand stand = (ArmorStand) victim.getWorld().spawnEntity(location.add(0,2,0), EntityType.ARMOR_STAND);
-            Utility.entityForPlayerOnly(stand, victim);
+            EntityUtil.entityForPlayerOnly(stand, victim);
             stand.setSmall(true);
             stand.setGravity(false);
             stand.setVisible(false);
