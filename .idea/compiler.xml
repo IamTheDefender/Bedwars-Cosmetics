@@ -9,6 +9,7 @@
         <module name="cosmetic-api" />
         <module name="cosmetic-plugin" />
         <module name="versionsupport_1_8_R3" />
+        <module name="versionsupport_1_20" />
       </profile>
     </annotationProcessing>
   </component>

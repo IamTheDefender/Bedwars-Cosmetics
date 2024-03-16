@@ -7,7 +7,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetic.versionsupport.VersionSupport_1_8_R3;
+import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
+import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
@@ -89,6 +90,9 @@ public class StartupUtils
         if(VersionSupportUtil.isLowerThan("1.9")){
             // 1.8 and lower
             versionSupport = new VersionSupport_1_8_R3();
+        } else if(VersionSupportUtil.getVersion().equalsIgnoreCase("1.20")){
+            // 1.20
+            versionSupport = new VersionSupport_1_20();
         }
 
         return versionSupport;

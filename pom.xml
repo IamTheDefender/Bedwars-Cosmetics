@@ -17,6 +17,7 @@
         <module>cosmetic-plugin</module>
         <module>cosmetic-api</module>
         <module>versionsupport_1_8_R3</module>
+        <module>versionsupport_1_20</module>
     </modules>
     <properties>
         <java.version>11</java.version>

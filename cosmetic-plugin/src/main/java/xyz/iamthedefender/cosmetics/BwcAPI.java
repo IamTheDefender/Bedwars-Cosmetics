@@ -98,8 +98,7 @@ public class BwcAPI implements CosmeticsAPI {
 
     @Override
     public IVersionSupport getVersionSupport() {
-        // TODO
-        return null;
+        return Cosmetics.getInstance().getVersionSupport();
     }
 
     /**

@@ -1,4 +1,4 @@
-package xyz.iamthedefender.cosmetic.versionsupport;
+package xyz.iamthedefender.cosmetics.versionsupport;
 
 import com.hakan.core.HCore;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;

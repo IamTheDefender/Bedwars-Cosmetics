@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.hakan.core.HCore;
 import lombok.Getter;
+import org.bukkit.plugin.ServicePriority;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
@@ -12,6 +13,7 @@ import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.command.MainCommand;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
@@ -23,6 +25,7 @@ import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Pr
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023Handler;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
+import xyz.iamthedefender.cosmetics.util.Metrics;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.api.util.config.DefaultsUtils;
@@ -32,11 +35,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.iamthedefender.cosmetics.util.VersionSupportUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-
+@Getter
 public class Cosmetics extends JavaPlugin {
     @Getter
     public ConfigManager menuData;
@@ -60,11 +64,14 @@ public class Cosmetics extends JavaPlugin {
     private Economy economy;
     @Getter
     private IHandler handler;
+    private IVersionSupport versionSupport;
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
         instance = this;
         api = new BwcAPI();
+        Bukkit.getServicesManager().register(CosmeticsAPI.class, api, this, ServicePriority.Highest);
         if (!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);
@@ -77,6 +84,13 @@ public class Cosmetics extends JavaPlugin {
             HCore.initialize(this);
         }catch (IllegalStateException ignored){
             getLogger().severe("Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
+            setEnabled(false);
+            dependenciesMissing = true;
+            return;
+        }
+        versionSupport = StartupUtils.getVersionSupport();
+        if(versionSupport == null){
+            getLogger().severe("Could not find a version support for " + VersionSupportUtil.getVersion());
             setEnabled(false);
             dependenciesMissing = true;
             return;
@@ -149,6 +163,8 @@ public class Cosmetics extends JavaPlugin {
         // This is a check to make sure victory dance config doesn't have any issues.
         VictoryDance.getDefault(null);
 
+        metrics = new Metrics(this, 21340);
+
         HCore.asyncScheduler().every(5L).run(() -> {
             try (Connection connection = remoteDatabase.getConnection()){
                 connection.createStatement();
@@ -189,6 +205,8 @@ public class Cosmetics extends JavaPlugin {
         } catch (SQLException e) {
             getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
         }
+
+        if(metrics != null) metrics.shutdown();
     }
 
     @Override
