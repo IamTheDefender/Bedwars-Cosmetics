@@ -5,7 +5,10 @@ package xyz.iamthedefender.cosmetics.category.sprays.util;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import com.hakan.core.HCore;
+import com.hakan.core.particle.Particle;
+import com.hakan.core.particle.type.ParticleType;
 import com.hakan.core.utils.ColorUtil;
+import org.bukkit.util.Vector;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
@@ -107,7 +110,10 @@ public class SpraysUtil
         map.setAmount(1);
         itemFrame.setItem(map);
         itemFrame.setRotation(Rotation.NONE);
-        player.playEffect(itemFrame.getLocation(), Effect.FLYING_GLYPH, 10);
+
+        Particle particle = new Particle(ParticleType.ASH, 10, new Vector());
+        HCore.playParticle(player, itemFrame.getLocation(), particle);
+
         for (final Entity entity : itemFrame.getNearbyEntities(1.0, 1.0, 1.0)) {
             if (entity.getType() == EntityType.ARMOR_STAND && entity.hasMetadata("HOLO_ITEM_FRAME")) {
                 entity.remove();

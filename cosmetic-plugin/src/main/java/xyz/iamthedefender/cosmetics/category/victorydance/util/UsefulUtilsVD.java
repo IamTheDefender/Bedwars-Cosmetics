@@ -2,8 +2,7 @@
 
 package xyz.iamthedefender.cosmetics.category.victorydance.util;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.util.CuboidUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -13,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
@@ -99,23 +97,8 @@ public class UsefulUtilsVD
         return originalLocation;
     }
     
-    public static ItemStack gethead(final String value, final String name) {
-        final ItemStack head = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-        final SkullMeta meta = (SkullMeta)head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-        profile.getProperties().put("textures", new Property("textures", value));
-        meta.setDisplayName(name);
-        Field profileField;
-        try {
-            profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(meta, profile);
-        }
-        catch (final IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
-        }
-        head.setItemMeta(meta);
-        return head;
+    public static ItemStack gethead(final String value) {
+        return Cosmetics.getInstance().getApi().getVersionSupport().getSkull(value);
     }
     
     public static void launch(final Player player, final double distOverHead, final double distToFacing, final Class<? extends Projectile> projectileClass) {

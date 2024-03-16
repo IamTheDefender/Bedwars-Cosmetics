@@ -9,15 +9,13 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hakan.core.utils.ColorUtil;
+import lombok.Getter;
+import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -31,6 +29,7 @@ import java.util.stream.Collectors;
 
 
 public class Utility {
+    @Getter
     private static final CosmeticsAPI api = Bukkit.getServicesManager().getRegistration(CosmeticsAPI.class).getProvider();
 
     /**
@@ -138,10 +137,6 @@ public class Utility {
         }
     }
 
-
-   public static CosmeticsAPI getApi(){
-        return api;
-   }
 
     public static boolean isWoodOrLogBlock(Material mat) {
         return (mat.toString().contains("WOOD") || mat.toString().contains("PLANKS") || mat.toString().contains("LOG")) && mat.isBlock();
