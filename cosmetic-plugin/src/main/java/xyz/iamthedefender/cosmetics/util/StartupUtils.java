@@ -7,9 +7,11 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
+import xyz.iamthedefender.cosmetic.versionsupport.VersionSupport_1_8_R3;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.category.bedbreakeffects.items.*;
 import xyz.iamthedefender.cosmetics.category.deathcries.items.DeathCryItems;
 import xyz.iamthedefender.cosmetics.category.finalkilleffects.items.*;
@@ -72,6 +74,24 @@ public class StartupUtils
     public static void registerEvents() {
         HCore.registerListeners(new CosmeticPurchaseListener());
         HCore.registerListeners(new PlayerJoinListener());
+    }
+
+    /**
+     * Get version support for the version of minecraft
+     * plugin is running on.
+     *
+     * This method should be used only by the plugin
+     * @return Version Support or null
+     */
+    public static IVersionSupport getVersionSupport(){
+        IVersionSupport versionSupport = null;
+
+        if(VersionSupportUtil.isLowerThan("1.9")){
+            // 1.8 and lower
+            versionSupport = new VersionSupport_1_8_R3();
+        }
+
+        return versionSupport;
     }
 
 

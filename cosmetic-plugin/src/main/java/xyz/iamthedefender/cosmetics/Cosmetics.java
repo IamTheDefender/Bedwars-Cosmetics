@@ -76,7 +76,7 @@ public class Cosmetics extends JavaPlugin {
         try{
             HCore.initialize(this);
         }catch (IllegalStateException ignored){
-            getLogger().severe("BW1058-Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
+            getLogger().severe("Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
             setEnabled(false);
             dependenciesMissing = true;
             return;

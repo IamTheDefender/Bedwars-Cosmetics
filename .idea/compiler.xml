@@ -8,10 +8,8 @@
         <outputRelativeToContentRoot value="true" />
         <module name="cosmetic-api" />
         <module name="cosmetic-plugin" />
+        <module name="versionsupport_1_8_R3" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="versionsupport_1_8_R3" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
