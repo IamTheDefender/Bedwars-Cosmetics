@@ -4,14 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.defender</groupId>
+    <groupId>xyz.iamthedefender</groupId>
     <artifactId>BedWars-Cosmetics</artifactId>
     <version>1.4.7</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>Cosmetics</name>
 
+
     <description>This addon adds a set of various cosmetics to your bedwars server</description>
+    <modules>
+        <module>cosmetic-plugin</module>
+        <module>cosmetic-api</module>
+    </modules>
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,7 +43,7 @@
                         <relocation>
                             <pattern>com.cryptomorin.xseries</pattern>
                             <!-- Be sure to change the package below -->
-                            <shadedPattern>me.defender.cosmetics.support.xseries</shadedPattern>
+                            <shadedPattern>xyz.iamthedefender.cosmetics.support.xseries</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
