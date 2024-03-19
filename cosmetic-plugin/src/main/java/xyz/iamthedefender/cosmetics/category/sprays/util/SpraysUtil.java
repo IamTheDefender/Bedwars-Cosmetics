@@ -12,6 +12,7 @@ import org.bukkit.util.Vector;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
 import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
@@ -25,6 +26,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
+import xyz.iamthedefender.cosmetics.util.FileUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -46,51 +48,41 @@ public class SpraysUtil
             MapView view = Bukkit.createMap(player.getWorld());
             String spray = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.Sprays);
             ConfigManager config = ConfigUtils.getSprays();
-
             if (SpraysUtil.cooldown.containsKey(player.getName())) {
                 // Player is in cooldown
                 long cooldownEndTime = SpraysUtil.cooldown.get(player.getName());
-                if (cooldownEndTime > System.currentTimeMillis()) {
+                if (cooldownEndTime > System.currentTimeMillis() && cooldownEndTime != 0) {
                     player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1.0f, 1.0f);
                     player.sendMessage(ColorUtil.colored(Utility.getMSGLang(player, "cosmetics.spray-msg")));
                     return;
                 }
                 SpraysUtil.cooldown.remove(player.getName());
             }
-            // The player is no longer in the cool down or it's the first time
-            else if (ShopKeeperHandler1058.arenas.containsKey(player.getWorld().getName())) {
+            IArenaHandler arenaHandler = Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(player);
+            if(arenaHandler == null) return;
+            SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
 
-                SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
-                // Player is no longer in cooldown
-                SpraysUtil.cooldown.remove(player.getName());
-            } else if (ShopKeeperHandler1058.arenas.containsKey(player.getWorld().getName())) {
-                // Player is not in cooldown or it's the first time
-                SpraysUtil.cooldown.put(player.getName(), System.currentTimeMillis() + 3000L);
-                view.removeRenderer(view.getRenderers().get(0));
-                final CustomRenderer renderer = new CustomRenderer();
+            view.removeRenderer(view.getRenderers().get(0));
+            final CustomRenderer renderer = new CustomRenderer();
 
-                String sprayUrl = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".url");
-                String sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
+            String sprayUrl = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".url");
+            String sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
 
-                DebugUtil.addMessage("Playing " + spray + " Spray for " + player.getDisplayName());
+            DebugUtil.addMessage("Playing " + spray + " Spray for " + player.getDisplayName());
 
-                if (sprayFile == null) {
-                    if (!renderer.load(sprayUrl)) {
-                        player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
-                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the URL for the " + spray + ". Check if the URL in Sprays.yml is valid!");
-                    } else {
-                        addRendererAndShowSpray(player, itemFrame, renderer, view);
-                    }
-                } else {
-                    sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
-                    File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
-                    if (!renderer.load(file)) {
-                        player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
-                        Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid!");
-                    } else {
-                        addRendererAndShowSpray(player, itemFrame, renderer, view);
-                    }
-                }
+            if (sprayFile == null) {
+                sprayFile = spray + "." + FileUtil.getFileExtension(sprayUrl);
+            } else {
+                sprayFile = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray + ".file");
+            }
+
+
+            File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+            if (!renderer.load(file)) {
+                player.sendMessage(ColorUtil.colored("&cLooks like there's an error rendering the Spray, contact the admin!"));
+                Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + spray + ". Check if the File in Sprays.yml is valid: " + file.getPath());
+            } else {
+                addRendererAndShowSpray(player, itemFrame, renderer, view);
             }
         });
     }
@@ -104,10 +96,7 @@ public class SpraysUtil
      * @param view The map view to render.
      */
     private static void addRendererAndShowSpray(Player player, ItemFrame itemFrame, CustomRenderer renderer, MapView view) {
-        view.addRenderer(renderer);
-        final ItemStack map = XMaterial.FILLED_MAP.parseItem();
-        map.setDurability(view.getId());
-        map.setAmount(1);
+        ItemStack map = Cosmetics.getInstance().getApi().getVersionSupport().applyRenderer(renderer, view);
         itemFrame.setItem(map);
         itemFrame.setRotation(Rotation.NONE);
 

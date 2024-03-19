@@ -7,6 +7,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
 import xyz.iamthedefender.cosmetics.Cosmetics;
@@ -36,9 +39,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -77,10 +78,47 @@ public class StartupUtils
         HCore.registerListeners(new PlayerJoinListener());
     }
 
+    public static void convertSpraysURLs(){
+        for (Spray spray : sprayList) {
+            ConfigManager config = ConfigUtils.getSprays();
+            String urlString = config.getString(CosmeticsType.Sprays.getSectionKey() + "." + spray.getIdentifier() + ".url");
+            if(urlString == null || urlString.isEmpty()){
+                DebugUtil.addMessage("Skipping Spray: " + spray.getIdentifier());
+                continue;
+            }
+            URL url = null;
+            try {
+                url = new URL(urlString);
+            } catch (MalformedURLException e) {
+                DebugUtil.addMessage("URL: " + urlString);
+                throw new RuntimeException(e);
+            }
+
+            File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + spray.getIdentifier() + "." + FileUtil.getFileExtension(urlString));
+            String destinationPath = file.getAbsolutePath();
+            if(file.exists()){
+                DebugUtil.addMessage("Skipping existing file: " + destinationPath);
+                continue;
+            }
+
+            try (InputStream in = url.openStream();
+                 OutputStream out = new BufferedOutputStream(new FileOutputStream(destinationPath))) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+                DebugUtil.addMessage("Downloaded: " + destinationPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     /**
      * Get version support for the version of minecraft
      * plugin is running on.
-     *
+     * <p>
      * This method should be used only by the plugin
      * @return Version Support or null
      */

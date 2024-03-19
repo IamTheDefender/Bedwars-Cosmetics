@@ -30,7 +30,7 @@ cosmetic-preview:
 bed-break-effects:
   enabled: true
 death-cries:
-  enabled:true
+  enabled: true
 final-kill-effects:
   enabled: true
 glyphs:

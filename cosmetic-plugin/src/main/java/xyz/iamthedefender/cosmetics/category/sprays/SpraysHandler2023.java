@@ -1,5 +1,6 @@
 package xyz.iamthedefender.cosmetics.category.sprays;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.utils.ColorUtil;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
@@ -25,7 +26,9 @@ public class SpraysHandler2023 implements Listener {
             ItemFrame itemFrame = (ItemFrame) e.getRightClicked();
             if (itemFrame.getItem() == null) return;
             String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.Sprays);
-            if (itemFrame.getItem().getType() == Material.AIR || itemFrame.getItem().getType() == Material.MAP || itemFrame.getItem().getType() == Material.EMPTY_MAP) {
+            XMaterial material = XMaterial.matchXMaterial(itemFrame.getItem());
+            // AIR, MAP, FILLED_MAP
+            if (material == XMaterial.AIR || material == XMaterial.MAP || material == XMaterial.FILLED_MAP) {
                 for(Spray spray : StartupUtils.sprayList){
                     if (spray.getIdentifier().equals(selected)){
                         spray.execute(p, itemFrame);

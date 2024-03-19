@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class BW1058Handler implements IHandler {
 
-    private BedWars api = com.andrei1058.bedwars.BedWars.getAPI();
+    private final BedWars api = com.andrei1058.bedwars.BedWars.getAPI();
 
     @Override
     public void register() {

@@ -159,6 +159,7 @@ public class Cosmetics extends JavaPlugin {
         defaultsUtils.saveAllDefaults();
         getLogger().info("Loading cosmetics...");
         StartupUtils.loadCosmetics();
+        StartupUtils.convertSpraysURLs();
         getLogger().info("Addon have been loaded and enabled!");
         // This is a check to make sure victory dance config doesn't have any issues.
         VictoryDance.getDefault(null);

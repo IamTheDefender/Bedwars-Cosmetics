@@ -7,6 +7,7 @@ import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
+import xyz.iamthedefender.cosmetics.Cosmetics;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -36,7 +37,7 @@ public class CustomRenderer extends MapRenderer
         try {
             image = ImageIO.read(new URL(url));
             image = MapPalette.resizeImage(image);
-            Logger.getLogger("successfully loaded image! " + image);
+            Cosmetics.getInstance().getLogger().info("Loaded image: " + url);
         }
         catch (final IOException e) {
             e.printStackTrace();

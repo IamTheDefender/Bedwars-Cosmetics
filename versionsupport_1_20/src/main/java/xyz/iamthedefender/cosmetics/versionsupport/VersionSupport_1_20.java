@@ -4,9 +4,13 @@ import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
+import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 
@@ -22,12 +26,28 @@ public class VersionSupport_1_20 implements IVersionSupport {
             PlayerProfile profile = getProfile(getUrlFromBase64(base64).toString());
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) head.getItemMeta();
+            if(meta == null) return head;
             meta.setOwnerProfile(profile);
             head.setItemMeta(meta);
             return head;
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public @NotNull ItemStack applyRenderer(MapRenderer mapRenderer, MapView mapView) {
+        ItemStack map = XMaterial.FILLED_MAP.parseItem();
+        mapView.getRenderers().forEach(mapView::removeRenderer);
+        mapView.addRenderer(mapRenderer);
+        MapMeta mapMeta = (MapMeta) map.getItemMeta();
+        if(mapMeta == null) {
+            Utility.getApi().getPlugin().getLogger().severe("Failed to apply renderer to map, map meta is null!");
+            return map;
+        }
+        mapMeta.setMapView(mapView);
+        map.setItemMeta(mapMeta);
+        return map;
     }
 
     private PlayerProfile getProfile(String url) {
