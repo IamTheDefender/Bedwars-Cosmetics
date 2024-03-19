@@ -6,6 +6,7 @@ import com.hakan.core.hologram.Hologram;
 import com.hakan.core.ui.inventory.InventoryGui;
 import com.hakan.core.utils.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.configuration.file.FileConfiguration;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
@@ -417,14 +418,14 @@ public class MainCommand {
         }
         Player player = (Player) sender;
         Location location = player.getLocation();
-        ConfigManager config = ConfigUtils.getMainConfig();
+        FileConfiguration config = Cosmetics.getInstance().getConfig();
         config.set("cosmetic-preview.cosmetic-location.world", location.getWorld().getName());
         config.set("cosmetic-preview.cosmetic-location.x", location.getX());
         config.set("cosmetic-preview.cosmetic-location.y", location.getY());
         config.set("cosmetic-preview.cosmetic-location.z", location.getZ());
         config.set("cosmetic-preview.cosmetic-location.yaw", location.getYaw());
         config.set("cosmetic-preview.cosmetic-location.pitch", location.getPitch());
-        config.save();
+        Cosmetics.getInstance().saveConfig();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as preview location.");
     }
 
@@ -439,14 +440,14 @@ public class MainCommand {
         }
         Player player = (Player) sender;
         Location location = player.getLocation();
-        ConfigManager config = ConfigUtils.getMainConfig();
+        FileConfiguration config = Cosmetics.getInstance().getConfig();
         config.set("cosmetic-preview.player-location.world", location.getWorld().getName());
         config.set("cosmetic-preview.player-location.x", location.getX());
         config.set("cosmetic-preview.player-location.y", location.getY());
         config.set("cosmetic-preview.player-location.z", location.getZ());
         config.set("cosmetic-preview.player-location.yaw", location.getYaw());
         config.set("cosmetic-preview.player-location.pitch", location.getPitch());
-        config.save();
+        Cosmetics.getInstance().saveConfig();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 }

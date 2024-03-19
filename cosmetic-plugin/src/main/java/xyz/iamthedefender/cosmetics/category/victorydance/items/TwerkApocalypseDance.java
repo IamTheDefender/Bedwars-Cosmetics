@@ -3,6 +3,7 @@ package xyz.iamthedefender.cosmetics.category.victorydance.items;
 import com.cryptomorin.xseries.XMaterial;
 import com.hakan.core.HCore;
 import com.hakan.core.skin.Skin;
+import net.citizensnpcs.util.NMS;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
 import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
@@ -73,7 +74,6 @@ public class TwerkApocalypseDance extends VictoryDance {
             skin = new Skin(values.get(0), values.get(1));
         }catch (Exception e){}
 
-        getLogger().info("Moving forward to execute the dance");
 
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
         List<NPC> npcs = new ArrayList<>();
@@ -98,6 +98,7 @@ public class TwerkApocalypseDance extends VictoryDance {
                     if (npc.isSpawned()) {
                         Player npcP  = (Player) npc.getEntity();
                         npcP.setSneaking(!npcP.isSneaking());
+                        NMS.setSneaking(npcP, npcP.isSneaking());
                     }
                 });
             }

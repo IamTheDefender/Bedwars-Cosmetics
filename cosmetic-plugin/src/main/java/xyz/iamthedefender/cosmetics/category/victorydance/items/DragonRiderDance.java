@@ -1,9 +1,16 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.items;
 
+import com.cryptomorin.xseries.XEntity;
 import com.cryptomorin.xseries.XMaterial;
+import com.tomkeuper.bedwars.BedWars;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.util.NMS;
 import xyz.iamthedefender.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
+import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
 import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Location;
@@ -67,17 +74,23 @@ public class DragonRiderDance extends VictoryDance {
         // create a task to move the dragon towards the fake target
         new BukkitRunnable() {
             public void run() {
+                IArenaHandler arena = Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(winner);
+                if(arena == null){
+                    cancel();
+                    stand.remove();
+                    dragon.remove();
+                    return;
+                }
+
+                Creature creature = (Creature) dragon;
+                creature.setTarget(stand);
                 Location original = winner.getEyeLocation();
                 Vector direction = winner.getEyeLocation().clone().getDirection().normalize().multiply(20);
                 Location newLocation = original.add(direction);
+                dragon.setVelocity(dragon.getVelocity().add(direction));
                 stand.teleport(newLocation);
                 for (Block block : UsefulUtilsVD.getBlocksInRadius(dragon.getLocation(), 10, false)) {
                     block.setType(Material.AIR);
-                }
-                if (!ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
-                    this.cancel();
-                    stand.remove();
-                    dragon.remove();
                 }
                 if (dragon.getPassenger() != winner){
                     dragon.setPassenger(winner);
@@ -85,6 +98,6 @@ public class DragonRiderDance extends VictoryDance {
                 Fireball fireball = winner.getWorld().spawn(original, Fireball.class);
                 fireball.setDirection(direction);
             }
-        }.runTaskTimer(Cosmetics.getInstance(), 0L, 1L);
+        }.runTaskTimer(Cosmetics.getInstance(), 0L, 10L);
     }
 }

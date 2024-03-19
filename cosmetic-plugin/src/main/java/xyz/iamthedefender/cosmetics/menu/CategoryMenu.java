@@ -305,12 +305,12 @@ public class CategoryMenu extends InventoryGui {
                 api.setSelectedCosmetic(p, type, id);
                 XSound.ENTITY_VILLAGER_YES.play(p);
                 new CategoryMenu(cosmeticsType, title, page).open(p);
-
+                return -2;
                 // Can't purchase, cuz locked
             } else if (type.getConfig().getString(type.getSectionKey() + "." + id + ".purchase-able") != null){
                 boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able");
                 if (!purchaseAble){
-                    XSound.ENTITY_VILLAGER_NO.play(p);
+                    return 2;
                 }
                 // Purchase
         } else if (eco != null && eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) >= price) {

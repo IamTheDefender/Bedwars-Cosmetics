@@ -125,11 +125,9 @@ public class StartupUtils
     public static IVersionSupport getVersionSupport(){
         IVersionSupport versionSupport = null;
 
-        if(VersionSupportUtil.isLowerThan("1.9")){
-            // 1.8 and lower
+        if(VersionSupportUtil.isLowerThan("1.18")){
             versionSupport = new VersionSupport_1_8_R3();
-        } else if(VersionSupportUtil.getVersion().equalsIgnoreCase("1.20")){
-            // 1.20
+        } else if(VersionSupportUtil.isHigherThan("1.17")){
             versionSupport = new VersionSupport_1_20();
         }
 
@@ -217,6 +215,7 @@ public class StartupUtils
         Utility.saveIfNotExistsLang("cosmetics.selected", "&aSELECTED!");
         Utility.saveIfNotExistsLang("cosmetics.click-to-select", "&eClick to select.");
         Utility.saveIfNotExistsLang("cosmetics.click-to-purchase", "&eClick to purchase.");
+        Utility.saveIfNotExistsLang("cosmetics.not-purchase-able", "&cLOCKED.");
         Utility.saveIfNotExistsLang("cosmetics.no-coins", "&cYou don't have enough coins!");
         Utility.saveIfNotExistsLang("cosmetics.spray-msg", "&cYou must wait 3 seconds between spray uses!");
         Utility.saveIfNotExistsLang("cosmetics.gui-title", "Cosmetics");

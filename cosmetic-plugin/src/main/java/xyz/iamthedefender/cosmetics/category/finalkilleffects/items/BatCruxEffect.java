@@ -65,6 +65,7 @@ public class BatCruxEffect extends FinalKillEffect {
             Bat bat = (Bat) location.getWorld().spawnEntity(location, EntityType.BAT);
             bat.setVelocity(bat.getLocation().getDirection().multiply(0.7).setY(2));
             bat.setCustomNameVisible(true);
+            
             int number = i + 1;
             if (onlyVictim) {
                 bat.setCustomName(ColorUtil.colored("&7Deperino's horcrux #" + number));
