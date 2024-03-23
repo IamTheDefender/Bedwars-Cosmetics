@@ -386,11 +386,13 @@ public class StartupUtils
         Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
         Library hCore = new Library.Builder().groupId("com{}github{}hakan-krgn{}hCore").artifactId("hCore-bukkit").version("0.7.3.3").build();
         Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.0.1").build();
+        Library fastutil = new Library.Builder().groupId("it{}unimi{}dsi").artifactId("fastutil").version("8.5.8").build();
         libraryManager.addMavenCentral();
         libraryManager.addJitPack();
         libraryManager.loadLibrary(mysql);
         libraryManager.loadLibrary(hCore);
         libraryManager.loadLibrary(hikariCP);
+        libraryManager.loadLibrary(fastutil);
 
     }
 
