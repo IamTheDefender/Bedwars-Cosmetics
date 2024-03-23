@@ -157,6 +157,7 @@ public class Cosmetics extends JavaPlugin {
         getLogger().info("Loading data from resources in jar...");
         DefaultsUtils defaultsUtils = new DefaultsUtils();
         defaultsUtils.saveAllDefaults();
+        StartupUtils.unzipSpray();
         getLogger().info("Loading cosmetics...");
         StartupUtils.loadCosmetics();
         StartupUtils.convertSpraysURLs();

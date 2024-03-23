@@ -189,6 +189,34 @@ public class StartupUtils
     }
 
     /**
+     * Add the spray files to the plugin folder
+     */
+    public static void unzipSpray(){
+        String sprayDir = Cosmetics.getInstance().getConfig().getString("Spray-Dir");
+        File folder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + sprayDir);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        final String temp = Cosmetics.getInstance().getHandler().getAddonPath() + "/" + sprayDir + "/temp.zip";
+        final File tempFile = new File(temp);
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+        String[] filesInFolder = folder.list();
+        if (filesInFolder != null && filesInFolder.length != 0) {
+            return;
+        }
+        JavaPlugin plugin = Cosmetics.getInstance();
+        Utility.saveFileFromInputStream(plugin.getResource("spray/Sprays.zip"), "temp.zip", folder);
+        try {
+            new UnzippingUtils().unzip(tempFile.getPath(), folder.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        tempFile.delete();
+    }
+
+    /**
      * Download a file from a URL to a file
      * @param url URL for the download, should be a direct download
      * @param filePath Path to the file
