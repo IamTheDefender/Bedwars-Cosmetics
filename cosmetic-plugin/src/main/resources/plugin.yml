@@ -1,5 +1,5 @@
 name: Cosmetics
-version: '1.4.6'
+version: '1.4.7'
 main: xyz.iamthedefender.cosmetics.Cosmetics
 prefix: BedWars-Cosmetics
 softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, WorldEdit, FastAsyncWorldEdit]
