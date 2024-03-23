@@ -91,7 +91,7 @@ public class BatCruxEffect extends FinalKillEffect {
             }
         });
 
-        long delay = (onlyVictim ? 80L : 200L);
+        long delay = 80L;
 
        HCore.syncScheduler().every(delay).run(() -> {
            for (Bat bat : bats) {

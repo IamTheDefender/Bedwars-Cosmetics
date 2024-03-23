@@ -418,14 +418,15 @@ public class MainCommand {
         }
         Player player = (Player) sender;
         Location location = player.getLocation();
-        FileConfiguration config = Cosmetics.getInstance().getConfig();
+        ConfigManager config = ConfigUtils.getMainConfig();
         config.set("cosmetic-preview.cosmetic-location.world", location.getWorld().getName());
         config.set("cosmetic-preview.cosmetic-location.x", location.getX());
         config.set("cosmetic-preview.cosmetic-location.y", location.getY());
         config.set("cosmetic-preview.cosmetic-location.z", location.getZ());
         config.set("cosmetic-preview.cosmetic-location.yaw", location.getYaw());
         config.set("cosmetic-preview.cosmetic-location.pitch", location.getPitch());
-        Cosmetics.getInstance().saveConfig();
+        config.save();
+        config.reload();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as preview location.");
     }
 
@@ -440,14 +441,15 @@ public class MainCommand {
         }
         Player player = (Player) sender;
         Location location = player.getLocation();
-        FileConfiguration config = Cosmetics.getInstance().getConfig();
+        ConfigManager config = ConfigUtils.getMainConfig();
         config.set("cosmetic-preview.player-location.world", location.getWorld().getName());
         config.set("cosmetic-preview.player-location.x", location.getX());
         config.set("cosmetic-preview.player-location.y", location.getY());
         config.set("cosmetic-preview.player-location.z", location.getZ());
         config.set("cosmetic-preview.player-location.yaw", location.getYaw());
         config.set("cosmetic-preview.player-location.pitch", location.getPitch());
-        Cosmetics.getInstance().saveConfig();
+        config.save();
+        config.reload();
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 }

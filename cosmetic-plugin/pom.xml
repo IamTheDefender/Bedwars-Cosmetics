@@ -14,8 +14,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -94,6 +94,12 @@
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/proxy-plugin-1.0-SNAPSHOT (1).jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>8.5.9</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
