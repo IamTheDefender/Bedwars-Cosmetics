@@ -7,6 +7,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.hakan.core.HCore;
+import net.byteflux.libby.LibraryManager;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
@@ -390,10 +391,20 @@ public class StartupUtils
         libraryManager.addMavenCentral();
         libraryManager.addJitPack();
         libraryManager.loadLibrary(mysql);
-        libraryManager.loadLibrary(hCore);
+        checkAndLoad(hCore, libraryManager);
         libraryManager.loadLibrary(hikariCP);
         libraryManager.loadLibrary(fastutil);
 
+    }
+
+
+    public static void checkAndLoad(Library library, LibraryManager libraryManager){
+       Package packageInfo = Package.getPackage(library.getGroupId().replace("{", "").replace("}", "."));
+       if(packageInfo != null){
+           Cosmetics.getInstance().getLogger().info("Found library: " + library.getGroupId() + ":" + library.getArtifactId() + ":" + library.getVersion() + ", not loading it..");
+           return;
+       }
+       libraryManager.loadLibrary(library);
     }
 
     public static Location getCosmeticLocation() {
