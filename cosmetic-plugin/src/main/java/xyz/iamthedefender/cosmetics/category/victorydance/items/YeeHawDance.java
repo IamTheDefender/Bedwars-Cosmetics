@@ -1,24 +1,20 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
-import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
+import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class YeeHawDance extends VictoryDance {
     @Override
@@ -67,23 +63,21 @@ public class YeeHawDance extends VictoryDance {
         horse.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 190000000, 3));
         horse.setTamed(true);
         horse.setOwner(winner);
-        HCore.syncScheduler().every(20L, TimeUnit.SECONDS).run((r) -> {
-            IArenaHandler arena = Cosmetics.getInstance().getHandler().getArenaUtil().getArenaByPlayer(winner);
+
+        addEntity(winner, horse);
+
+        addTask(winner, Run.every((r) -> {
+            IArenaHandler arena = CosmeticsPlugin.getInstance().getHandler().getArenaUtil().getArenaByPlayer(winner);
             if(arena == null){
                 horse.remove();
                 r.cancel();
+                return;
             }
+
             if(horse.getPassenger() == null){
                 horse.remove();
                 r.cancel();
             }
-        });
-
-        // Horse Hit Event
-        HCore.registerEvent(EntityDamageEvent.class).filter(event -> !horse.isDead()).consume((event) -> {
-           if (event.getEntity() == horse){
-               event.setCancelled(true);
-           }
-        });
+        }, 20 * 20L));
     }
 }

@@ -6,39 +6,45 @@ package xyz.iamthedefender.cosmetics.util;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import com.hakan.core.HCore;
-import net.byteflux.libby.LibraryManager;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
-import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
-import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
-import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
-import xyz.iamthedefender.cosmetics.category.bedbreakeffects.items.*;
-import xyz.iamthedefender.cosmetics.category.deathcries.items.DeathCryItems;
-import xyz.iamthedefender.cosmetics.category.finalkilleffects.items.*;
-import xyz.iamthedefender.cosmetics.category.glyphs.items.GlyphItems;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.items.IslandTopperItems;
-import xyz.iamthedefender.cosmetics.category.killmessage.items.KillMessageItems;
-import xyz.iamthedefender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.items.ShopKeeperItems;
-import xyz.iamthedefender.cosmetics.category.sprays.items.SprayItems;
-import xyz.iamthedefender.cosmetics.category.victorydance.items.*;
-import xyz.iamthedefender.cosmetics.category.woodskin.items.*;
-import xyz.iamthedefender.cosmetics.category.woodskin.items.log.*;
-import xyz.iamthedefender.cosmetics.listener.CosmeticPurchaseListener;
-import xyz.iamthedefender.cosmetics.listener.PlayerJoinListener;
-import xyz.iamthedefender.cosmetics.support.placeholders.Placeholders;
-import xyz.iamthedefender.cosmetics.util.lib.CosmeticsLibraryManager;
 import net.byteflux.libby.Library;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.items.*;
+import xyz.iamthedefender.cosmetics.category.deathcries.items.DeathCryItems;
+import xyz.iamthedefender.cosmetics.category.deathcries.preview.DeathCryPreview;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.items.*;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.preview.FinalKillEffectPreview;
+import xyz.iamthedefender.cosmetics.category.glyphs.items.GlyphItems;
+import xyz.iamthedefender.cosmetics.category.glyphs.preview.GlyphPreview;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.items.IslandTopperItems;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.preview.IslandTopperPreview;
+import xyz.iamthedefender.cosmetics.category.killmessage.items.KillMessageItems;
+import xyz.iamthedefender.cosmetics.category.killmessage.preview.KillMessagePreview;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.items.ShopKeeperItems;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.preview.ShopKeeperPreview;
+import xyz.iamthedefender.cosmetics.category.sprays.items.SprayItems;
+import xyz.iamthedefender.cosmetics.category.sprays.preview.SprayPreview;
+import xyz.iamthedefender.cosmetics.category.victorydance.items.*;
+import xyz.iamthedefender.cosmetics.category.woodskin.items.*;
+import xyz.iamthedefender.cosmetics.category.woodskin.items.log.*;
+import xyz.iamthedefender.cosmetics.listener.CosmeticPurchaseListener;
+import xyz.iamthedefender.cosmetics.listener.PlayerJoinListener;
+import xyz.iamthedefender.cosmetics.support.placeholders.CosmeticsPlaceholders;
+import xyz.iamthedefender.cosmetics.util.lib.CosmeticsLibraryManager;
+import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
+import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -72,11 +78,16 @@ public class StartupUtils
 
     /**
      Register events and handler
-      @author defender
+      @author IamTheDefender
      */
     public static void registerEvents() {
-        HCore.registerListeners(new CosmeticPurchaseListener());
-        HCore.registerListeners(new PlayerJoinListener());
+        registerListeners(new CosmeticPurchaseListener(), new PlayerJoinListener());
+    }
+
+    public static void registerListeners(Listener... listeners) {
+        for (Listener listener : listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, CosmeticsPlugin.getInstance());
+        }
     }
 
     public static void convertSpraysURLs(){
@@ -95,7 +106,7 @@ public class StartupUtils
                 throw new RuntimeException(e);
             }
 
-            File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir") + "/" + spray.getIdentifier() + "." + FileUtil.getFileExtension(urlString));
+            File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + CosmeticsPlugin.getInstance().getConfig().getString("Spray-Dir") + "/" + spray.getIdentifier() + "." + FileUtil.getFileExtension(urlString));
             String destinationPath = file.getAbsolutePath();
             if(file.exists()){
                 DebugUtil.addMessage("Skipping existing file: " + destinationPath);
@@ -142,15 +153,15 @@ public class StartupUtils
      If the folders do not exist, they will be created.
      */
     public static void createFolders() {
-        File spraysFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + Cosmetics.getInstance().getConfig().getString("Spray-Dir"));
+        File spraysFolder = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + CosmeticsPlugin.getInstance().getConfig().getString("Spray-Dir"));
         if (!spraysFolder.exists()) {
             spraysFolder.mkdirs();
         }
-        File islandToppersFolder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers");
+        File islandToppersFolder = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers");
         if (!islandToppersFolder.exists()) {
             islandToppersFolder.mkdirs();
         }
-        File cubeFile = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/cube.schematic");
+        File cubeFile = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers/cube.schematic");
         // Save if not found
         if (cubeFile.exists()) return;
         try {
@@ -166,11 +177,11 @@ public class StartupUtils
      * in the folder and remove the temp.zip.
      */
     public static void downloadGlyphs() {
-        File folder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs");
+        File folder = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/Glyphs");
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        final String temp = Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs/temp.zip";
+        final String temp = CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/Glyphs/temp.zip";
         final File tempFile = new File(temp);
         if (tempFile.exists()) {
             tempFile.delete();
@@ -179,7 +190,7 @@ public class StartupUtils
         if (filesInFolder != null && filesInFolder.length != 0) {
             return;
         }
-        JavaPlugin plugin = Cosmetics.getInstance();
+        JavaPlugin plugin = CosmeticsPlugin.getInstance();
         Utility.saveFileFromInputStream(plugin.getResource("glyph/GlyphsTemp.zip"), "temp.zip", folder);
         try {
             new UnzippingUtils().unzip(tempFile.getPath(), folder.getPath());
@@ -193,12 +204,12 @@ public class StartupUtils
      * Add the spray files to the plugin folder
      */
     public static void unzipSpray(){
-        String sprayDir = Cosmetics.getInstance().getConfig().getString("Spray-Dir");
-        File folder = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/" + sprayDir);
+        String sprayDir = CosmeticsPlugin.getInstance().getConfig().getString("Spray-Dir");
+        File folder = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + sprayDir);
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        final String temp = Cosmetics.getInstance().getHandler().getAddonPath() + "/" + sprayDir + "/temp.zip";
+        final String temp = CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + sprayDir + "/temp.zip";
         final File tempFile = new File(temp);
         if (tempFile.exists()) {
             tempFile.delete();
@@ -207,7 +218,7 @@ public class StartupUtils
         if (filesInFolder != null && filesInFolder.length != 0) {
             return;
         }
-        JavaPlugin plugin = Cosmetics.getInstance();
+        JavaPlugin plugin = CosmeticsPlugin.getInstance();
         Utility.saveFileFromInputStream(plugin.getResource("spray/Sprays.zip"), "temp.zip", folder);
         try {
             new UnzippingUtils().unzip(tempFile.getPath(), folder.getPath());
@@ -257,7 +268,7 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if (!isPluginEnabled("BedWars1058") && !Cosmetics.getInstance().getApi().isProxy()){
+            if (!isPluginEnabled("BedWars1058") && !CosmeticsPlugin.getInstance().getApi().isProxy()){
                 log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
                 return false;
             }
@@ -275,8 +286,8 @@ public class StartupUtils
 
         if (isPluginEnabled("PlaceholderAPI")){
             log.info("Found PlaceholderAPI, loading placeholders!");
-            new Placeholders(Cosmetics.getInstance()).register();
-            Cosmetics.setPlaceholderAPI(true);
+            new CosmeticsPlaceholders().register();
+            CosmeticsPlugin.setPlaceholderAPI(true);
         }
         return true;
     }
@@ -378,14 +389,22 @@ public class StartupUtils
         new JungleLog().register();
         new OakLog().register();
         new SpruceLog().register();
+
+        // Previews
+        new ShopKeeperPreview();
+        new GlyphPreview();
+        new KillMessagePreview();
+        new FinalKillEffectPreview();
+        new IslandTopperPreview();
+        new DeathCryPreview();
+        new SprayPreview();
     }
 
 
     public static void loadLibraries() {
-        Cosmetics.getInstance().getLogger().info("Loading libraries...");
-        CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(Cosmetics.getInstance());
+        CosmeticsPlugin.getInstance().getLogger().info("Loading libraries...");
+        CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(CosmeticsPlugin.getInstance());
         Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
-        Library hCore = new Library.Builder().groupId("com{}github{}hakan-krgn{}hCore").artifactId("hCore-bukkit").version("0.7.3.3").build();
         Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.1.0").build();
         Library fastutil = new Library.Builder().groupId("it{}unimi{}dsi").artifactId("fastutil").version("8.5.8").build();
         Library slf4j = new Library.Builder().groupId("org{}slf4j").artifactId("slf4j-api").version("2.0.7").build();
@@ -393,60 +412,49 @@ public class StartupUtils
         libraryManager.addJitPack();
         libraryManager.loadLibrary(mysql);
 
-        checkAndLoad(hCore, libraryManager);
         libraryManager.loadLibrary(hikariCP);
         libraryManager.loadLibrary(fastutil);
         libraryManager.loadLibrary(slf4j);
     }
 
-
-    public static void checkAndLoad(Library library, LibraryManager libraryManager){
-       Package packageInfo = Package.getPackage(library.getGroupId().replace("{", "").replace("}", "."));
-       if(packageInfo != null){
-           Cosmetics.getInstance().getLogger().info("Found library: " + library.getGroupId() + ":" + library.getArtifactId() + ":" + library.getVersion() + ", not loading it..");
-           return;
-       }
-       libraryManager.loadLibrary(library);
-    }
-
     public static Location getCosmeticLocation() {
-        World world = Bukkit.getWorld(Cosmetics.getInstance().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
-        double x = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");
-        double y = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.y");
-        double z = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.z");
-        float yaw = (float) Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.yaw");
-        float pitch = (float) Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.pitch");
+        World world = Bukkit.getWorld(CosmeticsPlugin.getInstance().getConfig().getString("cosmetic-preview.cosmetic-location.world"));
+        double x = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.x");
+        double y = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.y");
+        double z = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.z");
+        float yaw = (float) CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.yaw");
+        float pitch = (float) CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.cosmetic-location.pitch");
 
         Location location = new Location(world, x, y, z, yaw, pitch);
         location.setX(location.getBlockX() + 0.5);
         location.setZ(location.getBlockZ() + 0.5);
-
+        location.getChunk().load(true);
         return location;
     }
 
     public static Location getPlayerLocation() {
-        World world = Bukkit.getWorld(Cosmetics.getInstance().getConfig().getString("cosmetic-preview.player-location.world"));
-        double x = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.player-location.x");
-        double y = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.player-location.y");
-        double z = Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.player-location.z");
-        float yaw = (float) Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.player-location.yaw");
-        float pitch = (float) Cosmetics.getInstance().getConfig().getDouble("cosmetic-preview.player-location.pitch");
+        World world = Bukkit.getWorld(CosmeticsPlugin.getInstance().getConfig().getString("cosmetic-preview.player-location.world"));
+        double x = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.player-location.x");
+        double y = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.player-location.y");
+        double z = CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.player-location.z");
+        float yaw = (float) CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.player-location.yaw");
+        float pitch = (float) CosmeticsPlugin.getInstance().getConfig().getDouble("cosmetic-preview.player-location.pitch");
 
         Location location = new Location(world, x, y, z, yaw, pitch);
         location.setX(location.getBlockX() + 0.5);
         location.setZ(location.getBlockZ() + 0.5);
-
+        location.getChunk().load(true);
         return location;
     }
 
     public static void addEntityHideListener(){
-        Cosmetics.getInstance().getProtocolManager().addPacketListener(new PacketAdapter(Cosmetics.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
+        CosmeticsPlugin.getInstance().getProtocolManager().addPacketListener(new PacketAdapter(CosmeticsPlugin.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 int entityID = event.getPacket().getIntegers().read(0);
                 Player player = event.getPlayer();
-                if (Cosmetics.getInstance().getEntityPlayerHashMap().containsKey(entityID)){
-                    if (!player.getUniqueId().equals(Cosmetics.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
+                if (CosmeticsPlugin.getInstance().getEntityPlayerHashMap().containsKey(entityID)){
+                    if (!player.getUniqueId().equals(CosmeticsPlugin.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
                         event.setCancelled(true);
                     }
                 }

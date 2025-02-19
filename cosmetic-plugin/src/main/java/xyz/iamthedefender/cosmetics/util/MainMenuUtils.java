@@ -3,17 +3,18 @@
 package xyz.iamthedefender.cosmetics.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
-import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
-import xyz.iamthedefender.cosmetics.menu.CategoryMenu;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
+import xyz.iamthedefender.cosmetics.menu.CategoryMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,8 +89,8 @@ public class MainMenuUtils {
 
 
     public static List<String> formatLore(List<String> lores, Player p){
-        CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
+        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
+        PlayerOwnedData ownedData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
 
         try {
             lores = lores.stream()
@@ -117,6 +118,7 @@ public class MainMenuUtils {
                     .map(s -> s.replace("{ownedshopkeeper}", "&a" + ownedData.getShopkeeperSkin() + "/" + StartupUtils.shopKeeperSkinList.size() + " &8(" + ((ownedData.getShopkeeperSkin() / StartupUtils.shopKeeperSkinList.size()) * 100) + "%)"))
                     .map(s -> s.replace("{owneddc}", "&a" + ownedData.getDeathCry() + "/" + StartupUtils.deathCryList.size() + " &8(" + ((ownedData.getDeathCry() / StartupUtils.deathCryList.size()) * 100) + "%)"))
                     .map(s -> PlaceholderAPI.setPlaceholders(p, s))
+                    .map(ColorUtil::translate)
                     .collect(Collectors.toList());
         }catch (Exception ignored){
             // Cuz I guess only IslandTopper have this issue
@@ -127,7 +129,7 @@ public class MainMenuUtils {
 
     public static void openMenus(Player p, String name){
         String title = null;
-        boolean placeholder = Cosmetics.isPlaceholderAPI();
+        boolean placeholder = CosmeticsPlugin.isPlaceholderAPI();
         switch (name) {
             case "Sprays":
                 title = CosmeticsType.Sprays.getFormatedName();
@@ -207,7 +209,7 @@ public class MainMenuUtils {
                 new CategoryMenu(CosmeticsType.DeathCries, title).open(p);
                 break;
             case "Back":
-                String command = Cosmetics.getInstance().menuData.getString("Main-Menu.Back.custom-command");
+                String command = CosmeticsPlugin.getInstance().menuData.getString("Main-Menu.Back.custom-command");
                 if (command == null) {
                     p.getOpenInventory().close();
                 }else{

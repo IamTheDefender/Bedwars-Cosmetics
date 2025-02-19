@@ -1,13 +1,14 @@
 package xyz.iamthedefender.cosmetics.data;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import xyz.iamthedefender.cosmetics.Cosmetics;
+import lombok.ToString;
+import org.bukkit.Bukkit;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
-import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +17,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 @Getter
+@ToString
+@EqualsAndHashCode
 public class PlayerOwnedData{
     private final UUID uuid;
     @Setter
@@ -28,7 +31,7 @@ public class PlayerOwnedData{
 
     public void load() {
         try {
-            Connection connection = Cosmetics.getInstance().getRemoteDatabase().getConnection();
+            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM player_owned_data WHERE uuid = ?");
             statement.setString(1, uuid.toString());
             ResultSet result = statement.executeQuery();
@@ -59,7 +62,7 @@ public class PlayerOwnedData{
         "VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);";
 
         try{
-            Connection connection = Cosmetics.getInstance().getRemoteDatabase().getConnection();
+            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, uuid.toString());
             statement.executeUpdate();
@@ -72,7 +75,7 @@ public class PlayerOwnedData{
 
     public void save() {
         try {
-            Connection connection = Cosmetics.getInstance().getRemoteDatabase().getConnection();
+            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
             PreparedStatement statement = connection.prepareStatement("UPDATE player_owned_data SET bed_destroy = ?, death_cry = ?, final_kill_effect = ?, glyph = ?, island_topper = ?, kill_message = ?, projectile_trail = ?, shopkeeper_skin = ?, spray = ?, victory_dance = ?, wood_skin = ? WHERE uuid = ?;");
             statement.setInt(1, bedDestroy);
             statement.setInt(2, deathCry);

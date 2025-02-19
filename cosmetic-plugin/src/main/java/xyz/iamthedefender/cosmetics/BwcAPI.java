@@ -1,17 +1,19 @@
 package xyz.iamthedefender.cosmetics;
 
-import com.hakan.core.HCore;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
@@ -24,22 +26,27 @@ public class BwcAPI implements CosmeticsAPI {
      * @return true if enabled.
      */
     public boolean isMySQL() {
-        return  Cosmetics.getInstance().getConfig().getBoolean("mysql.enable");
+        return  CosmeticsPlugin.getInstance().getConfig().getBoolean("mysql.enable");
     }
 
     @Override
     public IHandler getHandler() {
-        return Cosmetics.getInstance().getHandler();
+        return CosmeticsPlugin.getInstance().getHandler();
+    }
+
+    @Override
+    public SystemGuiManager getSystemGuiManager() {
+        return CosmeticsPlugin.getInstance().getSystemGuiManager();
     }
 
     @Override
     public JavaPlugin getPlugin() {
-        return Cosmetics.getInstance();
+        return CosmeticsPlugin.getInstance();
     }
 
     @Override
     public ConfigManager getMenuData() {
-        return Cosmetics.getInstance().menuData;
+        return CosmeticsPlugin.getInstance().menuData;
     }
 
     @Override
@@ -99,7 +106,12 @@ public class BwcAPI implements CosmeticsAPI {
 
     @Override
     public IVersionSupport getVersionSupport() {
-        return Cosmetics.getInstance().getVersionSupport();
+        return CosmeticsPlugin.getInstance().getVersionSupport();
+    }
+
+    @Override
+    public List<CosmeticPreview> getPreviewList() {
+        return CosmeticsPlugin.getInstance().getPreviewList();
     }
 
     /**
@@ -112,7 +124,7 @@ public class BwcAPI implements CosmeticsAPI {
         if (p == null){
             return null;
         }
-        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
+        PlayerData playerData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 return playerData.getBedDestroy();
@@ -147,7 +159,7 @@ public class BwcAPI implements CosmeticsAPI {
      * @param value Cosmetic value.
      */
     public void setSelectedCosmetic(Player p, CosmeticsType cos, String value){
-        PlayerData playerData = Cosmetics.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
+        PlayerData playerData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         switch (cos){
             case BedBreakEffects:
                 playerData.setBedDestroy(value);
@@ -184,8 +196,8 @@ public class BwcAPI implements CosmeticsAPI {
                 playerData.setWoodSkin(value);
                 break;
         }
-        // Ran ASYNC
-        HCore.asyncScheduler().run(playerData::save);
+        
+        Run.async(playerData::save);
     }
 
     /**
@@ -198,6 +210,6 @@ public class BwcAPI implements CosmeticsAPI {
     }
 
     public IDatabase getDatabase(){
-        return Cosmetics.getInstance().getRemoteDatabase();
+        return CosmeticsPlugin.getInstance().getRemoteDatabase();
     }
 }

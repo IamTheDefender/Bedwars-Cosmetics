@@ -1,14 +1,18 @@
 package xyz.iamthedefender.cosmetics.api.cosmetics.category;
 
 import com.cryptomorin.xseries.XMaterial;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,9 +21,6 @@ import java.util.List;
 import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 public abstract class Spray extends Cosmetics {
     private final String category = "sprays";
@@ -78,6 +79,10 @@ public abstract class Spray extends Cosmetics {
                 return RarityType.valueOf(config.getString(configPath + "rarity"));
             case ITEM_STACK:
                 return config.getItemStack(configPath + "item");
+            case FILE:
+                return get(type).getString(configPath + "file");
+            case URL:
+                return get(type).getString(configPath + "url");
             default:
                 return null;
         }
@@ -105,5 +110,10 @@ public abstract class Spray extends Cosmetics {
 
         // This will never return null!
         return null;
+    }
+
+    @Override
+    public CosmeticsType getCosmeticType() {
+        return CosmeticsType.Sprays;
     }
 }

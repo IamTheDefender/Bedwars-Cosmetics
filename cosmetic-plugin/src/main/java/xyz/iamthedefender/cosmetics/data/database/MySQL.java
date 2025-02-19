@@ -3,10 +3,10 @@ package xyz.iamthedefender.cosmetics.data.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
-import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
-import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
+import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -51,6 +51,7 @@ public class MySQL implements IDatabase {
             boolean ssl = plugin.getConfig().getBoolean("mysql.useSSL");
             int port = plugin.getConfig().getInt("mysql.port", 3306);
             int maxpoolsize = plugin.getConfig().getInt("mysql.maxpoolsize", 50);
+            int maxLifetime = plugin.getConfig().getInt("mysql.maxlifetime", Integer.MAX_VALUE);
 
             HikariConfig config = new HikariConfig();
             config.setDriverClassName("com.mysql.cj.jdbc.Driver");

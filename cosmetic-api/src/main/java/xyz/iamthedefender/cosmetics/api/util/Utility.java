@@ -3,28 +3,27 @@
 package xyz.iamthedefender.cosmetics.api.util;
 
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.hakan.core.utils.ColorUtil;
 import lombok.Getter;
-import org.bukkit.*;
-import org.bukkit.plugin.java.JavaPlugin;
-import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -57,7 +56,7 @@ public class Utility {
      * @return the result
      */
     public static String getMSGLang(Player p, String path) {
-        return ColorUtil.colored(api.getHandler().getLanguageUtil().getMessage(p, path));
+        return ColorUtil.translate(api.getHandler().getLanguageUtil().getMessage(p, path));
     }
 
     /**
@@ -68,7 +67,7 @@ public class Utility {
      */
     public static List<String> getListLang(Player p, String path) {
        return api.getHandler().getLanguageUtil().getMessageList(p, path)
-               .stream().map(ColorUtil::colored).collect(Collectors.toList());
+               .stream().map(ColorUtil::translate).collect(Collectors.toList());
     }
 
     /**
@@ -142,12 +141,12 @@ public class Utility {
         return (mat.toString().contains("WOOD") || mat.toString().contains("PLANKS") || mat.toString().contains("LOG")) && mat.isBlock();
     }
 
-    public static List<Block> getSphere(Location loc, int radius) {
+    public static List<Block> getSphere(Location loc, int radius, Predicate<Block> condition) {
         List<Block> blocks = new ArrayList<>();
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
-                    if (Math.sqrt(x * x + y * y + z * z) <= radius) {
+                    if (Math.sqrt(x * x + y * y + z * z) <= radius && condition.test(loc.clone().add(x, y, z).getBlock())) {
                         blocks.add(loc.clone().add(x, y, z).getBlock());
                     }
                 }

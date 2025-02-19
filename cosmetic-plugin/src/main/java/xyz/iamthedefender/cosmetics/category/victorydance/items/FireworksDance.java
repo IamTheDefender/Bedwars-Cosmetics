@@ -1,16 +1,14 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
-import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 
 import java.util.List;
 
@@ -52,21 +50,13 @@ public class FireworksDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        new BukkitRunnable() {
-            public void run() {
-                if (ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
-                    final Location loc = winner.getEyeLocation();
-                    UsefulUtilsVD.spawnFireWorks(winner, 1, Color.RED, Color.BLUE, loc, false);
-                    new BukkitRunnable() {
-                        public void run() {
-                            UsefulUtilsVD.spawnFireWorks(winner, 1, Color.ORANGE, Color.YELLOW, loc, false);
-                        }
-                    }.runTaskLater(Cosmetics.getInstance(), 300L);
-                }
-                else {
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(Cosmetics.getInstance(), 0L, 60L);
+        addTask(winner, Run.every(() -> {
+            Location loc = winner.getEyeLocation();
+            UsefulUtilsVD.spawnFireWorks(winner, 1, Color.RED, Color.BLUE, loc, false);
+
+            addTask(winner, Run.delayed(() -> {
+                UsefulUtilsVD.spawnFireWorks(winner, 1, Color.ORANGE, Color.YELLOW, loc, false);
+            }, 300L));
+        }, 60L));
     }
 }

@@ -5,23 +5,12 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import com.hakan.core.HCore;
-import com.hakan.core.ui.inventory.InventoryGui;
-import com.hakan.core.utils.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import com.sk89q.worldedit.CuboidClipboard;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.schematic.SchematicFormat;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.util.BlockData;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,14 +19,25 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
+import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.util.BlockData;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static xyz.iamthedefender.cosmetics.util.StartupUtils.getCosmeticLocation;
 import static xyz.iamthedefender.cosmetics.util.StartupUtils.getPlayerLocation;
@@ -46,7 +46,7 @@ public class IslandTopperPreview {
 
     private final Map<UUID, Map<Integer, ItemStack>> inventories = new HashMap<>();
 
-    public void sendIslandTopperPreview(Player player, String selected, InventoryGui gui) {
+    public void sendIslandTopperPreview(Player player, String selected, SystemGui gui) {
         for (IslandTopper islandTopper : StartupUtils.islandTopperList) {
             if (islandTopper.getIdentifier().equals(selected)){
                 if (islandTopper.getField(FieldsType.RARITY, player) == RarityType.NONE) {
@@ -82,7 +82,7 @@ public class IslandTopperPreview {
             playerLocation = getPlayerLocation();
         }catch (Exception exception){
             exception.printStackTrace();
-            player.sendMessage(ColorUtil.colored("&cEither Preview location or Player location is not set! Contact the admin."));
+            player.sendMessage(ColorUtil.translate("&cEither Preview location or Player location is not set! Contact the admin."));
         }
 
         if (cosmeticLocation == null || playerLocation == null) return;
@@ -107,15 +107,15 @@ public class IslandTopperPreview {
 
         PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
         resetPacket.getIntegers().write(0, player.getEntityId());
-        Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+        CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
 
 
         sendIslandTopper(player, finalCosmeticLocation, selected);
 
-        HCore.syncScheduler().after(5, TimeUnit.SECONDS).run(() -> {
+        Run.delayed(() -> {
             if (!as.isDead()) as.remove();
 
-            Cosmetics.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
+            CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
@@ -130,7 +130,7 @@ public class IslandTopperPreview {
             }
 
             gui.open(player);
-        });
+        }, 5 * 20L);
     }
 
     private void sendIslandTopper(Player player, Location location, String selected) {
@@ -143,7 +143,7 @@ public class IslandTopperPreview {
             return;
         }
 
-        File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + topperFileName);
+        File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + topperFileName);
         if (!file.exists()){
             Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
             return;
@@ -162,7 +162,7 @@ public class IslandTopperPreview {
             Vector newOrigin = new Vector(location.getX(), location.getY(), location.getZ());
             newOrigin = newOrigin.add(clipboard.getOffset());
 
-            boolean order = Cosmetics.getInstance().getConfig().getBoolean("island-toppers.order");
+            boolean order = CosmeticsPlugin.getInstance().getConfig().getBoolean("island-toppers.order");
 
             if (!order){
                 HashMap<Location, BlockData> blockLocations = new HashMap<>();
@@ -174,7 +174,12 @@ public class IslandTopperPreview {
 
                             if (baseBlock.isAir()) continue;
 
-                            Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(baseBlock.getId(), (byte) baseBlock.getData());
+                            Optional<XMaterial> xMaterial;
+                            try{
+                                xMaterial = XMaterial.matchXMaterial(Material.getMaterial(baseBlock.getId()).name());
+                            }catch (Exception e){
+                                xMaterial = Optional.of(XMaterial.matchXMaterial(new MaterialData(baseBlock.getId(), (byte) baseBlock.getData()).getItemType()));
+                            }
 
                             if (xMaterial.isPresent()) {
                                 Vector targetVec = new Vector(x, y, z).add(newOrigin);
@@ -227,7 +232,7 @@ public class IslandTopperPreview {
                             }
                         }
                     }
-                }.runTaskTimerAsynchronously(HCore.getInstance(), 0L, 0L);
+                }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
             } else {
                 LinkedHashMap<Location, BlockData> blockLocations = new LinkedHashMap<>();
 
@@ -238,8 +243,12 @@ public class IslandTopperPreview {
 
                             if (baseBlock.isAir()) continue;
 
-                            Optional<XMaterial> xMaterial = XMaterial.matchXMaterial(baseBlock.getId(), (byte) baseBlock.getData());
-
+                            Optional<XMaterial> xMaterial;
+                            try{
+                                xMaterial = XMaterial.matchXMaterial(Material.getMaterial(baseBlock.getId()).name());
+                            }catch (Exception e){
+                                xMaterial = Optional.of(XMaterial.matchXMaterial(new MaterialData(baseBlock.getId(), (byte) baseBlock.getData()).getItemType()));
+                            }
                             if (xMaterial.isPresent()) {
                                 Vector targetVec = new Vector(x, y, z).add(newOrigin);
                                 Location targetLoc = new Location(location.getWorld(),
@@ -291,7 +300,7 @@ public class IslandTopperPreview {
                             }
                         }
                     }
-                }.runTaskTimerAsynchronously(HCore.getInstance(), 0L, 0L);
+                }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
             }
 
         } catch (DataException | IOException e) {

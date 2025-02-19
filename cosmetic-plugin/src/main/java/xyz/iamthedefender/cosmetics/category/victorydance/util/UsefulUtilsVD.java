@@ -2,8 +2,6 @@
 
 package xyz.iamthedefender.cosmetics.category.victorydance.util;
 
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.util.CuboidUtil;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -13,11 +11,11 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.util.CuboidUtil;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -98,7 +96,7 @@ public class UsefulUtilsVD
     }
     
     public static ItemStack gethead(final String value) {
-        return Cosmetics.getInstance().getApi().getVersionSupport().getSkull(value);
+        return CosmeticsPlugin.getInstance().getApi().getVersionSupport().getSkull(value);
     }
     
     public static void launch(final Player player, final double distOverHead, final double distToFacing, final Class<? extends Projectile> projectileClass) {

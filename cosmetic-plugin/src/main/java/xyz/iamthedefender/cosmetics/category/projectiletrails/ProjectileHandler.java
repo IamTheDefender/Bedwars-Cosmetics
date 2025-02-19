@@ -1,7 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.projectiletrails;
 
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.category.projectiletrails.util.ProjectileEffectsUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +7,8 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.util.ProjectileEffectsUtil;
 
 
 public class ProjectileHandler implements Listener {
@@ -25,7 +25,7 @@ public class ProjectileHandler implements Listener {
             return;
         }
 
-        boolean isProjectileTrailsEnabled = Cosmetics.getInstance().getConfig().getBoolean("projectile-trails.enabled");
+        boolean isProjectileTrailsEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("projectile-trails.enabled");
         if (!isProjectileTrailsEnabled) return;
 
         Player shooter = (Player) event.getEntity().getShooter();

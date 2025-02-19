@@ -2,18 +2,17 @@ package xyz.iamthedefender.cosmetics.category.bedbreakeffects.items;
 
 
 import com.cryptomorin.xseries.XSound;
-import com.hakan.core.HCore;
-import com.hakan.core.particle.Particle;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
-import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
+import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
+import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +75,11 @@ public class TornadoBedDestroy extends BedDestroy {
                         double radius = y * radius_increasement;
                         double x = Math.cos(Math.toRadians(360 / lines * l + y * 30.0 - this.angle)) * radius;
                         double z = Math.sin(Math.toRadians(360 / lines * l + y * 30.0 - this.angle)) * radius;
-                        HCore.playParticle(bedLocation.clone().add(x,y,z), new Particle(com.hakan.core.particle.type.ParticleType.CLOUD, 1, 0.01, new Vector(0.0f, 0.0f, 0.0f)));
+
+                        double finalY = y;
+                        ParticleWrapper.getParticle("CLOUD").ifPresent(particleWrapper -> {
+                            particleWrapper.support().displayParticle(null, bedLocation.clone().add(x, finalY, z), particleWrapper, 1, 0.01f, new Vector(0.0f, 0.0f, 0.0f));
+                        });
                     }
                 }
                 ++this.angle;
@@ -84,7 +87,7 @@ public class TornadoBedDestroy extends BedDestroy {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Cosmetics.getInstance(), 2L, 0L);
+        }.runTaskTimer(CosmeticsPlugin.getInstance(), 2L, 0L);
     }
 
 }

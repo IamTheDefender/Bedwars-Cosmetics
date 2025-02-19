@@ -3,10 +3,10 @@ package xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058;
 import com.andrei1058.bedwars.api.BedWars;
 import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.server.ServerType;
-import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
-import xyz.iamthedefender.cosmetics.api.handler.IArenaUtil;
+import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
 import xyz.iamthedefender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
 import xyz.iamthedefender.cosmetics.category.deathcries.DeathCryHandler1058;
@@ -19,9 +19,7 @@ import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler10
 import xyz.iamthedefender.cosmetics.category.sprays.SpraysHandler1058;
 import xyz.iamthedefender.cosmetics.category.victorydance.VictoryDanceHandler1058;
 import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinHandler1058;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
 import java.util.List;
@@ -33,17 +31,17 @@ public class BW1058Handler implements IHandler {
 
     @Override
     public void register() {
-        HCore.registerListeners(new ShopKeeperHandler1058());
-        HCore.registerListeners(new GlyphHandler1058());
-        HCore.registerListeners(new KillMessageHandler1058());
-        HCore.registerListeners(new VictoryDanceHandler1058());
-        HCore.registerListeners(new FinalKillEffectHandler1058());
-        HCore.registerListeners(new BedDestroyHandler1058());
-        HCore.registerListeners(new WoodSkinHandler1058());
-        HCore.registerListeners(new IslandTopperHandler1058());
-        HCore.registerListeners(new ProjectileHandler(Cosmetics.getInstance()));
-        HCore.registerListeners(new DeathCryHandler1058());
-        HCore.registerListeners(new SpraysHandler1058());
+        StartupUtils.registerListeners(new ShopKeeperHandler1058());
+        StartupUtils.registerListeners(new GlyphHandler1058());
+        StartupUtils.registerListeners(new KillMessageHandler1058());
+        StartupUtils.registerListeners(new VictoryDanceHandler1058());
+        StartupUtils.registerListeners(new FinalKillEffectHandler1058());
+        StartupUtils.registerListeners(new BedDestroyHandler1058());
+        StartupUtils.registerListeners(new WoodSkinHandler1058());
+        StartupUtils.registerListeners(new IslandTopperHandler1058());
+        StartupUtils.registerListeners(new ProjectileHandler(CosmeticsPlugin.getInstance()));
+        StartupUtils.registerListeners(new DeathCryHandler1058());
+        StartupUtils.registerListeners(new SpraysHandler1058());
     }
 
     @Override
@@ -135,14 +133,14 @@ public class BW1058Handler implements IHandler {
 
     @Override
     public String getAddonPath() {
-        return api.getAddonsPath().getPath() + File.separator + Cosmetics.getInstance().getDescription().getName();
+        return api.getAddonsPath().getPath() + File.separator + CosmeticsPlugin.getInstance().getDescription().getName();
     }
 
     @Override
     public ISetupSession getSetupSession(UUID playerUUID) {
         com.andrei1058.bedwars.api.server.ISetupSession session = api.getSetupSession(playerUUID);
         if (session == null) return null;
-        ISetupSession cosmeticsSessionHandler = new ISetupSession() {
+        return new ISetupSession() {
             @Override
             public UUID getPlayerUUID() {
                 return session.getPlayer().getUniqueId();
@@ -163,6 +161,5 @@ public class BW1058Handler implements IHandler {
                 session.getConfig().save();
             }
         };
-        return cosmeticsSessionHandler;
     }
 }

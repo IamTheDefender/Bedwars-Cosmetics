@@ -7,14 +7,13 @@ import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapPalette;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
-import xyz.iamthedefender.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 public class CustomRenderer extends MapRenderer
 {
@@ -37,7 +36,7 @@ public class CustomRenderer extends MapRenderer
         try {
             image = ImageIO.read(new URL(url));
             image = MapPalette.resizeImage(image);
-            Cosmetics.getInstance().getLogger().info("Loaded image: " + url);
+            CosmeticsPlugin.getInstance().getLogger().info("Loaded image: " + url);
         }
         catch (final IOException e) {
             e.printStackTrace();

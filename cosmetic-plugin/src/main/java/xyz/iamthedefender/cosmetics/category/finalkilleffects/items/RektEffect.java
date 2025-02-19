@@ -4,17 +4,16 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
-import com.hakan.core.utils.ColorUtil;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import xyz.iamthedefender.cosmetics.util.EntityUtil;
 
 import java.util.Arrays;
@@ -64,7 +63,7 @@ public class RektEffect extends FinalKillEffect {
             stand.setGravity(false);
             stand.setVisible(false);
             stand.setCustomNameVisible(true);
-            stand.setCustomName(ColorUtil.colored("&6" + killer.getDisplayName() + " &ehas #rekt &6" + victim.getDisplayName()
+            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6" + victim.getDisplayName()
                     + "&ehere"));
 
             new BukkitRunnable() {
@@ -72,7 +71,7 @@ public class RektEffect extends FinalKillEffect {
                 public void run() {
                     stand.remove();
                 }
-            }.runTaskLater(Cosmetics.getInstance(), 200L);
+            }.runTaskLater(CosmeticsPlugin.getInstance(), 200L);
         } else {
             ArmorStand stand = (ArmorStand) victim.getWorld().spawnEntity(location.add(0,2,0), EntityType.ARMOR_STAND);
             EntityUtil.entityForPlayerOnly(stand, victim);
@@ -80,7 +79,7 @@ public class RektEffect extends FinalKillEffect {
             stand.setGravity(false);
             stand.setVisible(false);
             stand.setCustomNameVisible(true);
-            stand.setCustomName(ColorUtil.colored("&6" + killer.getDisplayName() + " &ehas #rekt &6Derperino " +
+            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6Derperino " +
                     "&ehere"));
 
              PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
@@ -89,10 +88,11 @@ public class RektEffect extends FinalKillEffect {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Cosmetics.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
+                    CosmeticsPlugin.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
                     ProtocolLibrary.getProtocolManager().sendServerPacket(victim, packet);
+                    stand.remove();
                 }
-            }.runTaskLater(Cosmetics.getInstance(), 80L);
+            }.runTaskLater(CosmeticsPlugin.getInstance(), 80L);
         }
     }
 }

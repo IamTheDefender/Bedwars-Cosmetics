@@ -5,23 +5,24 @@ import com.andrei1058.bedwars.api.arena.IArena;
 import com.andrei1058.bedwars.api.arena.shop.IBuyItem;
 import com.andrei1058.bedwars.api.events.shop.ShopBuyEvent;
 import com.cryptomorin.xseries.XMaterial;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Optional;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.WoodSkin;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 public class WoodSkinHandler1058 implements Listener {
 
     @EventHandler
     public void onShopBuy(ShopBuyEvent e) {
-        boolean isWoodSkinsEnabled = Cosmetics.getInstance().getConfig().getBoolean("wood-skins.enabled");
+        boolean isWoodSkinsEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("wood-skins.enabled");
         if (!isWoodSkinsEnabled) return;
 
         Player p = e.getBuyer();
@@ -29,12 +30,15 @@ public class WoodSkinHandler1058 implements Listener {
         ItemStack stack = item.getItemStack();
 
         if (Utility.isWoodOrLogBlock(stack.getType())) {
-            String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
-            Optional<XMaterial> optional = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase());
-            if (!optional.isPresent()) return;
-            XMaterial m = optional.get();
-            stack.setType(m.parseMaterial());
-            stack.setDurability(m.getData());
+            String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
+            WoodSkin selectedWoodSkin = find(selected);
+
+            if(selectedWoodSkin == null) return;
+
+            ItemStack configItem = (ItemStack) selectedWoodSkin.getField(FieldsType.ITEM_STACK, p);
+
+            stack.setType(configItem.getType());
+            stack.setDurability(configItem.getDurability());
         }
     }
 
@@ -44,7 +48,10 @@ public class WoodSkinHandler1058 implements Listener {
 
         Player p = (Player) e.getPlayer();
         IArena arena = BedWars.getAPI().getArenaUtil().getArenaByPlayer(p);
-        String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
+        WoodSkin selectedWoodSkin = find(selected);
+
+        if(selectedWoodSkin == null) return;
 
         if (arena == null) return;
 
@@ -53,19 +60,30 @@ public class WoodSkinHandler1058 implements Listener {
                         || e.getView().getTitle().equals(Utility.getMSGLang(p, "shop-items-messages.blocks-category.inventory-name"))
                         || e.getView().getTitle().equals(Utility.getMSGLang(p, "shop-items-messages.quick-buy-add-inventory-name"));
 
-        if (isWoodSkinInventory) {
-            for (ItemStack i : inv.getContents()) {
-                if (i == null) continue;
-                if (i.getType() == XMaterial.AIR.parseMaterial()) continue;
+        if(!isWoodSkinInventory) return;
 
-                if (Utility.isWoodOrLogBlock(i.getType()) && selected != null) {
-                    Optional<XMaterial> optional = XMaterial.matchXMaterial(selected.replace("-", "_").toUpperCase());
-                    if (!optional.isPresent()) return;
-                    XMaterial m = optional.get();
-                    i.setType(m.parseMaterial());
-                    i.setDurability(m.getData());
-                }
+        ItemStack item = (ItemStack) selectedWoodSkin.getField(FieldsType.ITEM_STACK, p);
+
+        if (item == null) return;
+
+        for (ItemStack itemStack : inv.getContents()) {
+            if (itemStack == null) continue;
+            if (itemStack.getType() == XMaterial.AIR.parseMaterial()) continue;
+            if (!Utility.isWoodOrLogBlock(itemStack.getType())) continue;
+
+            itemStack.setType(item.getType());
+            itemStack.setDurability(item.getDurability());
+        }
+    }
+
+    private WoodSkin find(String selected) {
+        if (selected == null) return null;
+
+        for (WoodSkin woodSkin : StartupUtils.woodSkinsList) {
+            if (woodSkin.getIdentifier().equals(selected)) {
+                return woodSkin;
             }
         }
+        return null;
     }
 }

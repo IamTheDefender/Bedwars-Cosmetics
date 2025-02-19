@@ -2,17 +2,14 @@ package xyz.iamthedefender.cosmetics.category.finalkilleffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import com.hakan.core.HCore;
-import com.hakan.core.particle.Particle;
-import com.hakan.core.particle.type.ParticleType;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
+import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -70,13 +67,11 @@ public class TornadoEffect extends FinalKillEffect {
                         final double radius = y * radius_increasement;
                         final double x = Math.cos(Math.toRadians((double) 360 / lines * l + y * 30.0 - this.angle)) * radius;
                         final double z = Math.sin(Math.toRadians((double) 360 / lines * l + y * 30.0 - this.angle)) * radius;
-                        Particle particle = new Particle(ParticleType.CLOUD, 1, 0.01f, new Vector(0.0f, 0.0f, 0.0f));
+                        double finalY = y;
 
-                        if (onlyVictim) {
-                            HCore.playParticle(victim, location.clone().add(x, y, z), particle);
-                        } else {
-                            HCore.playParticle(location.clone().add(x, y, z), particle);
-                        }
+                        ParticleWrapper.getParticle("CLOUD").ifPresent(particleWrapper -> {
+                            particleWrapper.support().displayParticle(onlyVictim ? victim : null, location.clone().add(x, finalY, z), particleWrapper, 1, 0.0f);
+                        });
                     }
                 }
                 ++this.angle;
@@ -84,6 +79,6 @@ public class TornadoEffect extends FinalKillEffect {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(Cosmetics.getInstance(), 2L, 0L);
+        }.runTaskTimer(CosmeticsPlugin.getInstance(), 2L, 0L);
     }
 }

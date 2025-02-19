@@ -1,18 +1,18 @@
 package xyz.iamthedefender.cosmetics.category.islandtoppers.items;
 
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.util.IslandToppersUtil;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.util.IslandToppersUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,7 +73,7 @@ public class IslandTopperItems {
                         Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
                         return;
                     }
-                    File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + fileName);
+                    File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + fileName);
                     if (!file.exists()){
                         Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
                         return;

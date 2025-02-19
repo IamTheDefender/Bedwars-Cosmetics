@@ -1,21 +1,21 @@
 package xyz.iamthedefender.cosmetics.category.glyphs.items;
 
-import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.Glyph;
-import xyz.iamthedefender.cosmetics.category.glyphs.util.glyphUtil;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.Glyph;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.category.glyphs.util.GlyphUtil;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class GlyphItems {
 
@@ -68,10 +68,16 @@ public class GlyphItems {
                 @Override
                 public void execute(Player player, Location location) {
                     String fileLocation = config.getString(path + "file");
-                    File file = new File(Cosmetics.getInstance().getHandler().getAddonPath() + "/Glyphs/" + fileLocation);
-                    HCore.asyncScheduler().every(100, TimeUnit.MILLISECONDS).limit(10).run(()-> {
-                        glyphUtil.sendGlyphs(file, location);
-                            });
+                    File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/Glyphs/" + fileLocation);
+
+                    Run.everyAsync((r)-> {
+                        boolean status = GlyphUtil.sendGlyphs(file, location);
+
+                        if (status) return;
+
+                        player.sendMessage(ColorUtil.translate("&cGlyph failed to spawn! Please contact a administrator."));
+                        r.cancel();
+                    }, 2, 10);
                 }
             };
             glyphs.register();

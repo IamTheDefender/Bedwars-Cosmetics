@@ -1,6 +1,10 @@
 package xyz.iamthedefender.cosmetics.category.finalkilleffects;
 
-import xyz.iamthedefender.cosmetics.Cosmetics;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
@@ -9,19 +13,15 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import xyz.iamthedefender.cosmetics.api.event.FinalKillEffectsExecuteEvent;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 
 public class FinalKillEffectHandler2023 implements Listener {
 
     @EventHandler
     public void onFinalKill2023(com.tomkeuper.bedwars.api.events.player.PlayerKillEvent e){
-        CosmeticsAPI api = Cosmetics.getInstance().getApi();
+        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
         if (e.getKiller() == null) return;
 
-        boolean isFinalKillEffectsEnabled = Cosmetics.getInstance().getConfig().getBoolean("final-kill-effects.enabled");
+        boolean isFinalKillEffectsEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("final-kill-effects.enabled");
         if (!isFinalKillEffectsEnabled) return;
 
         String selected = api.getSelectedCosmetic(e.getKiller(), CosmeticsType.FinalKillEffects);

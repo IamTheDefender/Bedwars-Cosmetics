@@ -1,19 +1,18 @@
 package xyz.iamthedefender.cosmetics.category.projectiletrails.util;
 
-import com.hakan.core.HCore;
-import com.hakan.core.particle.Particle;
-import com.hakan.core.particle.type.ParticleType;
-import xyz.iamthedefender.cosmetics.Cosmetics;
+import org.bukkit.Color;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ProjectileTrail;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
+import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
-import org.bukkit.Color;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
+
+import java.util.Optional;
 
 public class ProjectileEffectsUtil {
 
@@ -26,7 +25,7 @@ public class ProjectileEffectsUtil {
 	 */
 	public static void sendEffect(Entity e, Player p) {
 		CosmeticsType type = CosmeticsType.ProjectileTrails;
-		String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(p, type);
+		String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, type);
 		String effect = ConfigUtils.getProjectileTrails().getString(type.getSectionKey() + "." + selected + ".particle");
 		Color color = ConfigUtils.getProjectileTrails().getYml().getColor(type.getSectionKey() + "." + selected + ".color");
 		ProjectileTrail projectileTrail = null;
@@ -36,13 +35,18 @@ public class ProjectileEffectsUtil {
 			}
 		}
 		if (projectileTrail != null && projectileTrail.getField(FieldsType.RARITY, p) != RarityType.NONE){
-			Particle particle;
-			if (color == null) {
-				particle = new Particle(ParticleType.valueOf(effect), 1, 0, new Vector(0, 0, 0));
-			} else {
-				particle = new Particle(ParticleType.valueOf(effect), 1, 0, new Vector(0, 0, 0), color);
+			Optional<ParticleWrapper> particleWrapper = ParticleWrapper.getParticle(effect);
+
+			if (particleWrapper.isEmpty()) {
+				CosmeticsPlugin.getInstance().getLogger().warning("Unknown particle effect: " + effect);
+				return;
 			}
-			HCore.playParticle(e.getLocation(), particle);
+
+			if (color == null) {
+				particleWrapper.get().support().displayParticle(null, e.getLocation(), particleWrapper.get());
+			} else {
+				particleWrapper.get().support().displayParticle(null, e.getLocation(), particleWrapper.get(), color);
+			}
 		}
 	}
 

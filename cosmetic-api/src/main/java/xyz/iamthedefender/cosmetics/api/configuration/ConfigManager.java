@@ -1,12 +1,14 @@
 package xyz.iamthedefender.cosmetics.api.configuration;
 
 import com.cryptomorin.xseries.XMaterial;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
+import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +20,16 @@ import java.util.stream.Collectors;
 // Why copy code from bedwars1058 Config Manager?
 // well because proxy have PluginConfig and bedwars1058 have ConfigManager
 
+@ToString (onlyExplicitlyIncluded = true)
 public class ConfigManager {
+
+    @Getter
     private YamlConfiguration yml;
     private File config;
+
+    @ToString.Include
     private String name;
+    @ToString.Include
     private boolean firstTime = false;
 
     public ConfigManager(Plugin plugin, String name, String dir) {
@@ -58,10 +66,6 @@ public class ConfigManager {
     public void set(String path, Object value) {
         this.yml.set(path, value);
         this.save();
-    }
-
-    public YamlConfiguration getYml() {
-        return this.yml;
     }
 
     public void save() {

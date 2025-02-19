@@ -1,19 +1,16 @@
 package xyz.iamthedefender.cosmetics.category.finalkilleffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.hakan.core.HCore;
-import com.hakan.core.particle.Particle;
-import com.hakan.core.particle.type.ParticleType;
-import com.hakan.core.utils.ColorUtil;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
 import org.bukkit.Location;
 import org.bukkit.entity.Bat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
+import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.util.EntityUtil;
 
 import java.util.ArrayList;
@@ -68,9 +65,9 @@ public class BatCruxEffect extends FinalKillEffect {
             
             int number = i + 1;
             if (onlyVictim) {
-                bat.setCustomName(ColorUtil.colored("&7Deperino's horcrux #" + number));
+                bat.setCustomName(ColorUtil.translate("&7Deperino's horcrux #" + number));
             } else {
-                bat.setCustomName(ColorUtil.colored("&7" + victim.getName() + "'s horcrux #" + number));
+                bat.setCustomName(ColorUtil.translate("&7" + victim.getName() + "'s horcrux #" + number));
             }
             bats.add(bat);
         }
@@ -81,23 +78,29 @@ public class BatCruxEffect extends FinalKillEffect {
             }
         }
 
-        HCore.syncScheduler().every(5L).run(() -> {
+        Run.delayed(() -> {
             if (!bats.isEmpty()) {
                 for (Bat bat : bats) {
                     Location batLocation = bat.getLocation().clone();
-                    Particle particle = new Particle(ParticleType.SMOKE_LARGE, 1, new Vector(0,0,0));
-                    HCore.playParticle(victim, batLocation, particle);
+
+                    ParticleWrapper.getParticle("SMOKE_LARGE").ifPresent(particleWrapper -> {
+                       particleWrapper.support().displayParticle(
+                               null,
+                               batLocation,
+                               particleWrapper,
+                               1
+                        );
+                    });
+
                 }
             }
-        });
+        }, 5L);
 
-        long delay = 80L;
-
-       HCore.syncScheduler().every(delay).run(() -> {
-           for (Bat bat : bats) {
-               bat.remove();
-           }
-           bats.clear();
-       });
+        Run.delayed(() -> {
+            for (Bat bat : bats) {
+                bat.remove();
+            }
+            bats.clear();
+        }, 80L);
     }
 }

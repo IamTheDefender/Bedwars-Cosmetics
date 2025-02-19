@@ -1,20 +1,35 @@
 
 package xyz.iamthedefender.cosmetics;
 
+import co.aikar.commands.PaperCommandManager;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.hakan.core.HCore;
 import lombok.Getter;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
 import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.api.util.config.DefaultsUtils;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
-import xyz.iamthedefender.cosmetics.command.MainCommand;
+import xyz.iamthedefender.cosmetics.command.BedWarsCosmeticsCommand;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
 import xyz.iamthedefender.cosmetics.data.database.MySQL;
@@ -27,67 +42,62 @@ import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023Pr
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 import xyz.iamthedefender.cosmetics.util.Metrics;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
-import xyz.iamthedefender.cosmetics.api.util.config.DefaultsUtils;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.util.VersionSupportUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
 @Getter
-public class Cosmetics extends JavaPlugin {
-    @Getter
+public class CosmeticsPlugin extends JavaPlugin {
+
     public ConfigManager menuData;
+    private PlayerManager playerManager;
+    private Metrics metrics;
+
     public boolean dependenciesMissing = false;
     @Getter
     static boolean placeholderAPI;
-    @Getter
-    private IDatabase remoteDatabase;
-    @Getter
-    private static Cosmetics instance;
-    @Getter
-    private ProtocolManager protocolManager;
-    @Getter
-    private HashMap<Integer, Player> entityPlayerHashMap;
 
     @Getter
-    private PlayerManager playerManager;
-    @Getter
+    private static CosmeticsPlugin instance;
+
+    private ProtocolManager protocolManager;
+
+    private HashMap<Integer, Player> entityPlayerHashMap;
+
     private CosmeticsAPI api;
-    @Getter
     private Economy economy;
-    @Getter
     private IHandler handler;
     private IVersionSupport versionSupport;
-    private Metrics metrics;
+    private IDatabase remoteDatabase;
+
+    private SystemGuiManager systemGuiManager;
+
+    private List<CosmeticPreview> previewList;
+
 
     @Override
     public void onEnable() {
         instance = this;
         api = new BwcAPI();
+        previewList = new ArrayList<>();
         Bukkit.getServicesManager().register(CosmeticsAPI.class, api, this, ServicePriority.Highest);
+        systemGuiManager = new SystemGuiManager(this);
+
         if (!StartupUtils.checkDependencies()){
             getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
             return;
         }
+
         handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
         StartupUtils.loadLibraries();
-        try{
-            HCore.initialize(this);
-        }catch (IllegalStateException ignored){
-            getLogger().severe("Cosmetics does not support your server version, please check dev builds or contact the developer for more info!");
-            setEnabled(false);
-            dependenciesMissing = true;
-            return;
-        }
+
         versionSupport = StartupUtils.getVersionSupport();
         if(versionSupport == null){
             getLogger().severe("Could not find a version support for " + VersionSupportUtil.getVersion());
@@ -112,21 +122,19 @@ public class Cosmetics extends JavaPlugin {
         StartupUtils.addEntityHideListener();
         // Download Glyphs
         StartupUtils.downloadGlyphs();
-        ConfigUtils.getBedDestroys().save();
-        ConfigUtils.getDeathCries().save();
-        ConfigUtils.getFinalKillEffects().save();
-        ConfigUtils.getGlyphs().save();
-        ConfigUtils.getIslandToppers().save();
-        ConfigUtils.getKillMessages().save();
-        ConfigUtils.getProjectileTrails().save();
-        ConfigUtils.getShopKeeperSkins().save();
-        ConfigUtils.getSprays().save();
-        ConfigUtils.getVictoryDances().save();
-        ConfigUtils.getWoodSkins().save();
-        ConfigUtils.getMainConfig().save();
+        this.menuData = new ConfigManager(this, "MainMenu", getHandler().getAddonPath());
+
+        for (ConfigType configType : ConfigType.values()) {
+            Optional.ofNullable(ConfigUtils.get(configType)).ifPresent(ConfigManager::save);
+        }
+
         ConfigUtils.addExtrasToLang();
 
-        this.menuData = new ConfigManager(this, "MainMenu", getHandler().getAddonPath());
+        getLogger().info("Loading data from resources in jar...");
+        DefaultsUtils defaultsUtils = new DefaultsUtils();
+        defaultsUtils.saveAllDefaults();
+        StartupUtils.unzipSpray();
+
         StartupUtils.loadLists();
         getLogger().info("Cosmetics list successfully loaded.");
 
@@ -153,12 +161,11 @@ public class Cosmetics extends JavaPlugin {
         
         getLogger().info("Registering event listeners...");
         StartupUtils.registerEvents();
-        getLogger().info("Registering command to HCore...");
-        HCore.registerCommands(new MainCommand(this));
-        getLogger().info("Loading data from resources in jar...");
-        DefaultsUtils defaultsUtils = new DefaultsUtils();
-        defaultsUtils.saveAllDefaults();
-        StartupUtils.unzipSpray();
+
+        getLogger().info("Registering commands...");
+        PaperCommandManager commandManager = new PaperCommandManager(this);
+        commandManager.registerCommand(new BedWarsCosmeticsCommand());
+
         getLogger().info("Loading cosmetics...");
         StartupUtils.loadCosmetics();
         StartupUtils.convertSpraysURLs();
@@ -168,19 +175,19 @@ public class Cosmetics extends JavaPlugin {
 
         metrics = new Metrics(this, 21340);
 
-        HCore.asyncScheduler().every(5L).run(() -> {
+        Run.everyAsync(() -> {
             try (Connection connection = remoteDatabase.getConnection()){
                 connection.createStatement();
             }catch (Exception e){
                 remoteDatabase.connect();
             }
-        });
+        }, 5L);
 
-        HCore.asyncScheduler().every(5 * 20L).run(() -> {
+        Run.everyAsync(() -> {
             for (Player onlinePlayer : getServer().getOnlinePlayers()) {
                 getPlayerManager().getPlayerOwnedData(onlinePlayer.getUniqueId()).updateOwned();
             }
-        });
+        }, 5 * 20L);
 
     }
 
@@ -228,10 +235,33 @@ public class Cosmetics extends JavaPlugin {
     }
 
     public static void setPlaceholderAPI(boolean placeholderAPI) {
-        Cosmetics.placeholderAPI = placeholderAPI;
+        CosmeticsPlugin.placeholderAPI = placeholderAPI;
     }
 
+    /**
+     * Find cosmetic by id
+     * @param cosmeticId case-sensitive cosmetic id
+     * @param cosmeticsType cosmetic type
+     * @return null if not found or else the {@link Cosmetics} object
+     */
+    public static @Nullable Cosmetics findCosmetic(String cosmeticId, CosmeticsType cosmeticsType) {
+        CosmeticsAPI cosmeticsAPI = instance.getApi();
 
+        List<Cosmetics> cosmetics = new ArrayList<>();
+        cosmetics.addAll(cosmeticsAPI.getBedDestroyList());
+        cosmetics.addAll(cosmeticsAPI.getDeathCryList());
+        cosmetics.addAll(cosmeticsAPI.getFinalKillList());
+        cosmetics.addAll(cosmeticsAPI.getProjectileTrailList());
+        cosmetics.addAll(cosmeticsAPI.getGlyphsList());
+        cosmetics.addAll(cosmeticsAPI.getVictoryDanceList());
+        cosmetics.addAll(cosmeticsAPI.getWoodSkinList());
+        cosmetics.addAll(cosmeticsAPI.getSprayList());
+        cosmetics.addAll(cosmeticsAPI.getKillMessageList());
+        cosmetics.addAll(cosmeticsAPI.getShopKeeperSkinList());
+        cosmetics.addAll(cosmeticsAPI.getIslandTopperList());
+
+        return cosmetics.stream().filter(cosmetic -> cosmetic.getIdentifier().equals(cosmeticId) && cosmetic.getCosmeticType() == cosmeticsType).findFirst().orElse(null);
+    }
 
 
 

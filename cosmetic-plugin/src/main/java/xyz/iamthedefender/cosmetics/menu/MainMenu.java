@@ -1,32 +1,34 @@
 package xyz.iamthedefender.cosmetics.menu;
 
-import com.hakan.core.HCore;
-import com.hakan.core.ui.inventory.InventoryGui;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
+import com.cryptomorin.xseries.XItemStack;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.menu.impl.ChestSystemGui;
+import xyz.iamthedefender.cosmetics.api.util.ItemBuilder;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 
 import java.util.List;
 
-public class MainMenu extends InventoryGui {
-
-    FileConfiguration config = Cosmetics.getInstance().menuData.getYml();
+public class MainMenu extends ChestSystemGui {
 
     public MainMenu(Player player) {
-        super("none", Utility.getMSGLang(player, "cosmetics.gui-title") , 6, InventoryType.CHEST);
+        super(Utility.getMSGLang(player, "cosmetics.gui-title") , 6);
     }
 
     @Override
     public void onOpen(@NotNull Player player) {
         String loc = "Main-Menu";
         String langLoc = "cosmetics.main-menu";
+        FileConfiguration config = CosmeticsPlugin.getInstance().getMenuData().getYml();
+
         for(String name : config.getConfigurationSection(loc).getKeys(false)) {
             try {
                 ItemStack itemStack = ConfigManager.getItemStack(config, loc + "." + name + ".item");
@@ -36,8 +38,14 @@ public class MainMenu extends InventoryGui {
                 List<String> lores = MainMenuUtils.formatLore(lore, player);
                 boolean disabled = config.getBoolean(loc + "." + name + ".disabled");
 
+                // Translate for XItemStack
+                ConfigurationSection configurationSection = new MemoryConfiguration();
+                configurationSection.set("lore", lores);
+                configurationSection.set("name", itemName);
+
                 if (itemStack != null && !disabled) {
-                    super.setItem(slot, HCore.itemBuilder(itemStack).lores(true, lores).name(true, itemName).build(), (e) -> {
+
+                    super.setItem(slot, XItemStack.edit(itemStack, configurationSection, s -> s, null), (e) -> {
                         MainMenuUtils.openMenus((Player) e.getWhoClicked(), name);
                     });
                 }
@@ -49,9 +57,14 @@ public class MainMenu extends InventoryGui {
         String extrasPath = "Extras.fill-empty.";
         if (config.getBoolean(extrasPath + "enabled")){
             ItemStack stack = ConfigManager.getItemStack(config, extrasPath + "item");
-            while (toInventory().firstEmpty() != -1){
-                setItem(toInventory().firstEmpty(), HCore.itemBuilder(stack).name(true, "&r").build());
+            while (getInventory().firstEmpty() != -1){
+                setItem(getInventory().firstEmpty(), new ItemBuilder(stack).name("&r").build());
             }
         }
+    }
+
+    @Override
+    public void onClose(Player player) {
+
     }
 }

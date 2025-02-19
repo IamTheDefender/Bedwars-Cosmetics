@@ -1,32 +1,41 @@
 package xyz.iamthedefender.cosmetics.api.cosmetics.category;
 
 import com.cryptomorin.xseries.XMaterial;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
+import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
+@Getter
 public abstract class VictoryDance extends Cosmetics {
 
 
     private final String category = "victory-dance";
-    ConfigManager config = ConfigUtils.getVictoryDances();
-    ConfigType type = ConfigType.VICTORY_DANCES;
+    private final ConfigManager config = ConfigUtils.getVictoryDances();
+    private final ConfigType type = ConfigType.VICTORY_DANCES;
+    private final HashMap<Player, List<BukkitTask>> tasks = new HashMap<>();
+    private final HashMap<Player, List<Entity>> entities = new HashMap<>();
 
     /**
      * Register the victory dance
@@ -58,6 +67,10 @@ public abstract class VictoryDance extends Cosmetics {
 
         saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
         Utility.getApi().getVictoryDanceList().add(this);
+
+        if(this instanceof Listener) {
+            Utility.getPlugin().getServer().getPluginManager().registerEvents((Listener) this, Utility.getPlugin());
+        }
     }
 
     /**
@@ -77,7 +90,10 @@ public abstract class VictoryDance extends Cosmetics {
             case LORE:
                 return Utility.getListLang(p, "cosmetics." + configPath + "lore");
             case RARITY:
-                return RarityType.valueOf(config.getString(configPath + "rarity"));
+                String rarity = config.getString(configPath + "rarity");
+                if (rarity == null) return getRarity();
+
+                return RarityType.valueOf(rarity.toUpperCase());
             case ITEM_STACK:
                 return config.getItemStack(configPath + "item");
             default:
@@ -91,6 +107,21 @@ public abstract class VictoryDance extends Cosmetics {
      */
     public abstract void execute(Player winner);
 
+    public void stopExecution(Player winner) {
+        if (tasks.containsKey(winner)) tasks.get(winner).forEach(BukkitTask::cancel);
+
+        if (entities.containsKey(winner)) {
+            entities.get(winner).forEach(Entity::remove);
+        }
+    }
+
+    public void addTask(Player winner, BukkitTask task) {
+        tasks.computeIfAbsent(winner, k -> new ArrayList<>()).add(task);
+    }
+
+    public void addEntity(Player winner, Entity entity) {
+        entities.computeIfAbsent(winner, k -> new ArrayList<>()).add(entity);
+    }
 
     /**
      * Get the default victory dance
@@ -105,11 +136,17 @@ public abstract class VictoryDance extends Cosmetics {
                 }
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Bukkit.getLogger().severe("There was an error with cosmetics addon config file!");
             Bukkit.getLogger().severe("Server will restart to fix this bug!");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
         }
         // This will never return null!
         return null;
+    }
+
+    @Override
+    public CosmeticsType getCosmeticType() {
+        return CosmeticsType.VictoryDances;
     }
 }

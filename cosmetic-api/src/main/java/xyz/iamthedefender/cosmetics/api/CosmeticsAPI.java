@@ -1,12 +1,14 @@
 package xyz.iamthedefender.cosmetics.api;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
-import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public interface CosmeticsAPI {
     boolean isMySQL();
 
     IHandler getHandler();
+    SystemGuiManager getSystemGuiManager();
 
     JavaPlugin getPlugin();
 
@@ -36,4 +39,5 @@ public interface CosmeticsAPI {
     List<ShopKeeperSkin> getShopKeeperSkinList();
     List<IslandTopper> getIslandTopperList();
     IVersionSupport getVersionSupport();
+    List<CosmeticPreview> getPreviewList();
 }

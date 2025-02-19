@@ -5,30 +5,30 @@ package xyz.iamthedefender.cosmetics.category.islandtoppers;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.api.events.gameplay.GameStateChangeEvent;
-import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 public class IslandTopperHandler1058 implements Listener {
     @EventHandler
     public void onSpawn1058(GameStateChangeEvent e) {
 
-        boolean isIslandToppersEnabled = Cosmetics.getInstance().getConfig().getBoolean("island-toppers.enabled");
+        boolean isIslandToppersEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("island-toppers.enabled");
         if (!isIslandToppersEnabled) return;
 
-        HCore.syncScheduler().after(20).run((runnable) -> {
+        Run.delayed(() -> {
             for (ITeam teams : e.getArena().getTeams()) {
                 Player player = null;
                 for (Player p : teams.getMembers()) {
-                    if (!Cosmetics.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandTopper).equals("none")) {
+                    if (!CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandTopper).equals("none")) {
                         player = p;
                     }
                 }
@@ -40,7 +40,7 @@ public class IslandTopperHandler1058 implements Listener {
                 if (location == null) {
                     return;
                 }
-                String selected = Cosmetics.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
+                String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
                 for(IslandTopper islandTopper : StartupUtils.islandTopperList){
                     if (islandTopper.getIdentifier().equals(selected)){
                         if (islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {
@@ -49,6 +49,6 @@ public class IslandTopperHandler1058 implements Listener {
                     }
                 }
             }
-        });
+        }, 20L);
     }
 }

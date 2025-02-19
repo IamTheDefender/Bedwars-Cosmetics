@@ -2,12 +2,6 @@ package xyz.iamthedefender.cosmetics.category.finalkilleffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import com.hakan.core.HCore;
-import com.hakan.core.particle.Particle;
-import com.hakan.core.particle.type.ParticleType;
-import xyz.iamthedefender.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -16,7 +10,10 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
+import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,9 +75,9 @@ public class SquidMissleEffect extends FinalKillEffect {
                     stand.eject();
                     stand.teleport(stand.getLocation().add(0.0, 0.5, 0.0));
                     stand.setPassenger(squid);
-
-                    Particle particle = new Particle(ParticleType.FLAME, 1, 0.01f, new Vector(0.0f, 0.0f, 0.0f));
-                    HCore.playParticle(victim, stand.getLocation(), particle);
+                    
+                    ParticleWrapper.getParticle("FLAME").ifPresent(particleWrapper ->
+                            particleWrapper.support().displayParticle(null, stand.getLocation(), particleWrapper, 1, 0.0f));
 
                     victim.playSound(victim.getLocation(), XSound.ENTITY_CHICKEN_EGG.parseSound(), 1.0f, 1.0f);
                     if (this.i1 == 25) {
@@ -102,7 +99,7 @@ public class SquidMissleEffect extends FinalKillEffect {
                         this.cancel();
                     }
                 }
-            }.runTaskTimer(Cosmetics.getInstance(), 4L, 1L);
+            }.runTaskTimer(CosmeticsPlugin.getInstance(), 4L, 1L);
         } else {
             Squid squid = (Squid) victim.getWorld().spawnEntity(location, EntityType.SQUID);
             stand.setPassenger(squid);
@@ -115,8 +112,12 @@ public class SquidMissleEffect extends FinalKillEffect {
                     stand.eject();
                     stand.teleport(stand.getLocation().add(0.0, 0.5, 0.0));
                     stand.setPassenger(squid);
-                    Particle particle = new Particle(ParticleType.FLAME, 1, 0.01f, new Vector(0.0f, 0.0f, 0.0f));
-                    HCore.playParticle(victim, stand.getLocation(), particle);
+
+                    ParticleWrapper.getParticle("FLAME")
+                            .ifPresent(
+                                    particleWrapper -> particleWrapper.support().displayParticle(null, stand.getLocation(), particleWrapper, 1, 0.0f)
+                            );
+
                     victim.playSound(victim.getLocation(), XSound.ENTITY_CHICKEN_EGG.parseSound(), 1.0f, 1.0f);
                     if (this.i1 == 13) {
                         final Firework fw = stand.getWorld().spawn(stand.getLocation(), Firework.class);
@@ -131,7 +132,7 @@ public class SquidMissleEffect extends FinalKillEffect {
                         this.cancel();
                     }
                 }
-            }.runTaskTimer(Cosmetics.getInstance(), 4L, 1L);
+            }.runTaskTimer(CosmeticsPlugin.getInstance(), 4L, 1L);
         }
     }
 }

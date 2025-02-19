@@ -1,35 +1,35 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.hakan.core.HCore;
-import com.hakan.core.skin.Skin;
-import net.citizensnpcs.util.NMS;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
-import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
-import xyz.iamthedefender.cosmetics.util.MathUtil;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.npc.skin.Skin;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
-import org.bukkit.Bukkit;
+import net.citizensnpcs.trait.SneakTrait;
+import net.citizensnpcs.util.NMS;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
+import xyz.iamthedefender.cosmetics.util.MathUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 import static org.bukkit.Bukkit.getLogger;
 
 public class TwerkApocalypseDance extends VictoryDance {
+
+    private final Map<Player, List<NPC>> npcsStorage = new HashMap<>();
+
     @Override
     public ItemStack getItem() {
         return XMaterial.LEATHER_BOOTS.parseItem();
@@ -67,48 +67,41 @@ public class TwerkApocalypseDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-        Skin skin = null;
-        getLogger().info("Trying to find the skin of " + winner.getName());
-        try{
-            List<String> values = Arrays.asList(Utility.getFromName(winner.getName()));
-            skin = new Skin(values.get(0), values.get(1));
-        }catch (Exception e){}
-
-
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
-        List<NPC> npcs = new ArrayList<>();
 
-        Skin finalSkin = skin;
-        HCore.syncScheduler().every(1).limit(15).run(() -> {
+        addTask(winner, Run.every(() -> {
             List<Block> freeBlocks = UsefulUtilsVD.getFreeBlocks(winner.getLocation());
             Location loc = freeBlocks.get(MathUtil.getRandom(0, freeBlocks.size() -1)).getLocation();
             loc.setYaw((float) MathUtil.getRandom(0.0D, 360.0D));
 
             if (loc.getBlock().getType() == Material.AIR && loc.subtract(0,1,0).getBlock().getType() != Material.AIR) {
                 NPC npc = registry.createNPC(EntityType.PLAYER, winner.getDisplayName());
-                if(finalSkin != null){
-                    npc.getOrAddTrait(SkinTrait.class).setTexture(finalSkin.getTexture(), finalSkin.getSignature());
-                }
+
+                npc.getOrAddTrait(SkinTrait.class).setSkinName(winner.getName(), true);
 
                 npc.getOrAddTrait(LookClose.class).lookClose(false);
                 npc.spawn(loc.add(0,1,0));
-                npcs.add(npc);
+                npcsStorage.computeIfAbsent(winner, k -> new ArrayList<>()).add(npc);
 
-                HCore.syncScheduler().every(1, TimeUnit.SECONDS).run(() -> {
-                    if (npc.isSpawned()) {
-                        Player npcP  = (Player) npc.getEntity();
-                        npcP.setSneaking(!npcP.isSneaking());
-                        NMS.setSneaking(npcP, npcP.isSneaking());
+                addTask(winner, Run.every((r) -> {
+                    if(!npc.isSpawned()) {
+                        r.cancel();
+                        return;
                     }
-                });
-            }
-        });
 
-        Bukkit.getScheduler().runTaskLater(HCore.getInstance(), () -> {
-            for (NPC npc : npcs) {
-                npc.destroy();
+                    Player npcPlayer = (Player) npc.getEntity();
+                    npcPlayer.setSneaking(!npcPlayer.isSneaking());
+                }, 20L));
             }
-        }, 20L * 9 + 10L);
+        }, 1L, 15));
 
+        addTask(winner, Run.delayed(() -> Optional.ofNullable(npcsStorage.get(winner)).ifPresent(list -> list.forEach(NPC::destroy)), 20L * 9 + 10L));
+    }
+
+    @Override
+    public void stopExecution(Player winner) {
+        super.stopExecution(winner);
+
+        Optional.ofNullable(npcsStorage.get(winner)).ifPresent(list -> list.forEach(NPC::destroy));
     }
 }

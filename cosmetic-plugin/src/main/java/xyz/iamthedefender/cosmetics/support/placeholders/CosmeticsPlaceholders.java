@@ -1,21 +1,15 @@
 package xyz.iamthedefender.cosmetics.support.placeholders;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import xyz.iamthedefender.cosmetics.Cosmetics;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class Placeholders extends PlaceholderExpansion {
-    private final Cosmetics plugin;
-
-    public Placeholders(Cosmetics plugin) {
-        this.plugin = plugin;
-    }
-
+public class CosmeticsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
@@ -37,11 +31,10 @@ public class Placeholders extends PlaceholderExpansion {
         return true;
     }
 
-
-
+    @Override
     public String onPlaceholderRequest(Player player, String placeholder) {
-        CosmeticsAPI api = Cosmetics.getInstance().getApi();
-        PlayerOwnedData ownedData = Cosmetics.getInstance().getPlayerManager().getPlayerOwnedData(player.getUniqueId());
+        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
+        PlayerOwnedData ownedData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerOwnedData(player.getUniqueId());
         switch (placeholder.toLowerCase()) {
             case "selected_dc":
                 return api.getSelectedCosmetic(player, CosmeticsType.DeathCries);

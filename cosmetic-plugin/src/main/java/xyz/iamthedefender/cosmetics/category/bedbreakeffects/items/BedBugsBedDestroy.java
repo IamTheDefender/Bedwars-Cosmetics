@@ -1,17 +1,17 @@
 package xyz.iamthedefender.cosmetics.category.bedbreakeffects.items;
 
 import com.cryptomorin.xseries.XMaterial;
-import com.hakan.core.HCore;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
-import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
-import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 import org.bukkit.Location;
 import org.bukkit.entity.Endermite;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
+import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import java.util.List;
  * This effect spawns many bed bugs near the bed location.
  */
 public class BedBugsBedDestroy extends BedDestroy {
+
     /** {@inheritDoc} */
     @Override
     public ItemStack getItem() {
@@ -61,15 +62,16 @@ public class BedBugsBedDestroy extends BedDestroy {
     @Override
     public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
         List<Endermite> endermites = new ArrayList<>();
-        HCore.syncScheduler().every(1L).limit(4).run(() -> {
+
+        Run.every(() -> {
             Location loc = UsefulUtilsVD.getRandomLocation(bedLocation, 1);
             Endermite mite = (Endermite) player.getWorld().spawnEntity(loc.add(0,1,0), EntityType.ENDERMITE);
             endermites.add(mite);
-        });
+        }, 1, 4);
 
-        HCore.syncScheduler().after(100L).run(() -> {
-           endermites.forEach(Entity::remove);
-        });
+        Run.delayed(() -> {
+            endermites.forEach(Entity::remove);
+        }, 100L);
     }
 
 }
