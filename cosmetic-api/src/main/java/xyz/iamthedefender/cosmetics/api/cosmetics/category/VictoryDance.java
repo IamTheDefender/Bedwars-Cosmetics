@@ -90,7 +90,10 @@ public abstract class VictoryDance extends Cosmetics {
             case LORE:
                 return Utility.getListLang(p, "cosmetics." + configPath + "lore");
             case RARITY:
-                return RarityType.valueOf(config.getString(configPath + "rarity"));
+                String rarity = config.getString(configPath + "rarity");
+                if (rarity == null) return getRarity();
+
+                return RarityType.valueOf(rarity.toUpperCase());
             case ITEM_STACK:
                 return config.getItemStack(configPath + "item");
             default:
@@ -133,6 +136,7 @@ public abstract class VictoryDance extends Cosmetics {
                 }
             }
         }catch (Exception exception){
+            exception.printStackTrace();
             Bukkit.getLogger().severe("There was an error with cosmetics addon config file!");
             Bukkit.getLogger().severe("Server will restart to fix this bug!");
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
