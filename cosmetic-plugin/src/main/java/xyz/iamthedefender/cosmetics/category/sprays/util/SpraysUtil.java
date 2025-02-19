@@ -76,7 +76,7 @@ public class SpraysUtil
             if (sprayFile == null) {
                 sprayFile = selectedSpray.getIdentifier() + "." + FileUtil.getFileExtension(sprayUrl);
             } else {
-                sprayFile = selectedSpray.getField(FieldsType.FILE, player).toString();
+                sprayFile = String.valueOf(selectedSpray.getField(FieldsType.FILE, player));
             }
 
 
