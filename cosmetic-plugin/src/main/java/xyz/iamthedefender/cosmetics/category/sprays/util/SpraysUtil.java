@@ -21,6 +21,7 @@ import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.category.sprays.preview.SprayPreview;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.FileUtil;
 
@@ -62,11 +63,13 @@ public class SpraysUtil
             }
             DebugUtil.addMessage("Check 1");
 
-            view.removeRenderer(view.getRenderers().get(0));
-            final CustomRenderer renderer = new CustomRenderer();
+            view.getRenderers().forEach(view::removeRenderer);
 
-            String sprayUrl = selectedSpray.getField(FieldsType.URL, player).toString();
-            String sprayFile = selectedSpray.getField(FieldsType.FILE, player).toString();
+            CustomRenderer renderer = new CustomRenderer();
+
+            // Can't use Object.toString() here, as values can be null!
+            String sprayUrl = String.valueOf(selectedSpray.getField(FieldsType.URL, player));
+            String sprayFile = String.valueOf(selectedSpray.getField(FieldsType.FILE, player));
 
             DebugUtil.addMessage("Playing " + selectedSpray.getIdentifier() + " Spray for " + player.getDisplayName());
 
@@ -99,7 +102,10 @@ public class SpraysUtil
         ItemStack map = CosmeticsPlugin.getInstance().getApi().getVersionSupport().applyRenderer(renderer, view);
         itemFrame.setItem(map);
         itemFrame.setRotation(Rotation.NONE);
+
         if(isPreview){
+            itemFrame.setFacingDirection(SprayPreview.getCardinalDirection(player.getLocation()).getOppositeFace());
+
             player.getInventory().addItem(map);
             player.getInventory().setItem(0, map);
         }

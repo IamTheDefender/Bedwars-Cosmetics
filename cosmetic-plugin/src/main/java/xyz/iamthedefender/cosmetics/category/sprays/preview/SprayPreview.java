@@ -44,8 +44,8 @@ public class SprayPreview extends CosmeticPreview {
 
     private PacketAdapter adapter;
 
-    public SprayPreview(CosmeticsType type) {
-        super(type);
+    public SprayPreview() {
+        super(CosmeticsType.Sprays);
     }
 
     @Override
@@ -127,12 +127,14 @@ public class SprayPreview extends CosmeticPreview {
         view.addRenderer(renderer);
          */
 
+
+
         playerLocation.setPitch(0);
         playerLocation.add(0, 1.5, 0);
         Location firstBlock = playerLocation.clone().add(playerLocation.getDirection().multiply(2));
         firstBlock.getBlock().setType(Material.BARRIER);
         firstBlock.getChunk().load(true);
-        frame = (ItemFrame) player.getWorld().spawnEntity(firstBlock.getBlock().getRelative(getCardinalDirection(playerLocation)).getLocation(), EntityType.ITEM_FRAME);
+        frame = (ItemFrame) player.getWorld().spawnEntity(firstBlock.getBlock().getRelative(getCardinalDirection(playerLocation).getOppositeFace()).getLocation(), EntityType.ITEM_FRAME);
 
         adapter = new PacketAdapter(CosmeticsPlugin.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
             @Override

@@ -35,6 +35,7 @@ import xyz.iamthedefender.cosmetics.category.projectiletrails.items.ProjectileTr
 import xyz.iamthedefender.cosmetics.category.shopkeeperskins.items.ShopKeeperItems;
 import xyz.iamthedefender.cosmetics.category.shopkeeperskins.preview.ShopKeeperPreview;
 import xyz.iamthedefender.cosmetics.category.sprays.items.SprayItems;
+import xyz.iamthedefender.cosmetics.category.sprays.preview.SprayPreview;
 import xyz.iamthedefender.cosmetics.category.victorydance.items.*;
 import xyz.iamthedefender.cosmetics.category.woodskin.items.*;
 import xyz.iamthedefender.cosmetics.category.woodskin.items.log.*;
@@ -396,6 +397,7 @@ public class StartupUtils
         new FinalKillEffectPreview();
         new IslandTopperPreview();
         new DeathCryPreview();
+        new SprayPreview();
     }
 
 

@@ -7,6 +7,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.npc.skin.Skin;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
+import net.citizensnpcs.trait.SneakTrait;
 import net.citizensnpcs.util.NMS;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -82,22 +83,19 @@ public class TwerkApocalypseDance extends VictoryDance {
                 npc.spawn(loc.add(0,1,0));
                 npcsStorage.computeIfAbsent(winner, k -> new ArrayList<>()).add(npc);
 
-                Run.every((r) -> {
+                addTask(winner, Run.every((r) -> {
                     if(!npc.isSpawned()) {
                         r.cancel();
                         return;
                     }
 
-                    Player npcP = (Player) npc.getEntity();
-                    npcP.setSneaking(!npcP.isSneaking());
-                    NMS.setSneaking(npcP, npcP.isSneaking());
-                }, 20L);
+                    Player npcPlayer = (Player) npc.getEntity();
+                    npcPlayer.setSneaking(!npcPlayer.isSneaking());
+                }, 20L));
             }
         }, 1L, 15));
 
-        Run.delayed(() ->
-                Optional.ofNullable(npcsStorage.get(winner)).ifPresent(list -> list.forEach(NPC::destroy))
-                , 20L * 9 + 10L);
+        addTask(winner, Run.delayed(() -> Optional.ofNullable(npcsStorage.get(winner)).ifPresent(list -> list.forEach(NPC::destroy)), 20L * 9 + 10L));
     }
 
     @Override
