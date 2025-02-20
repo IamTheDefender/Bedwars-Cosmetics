@@ -110,7 +110,6 @@ public class Utility {
 
             return new String[]{texture, signature};
         } catch (IOException e) {
-            api.getPlugin().getLogger().warning("Could not get skin data from session servers!");
             return null;
         }
     }
