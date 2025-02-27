@@ -8,6 +8,7 @@ import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
 import net.minecraft.server.v1_8_R3.EnumParticle;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -58,16 +59,17 @@ public class VersionSupport_1_8_R3 implements IVersionSupport {
 
     @Override
     public boolean isValidParticle(String name) {
+        try {
+            String packageName = Bukkit.getServer().getClass().getPackage().getName();
+            String serverVersion = packageName.substring(packageName.lastIndexOf('.') + 1);
+            Class<?> enumParticleClass = Class.forName("net.minecraft.server." + serverVersion + ".EnumParticle");
 
-        try{
-            EnumParticle.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException e) {
+            Enum.valueOf((Class<Enum>) enumParticleClass, name.toUpperCase());
+        } catch (ClassNotFoundException | IllegalArgumentException e) {
             return false;
         }
-
         return true;
     }
-
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle) {
         displayParticle(player, location, particle, 1, 1.0f, null, null);

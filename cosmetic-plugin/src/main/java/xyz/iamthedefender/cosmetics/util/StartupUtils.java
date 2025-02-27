@@ -28,7 +28,6 @@ import xyz.iamthedefender.cosmetics.category.finalkilleffects.preview.FinalKillE
 import xyz.iamthedefender.cosmetics.category.glyphs.items.GlyphItems;
 import xyz.iamthedefender.cosmetics.category.glyphs.preview.GlyphPreview;
 import xyz.iamthedefender.cosmetics.category.islandtoppers.items.IslandTopperItems;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.preview.IslandTopperPreview;
 import xyz.iamthedefender.cosmetics.category.killmessage.items.KillMessageItems;
 import xyz.iamthedefender.cosmetics.category.killmessage.preview.KillMessagePreview;
 import xyz.iamthedefender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
@@ -395,7 +394,7 @@ public class StartupUtils
         new GlyphPreview();
         new KillMessagePreview();
         new FinalKillEffectPreview();
-        new IslandTopperPreview();
+        // new IslandTopperPreview(); - temporarily disabled
         new DeathCryPreview();
         new SprayPreview();
     }
