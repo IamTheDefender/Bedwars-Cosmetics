@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
 import xyz.iamthedefender.cosmetics.api.util.Run;
@@ -54,8 +55,7 @@ public class FloatingLanternDance extends VictoryDance {
 
     @Override
     public void execute(Player winner) {
-
-        Run.every(() -> {
+        BukkitTask task = Run.every(() -> {
             Location loc = UsefulUtilsVD.getRandomLocation(winner.getLocation(), 10);
             Bat bat = (Bat) winner.getWorld().spawnEntity(loc, EntityType.BAT);
             bat.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1));
@@ -63,15 +63,16 @@ public class FloatingLanternDance extends VictoryDance {
 
             addEntity(winner, bat);
 
-            ArmorStand stand = (ArmorStand)winner.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+            ArmorStand stand = (ArmorStand) winner.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
             stand.setVisible(false);
+            stand.setGravity(false);
+            stand.setHelmet(UsefulUtilsVD.gethead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRjNzM2ODY0YTY0OWY2NjVmMDRmMjhiYjE0YTNjNGVhMGYyNDVlODQ2MDE3YWNmZTM2NmU3ZDEzNWI0ZmNhOCJ9fX0="));
 
             addEntity(winner, stand);
 
             bat.setPassenger(stand);
-
-            stand.setHelmet(UsefulUtilsVD.gethead("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTRjNzM2ODY0YTY0OWY2NjVmMDRmMjhiYjE0YTNjNGVhMGYyNDVlODQ2MDE3YWNmZTM2NmU3ZDEzNWI0ZmNhOCJ9fX0="));
-
         }, 8L);
+
+        addTask(winner, task);
     }
 }
