@@ -57,42 +57,54 @@ public class RektEffect extends FinalKillEffect {
 
     @Override
     public void execute(Player killer, Player victim, Location location, boolean onlyVictim) {
-        if (!onlyVictim) {
-            ArmorStand stand = (ArmorStand) victim.getWorld().spawnEntity(victim.getEyeLocation(), EntityType.ARMOR_STAND);
-            stand.setSmall(true);
-            stand.setGravity(false);
-            stand.setVisible(false);
-            stand.setCustomNameVisible(true);
-            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6" + victim.getDisplayName()
-                    + "&ehere"));
+        ArmorStand stand;
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    stand.remove();
-                }
-            }.runTaskLater(CosmeticsPlugin.getInstance(), 200L);
-        } else {
-            ArmorStand stand = (ArmorStand) victim.getWorld().spawnEntity(location.add(0,2,0), EntityType.ARMOR_STAND);
+        if (onlyVictim) {
+            stand = (ArmorStand) victim.getWorld().spawnEntity(location.add(0, 2, 0), EntityType.ARMOR_STAND);
             EntityUtil.entityForPlayerOnly(stand, victim);
-            stand.setSmall(true);
-            stand.setGravity(false);
-            stand.setVisible(false);
-            stand.setCustomNameVisible(true);
-            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6Derperino " +
-                    "&ehere"));
+            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6Derperino &ehere"));
 
-             PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-            int[] entityIds = new int[] { stand.getEntityId() };
-            packet.getIntegerArrays().write(0, entityIds);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    CosmeticsPlugin.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
-                    ProtocolLibrary.getProtocolManager().sendServerPacket(victim, packet);
-                    stand.remove();
-                }
-            }.runTaskLater(CosmeticsPlugin.getInstance(), 80L);
+            schedulePlayerSpecificStandRemoval(stand, victim, 80L);
+        } else {
+            stand = (ArmorStand) victim.getWorld().spawnEntity(victim.getEyeLocation(), EntityType.ARMOR_STAND);
+            stand.setCustomName(ColorUtil.translate("&6" + killer.getDisplayName() + " &ehas #rekt &6" + victim.getDisplayName() + "&ehere"));
+
+            scheduleStandRemoval(stand, 200L);
         }
+
+        setupArmorStand(stand);
+    }
+
+    private void setupArmorStand(ArmorStand stand) {
+        stand.setSmall(true);
+        stand.setGravity(false);
+        stand.setVisible(false);
+        stand.setCustomNameVisible(true);
+    }
+
+    private void scheduleStandRemoval(ArmorStand stand, long delay) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                stand.remove();
+            }
+        }.runTaskLater(CosmeticsPlugin.getInstance(), delay);
+    }
+
+    private void schedulePlayerSpecificStandRemoval(ArmorStand stand, Player player, long delay) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Create packet to destroy the entity
+                PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
+                int[] entityIds = new int[] { stand.getEntityId() };
+                packet.getIntegerArrays().write(0, entityIds);
+
+                // Clean up and send packet
+                CosmeticsPlugin.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
+                ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+                stand.remove();
+            }
+        }.runTaskLater(CosmeticsPlugin.getInstance(), delay);
     }
 }

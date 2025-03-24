@@ -156,6 +156,10 @@ public class ConfigManager {
         return this.yml.getBoolean(path);
     }
 
+    public boolean getBoolean(String path, boolean defaultValue) {
+        return this.yml.getBoolean(path, defaultValue);
+    }
+
     public int getInt(String path) {
         return this.yml.getInt(path);
     }
