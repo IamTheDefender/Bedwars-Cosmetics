@@ -17,6 +17,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
+import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
@@ -42,6 +43,8 @@ import xyz.iamthedefender.cosmetics.listener.CosmeticPurchaseListener;
 import xyz.iamthedefender.cosmetics.listener.PlayerJoinListener;
 import xyz.iamthedefender.cosmetics.support.placeholders.CosmeticsPlaceholders;
 import xyz.iamthedefender.cosmetics.util.lib.CosmeticsLibraryManager;
+import xyz.iamthedefender.cosmetics.versionsupport.LegacyWorldEditHandler;
+import xyz.iamthedefender.cosmetics.versionsupport.ModernWorldEditHandler;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
 
@@ -143,6 +146,18 @@ public class StartupUtils
         }
 
         return versionSupport;
+    }
+
+    public static IWorldEditHandler getWorldEditHandler(){
+        IWorldEditHandler worldEditHandler = null;
+
+        if(VersionSupportUtil.isLowerThan("1.13")){
+            worldEditHandler = new LegacyWorldEditHandler();
+        } else if(VersionSupportUtil.isHigherThan("1.13")){
+            worldEditHandler = new ModernWorldEditHandler();
+        }
+
+        return worldEditHandler;
     }
 
 

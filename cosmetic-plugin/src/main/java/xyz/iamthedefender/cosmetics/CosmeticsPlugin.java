@@ -23,6 +23,7 @@ import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
@@ -79,6 +80,8 @@ public class CosmeticsPlugin extends JavaPlugin {
 
     private List<CosmeticPreview> previewList;
 
+    private IWorldEditHandler worldEditHandler;
+
 
     @Override
     public void onEnable() {
@@ -105,6 +108,15 @@ public class CosmeticsPlugin extends JavaPlugin {
             dependenciesMissing = true;
             return;
         }
+
+        worldEditHandler = StartupUtils.getWorldEditHandler();
+        if(worldEditHandler == null){
+            getLogger().severe("Could not find a world edit handler for " + VersionSupportUtil.getVersion());
+            setEnabled(false);
+            dependenciesMissing = true;
+            return;
+        }
+
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null){
             getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");

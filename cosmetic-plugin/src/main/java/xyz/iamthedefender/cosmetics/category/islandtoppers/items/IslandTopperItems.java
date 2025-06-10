@@ -1,6 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.islandtoppers.items;
 
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +14,6 @@ import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.category.islandtoppers.util.IslandToppersUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class IslandTopperItems {
@@ -24,7 +22,7 @@ public class IslandTopperItems {
         FileConfiguration config = ConfigUtils.getIslandToppers().getYml();
         ConfigManager configManager = ConfigUtils.getIslandToppers();
         ConfigurationSection topperSection = config.getConfigurationSection("island-topper");
-        for(String id : topperSection.getKeys(false)){
+        for (String id : topperSection.getKeys(false)) {
             String path = "island-topper." + id + ".";
             IslandTopper islandTopper = new IslandTopper() {
                 @Override
@@ -49,7 +47,7 @@ public class IslandTopperItems {
 
                 @Override
                 public List<String> getLore() {
-                    if (getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE) {
                         return List.of("&7Selecting this option disables your", "&7Island Topper.");
                     }
                     return List.of("&7Select " + getDisplayName() + " as your Island Topper!");
@@ -69,25 +67,23 @@ public class IslandTopperItems {
                 public void execute(Player player, Location topperLocation, String selected) {
                     if (selected.equals("none")) return;
                     String fileName = ConfigUtils.getIslandToppers().getString("island-topper." + selected + ".file");
-                    if (fileName == null){
+                    if (fileName == null) {
                         Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
                         return;
                     }
                     File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + fileName);
-                    if (!file.exists()){
+                    if (!file.exists()) {
                         Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
                         return;
                     }
-                    try {
-                        IslandToppersUtil.sendIslandTopper(topperLocation.getWorld(), topperLocation, player, file);
-                    } catch (MaxChangedBlocksException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
+
+                    IslandToppersUtil.sendIslandTopper(topperLocation.getWorld(), topperLocation, player, file);
                 }
             };
             islandTopper.register();
         }
     }
+
     public String replaceHyphens(String str) {
         StringBuilder result = new StringBuilder();
         boolean capitalizeNext = true;

@@ -126,6 +126,7 @@ public class FinalKillEffectPreview extends CosmeticPreview {
         derperinoNPC.getEntity().setMetadata("NPC1", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
         victimNPC.getNavigator().setTarget(derperinoNPC.getEntity(), true);
 
+
         Run.delayed(() -> {
             derperinoNPC.despawn();
             killEffect.execute(player, player, leftLocation, false);
