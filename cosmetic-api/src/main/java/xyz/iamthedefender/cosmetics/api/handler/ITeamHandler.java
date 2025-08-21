@@ -9,8 +9,7 @@ public interface ITeamHandler {
     Location getBed();
     List<Player> getPlayers();
     String getName();
-    Location getTeamUpgrades();
-    Location getShop();
+    List<Location> getStoreLocations();
     Location getSpawn();
     int getSize();
    default boolean isBed(Location location){

@@ -419,7 +419,7 @@ public class StartupUtils
         CosmeticsPlugin.getInstance().getLogger().info("Loading libraries...");
         CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(CosmeticsPlugin.getInstance());
         Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
-        Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.1.0").build();
+        Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.1.0").relocate("com{}zaxxer{}hikari", "xyz{}iamthedefender{}cosmetics{}support{}hikari").build();
         Library fastutil = new Library.Builder().groupId("it{}unimi{}dsi").artifactId("fastutil").version("8.5.8").build();
         Library slf4j = new Library.Builder().groupId("org{}slf4j").artifactId("slf4j-api").version("2.0.7").build();
         libraryManager.addMavenCentral();

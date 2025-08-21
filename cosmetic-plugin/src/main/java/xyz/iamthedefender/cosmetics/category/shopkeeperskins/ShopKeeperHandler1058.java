@@ -30,15 +30,14 @@ import java.util.List;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class ShopKeeperHandler1058 implements Listener
-{
+public class ShopKeeperHandler1058 implements Listener {
     private final CosmeticsPlugin plugin;
     public static HashMap<String, Boolean> arenas = new HashMap<>();
-    
+
     public ShopKeeperHandler1058() {
         this.plugin = CosmeticsPlugin.getPlugin(CosmeticsPlugin.class);
     }
-    
+
     @EventHandler
     public void onGameStart1058(GameStateChangeEvent event) {
 
@@ -47,7 +46,7 @@ public class ShopKeeperHandler1058 implements Listener
 
         if (event.getNewState().name().equals("playing")) {
             ShopKeeperHandler1058.arenas.put(event.getArena().getWorldName(), true);
-             List<ITeam> teams = event.getArena().getTeams();
+            List<ITeam> teams = event.getArena().getTeams();
             DebugUtil.addMessage("Executing ShopKeeper Skins for arena " + event.getArena().getArenaName());
             new BukkitRunnable() {
                 public void run() {
@@ -56,6 +55,7 @@ public class ShopKeeperHandler1058 implements Listener
 
                         Location shopLocation = team.getShop();
                         Location upgradeLocation = team.getTeamUpgrades();
+
                         World world = shopLocation.getWorld();
                         DebugUtil.addMessage("Executing ShopKeeper Skins for team " + team.getName());
                         // Delete existing NPCs
@@ -64,15 +64,15 @@ public class ShopKeeperHandler1058 implements Listener
                                 .forEach(Entity::remove);
 
                         // Choose random player from the team
-                        Player player = team.getMembers().get(MathUtil.getRandom(0, team.getMembers().size() -1));
+                        Player player = team.getMembers().get(MathUtil.getRandom(0, team.getMembers().size() - 1));
                         String skin = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
-                       DebugUtil.addMessage("Selected skin: " + skin);
+                        DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {
                             if (skin.equals(skins.getIdentifier())) {
                                 try {
                                     skins.execute(player, shopLocation, upgradeLocation);
-                                }catch (Exception ignored){
+                                } catch (Exception ignored) {
                                 }
                             }
                         }
@@ -98,12 +98,12 @@ public class ShopKeeperHandler1058 implements Listener
 
 
     @EventHandler
-    public void onPlayerTeleportEvent(PlayerTeleportEvent e){
+    public void onPlayerTeleportEvent(PlayerTeleportEvent e) {
 
         boolean isShopkeepersEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("shopkeeper-skins.enabled");
         if (!isShopkeepersEnabled) return;
 
-        if (e.getPlayer().hasMetadata("NPC2")){
+        if (e.getPlayer().hasMetadata("NPC2")) {
             e.setCancelled(true);
 
             Run.delayed(() -> {
@@ -123,13 +123,13 @@ public class ShopKeeperHandler1058 implements Listener
     }
 
     @EventHandler
-    public void onGameStartEvent(GameStateChangeEvent event){
+    public void onGameStartEvent(GameStateChangeEvent event) {
         if (event.getNewState() != GameState.playing) return;
         getServer().getScheduler().runTaskLater(CosmeticsPlugin.getInstance(), () -> {
             World world = event.getArena().getWorld();
             for (Entity entity : world.getEntities()) {
                 boolean isCitizensNPC = entity.hasMetadata("NPC");
-                if (!entity.isDead() && isCitizensNPC){
+                if (!entity.isDead() && isCitizensNPC) {
                     NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
                     npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
                     npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");

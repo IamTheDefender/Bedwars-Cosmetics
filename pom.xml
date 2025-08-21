@@ -61,6 +61,10 @@
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <id>screaming-repo</id>
+            <url>https://repo.screamingsandals.org/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>

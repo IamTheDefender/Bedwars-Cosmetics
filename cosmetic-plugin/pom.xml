@@ -89,6 +89,13 @@
             <version>8.5.9</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.screamingsandals.bedwars</groupId>
+            <artifactId>BedWars-API</artifactId>
+            <version>0.2.40</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/BedWars-0.2.40.jar</systemPath>
+        </dependency>
     </dependencies>
 
 
@@ -147,6 +154,10 @@
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
                             <shadedPattern>xyz.iamthedefender.cosmetics.support.aikar</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>xyz.iamthedefender.cosmetics.support.hikari</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
