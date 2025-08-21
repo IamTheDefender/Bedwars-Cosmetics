@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WoodSKinSBW implements Listener {
+public class WoodSkinSBW implements Listener {
 
     @EventHandler
     public void onShopBuy(BedwarsItemBoughtEvent e) {

@@ -1,17 +1,25 @@
 package xyz.iamthedefender.cosmetics.support.bedwars.handler.screamingBedwars;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.screamingsandals.bedwars.Main;
 import org.screamingsandals.bedwars.api.BedwarsAPI;
 import org.screamingsandals.bedwars.api.RunningTeam;
-import org.screamingsandals.bedwars.api.Team;
 import org.screamingsandals.bedwars.game.Game;
 import org.screamingsandals.bedwars.game.GameStore;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.BedDestroySBW;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.FinalKillHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.killmessage.KillMessagesSBW;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.ProjectileHandler;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.sprays.SprayHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.victorydance.VictoryDanceSBW;
+import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinSBW;
 import xyz.iamthedefender.cosmetics.support.language.LanguageImpl;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
 import java.util.List;
@@ -29,16 +37,60 @@ public class ScreamingBedWarsHandler implements IHandler {
     public void register() {
         dataFolder = new File(Main.getInstance().getDataFolder(), "Addons/" + CosmeticsPlugin.getInstance().getDescription().getName());
         language = new LanguageImpl(new File(dataFolder, "messages.yml"));
+
+
+        StartupUtils.registerListeners(new ProjectileHandler(CosmeticsPlugin.getInstance()));
+
+        // TODO: add for island toppers & death cry
+        StartupUtils.registerListeners(
+                new WoodSkinSBW(),
+                new VictoryDanceSBW(),
+                new SprayHandlerSBW(),
+                new ShopKeeperHandlerSBW(),
+                new KillMessagesSBW(),
+                new FinalKillHandlerSBW(),
+                new BedDestroySBW()
+        );
     }
 
     @Override
     public ISetupSession getSetupSession(UUID playerUUID) {
-        return null;
+        return new ISetupSession() {
+            @Override
+            public UUID getPlayerUUID() {
+                return playerUUID;
+            }
+
+            @Override
+            public FileConfiguration getConfig() {
+                return null;
+            }
+
+            @Override
+            public void saveConfigLoc(String path, Location value) {
+
+            }
+
+            @Override
+            public void saveConfig() {
+
+            }
+        };
     }
 
     @Override
     public IScoreboardUtil getScoreboardUtil() {
-        return null;
+        return new IScoreboardUtil() {
+            @Override
+            public void giveScoreboard(Player player, boolean b) {
+
+            }
+
+            @Override
+            public void removePlayerScoreboard(Player player) {
+
+            }
+        };
     }
 
     @Override

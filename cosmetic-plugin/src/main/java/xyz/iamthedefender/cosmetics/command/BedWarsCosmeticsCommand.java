@@ -21,6 +21,7 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.handler.ISetupSession;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
@@ -177,7 +178,9 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
 
         ChatColor color = getColorForTeam(section, teamName);
 
-        hologramStand.setCustomName(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET");
+        hologramStand.setCustomName(color + teamName + " " + ChatColor.GOLD + "ISLAND TOPPER SET" + ChatColor.GRAY + " (HOLOGRAM WILL DISAPPEAR IN 5 SECONDS)");
+
+        Run.delayed(hologramStand::remove, 5 * 20);
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName);
     }
 

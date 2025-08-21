@@ -5,9 +5,19 @@ import org.bukkit.Bukkit;
 public class VersionSupportUtil {
 
     private static final String PACKAGE_NAME = Bukkit.getServer().getClass().getPackage().getName();
-    private static final String SERVER_VERSION = PACKAGE_NAME.substring(PACKAGE_NAME.lastIndexOf('.') + 1)
-            .replace("_", ".").replace("v", "")
-            .replaceAll("\\.R\\d+$", "");
+    private static final String SERVER_VERSION = parseServerVersion();
+
+    private static String parseServerVersion() {
+        try {
+            return Bukkit.getBukkitVersion().split("-")[0];
+        } catch (Exception e) {
+            String packageName = PACKAGE_NAME.substring(PACKAGE_NAME.lastIndexOf('.') + 1);
+            if (packageName.startsWith("v")) {
+                return packageName.replace("_", ".").replace("v", "").replaceAll("\\.R\\d+$", "");
+            }
+            return "1.21.8";
+        }
+    }
 
     public static boolean isHigherThan(String version) {
         return compareVersions(SERVER_VERSION, version) > 0;
