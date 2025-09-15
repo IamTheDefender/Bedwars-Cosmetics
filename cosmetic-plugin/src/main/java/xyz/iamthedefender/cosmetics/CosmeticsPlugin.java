@@ -40,6 +40,7 @@ import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Ha
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023Handler;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
+import xyz.iamthedefender.cosmetics.support.bedwars.handler.screamingBedwars.ScreamingBedWarsHandler;
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 import xyz.iamthedefender.cosmetics.util.Metrics;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
@@ -98,7 +99,8 @@ public class CosmeticsPlugin extends JavaPlugin {
             return;
         }
 
-        handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
+        handler = findHandler();
+
         StartupUtils.loadLibraries();
 
         versionSupport = StartupUtils.getVersionSupport();
@@ -201,6 +203,19 @@ public class CosmeticsPlugin extends JavaPlugin {
             }
         }, 5 * 20L);
 
+    }
+
+    private IHandler findHandler() {
+
+        if (StartupUtils.isPluginEnabled("BedWars")) {
+            try {
+                return new ScreamingBedWarsHandler();
+            }catch (Throwable throwable) {
+                throw new RuntimeException("Failed to find a valid BedWars plugin, are you using a supported BedWars plugin?");
+            }
+        }
+
+        return api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler());
     }
 
     @Override

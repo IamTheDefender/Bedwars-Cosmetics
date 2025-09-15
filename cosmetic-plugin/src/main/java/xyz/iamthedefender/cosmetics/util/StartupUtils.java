@@ -282,8 +282,8 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if (!isPluginEnabled("BedWars1058") && !CosmeticsPlugin.getInstance().getApi().isProxy()){
-                log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
+            if (!isPluginEnabled("BedWars1058") && !CosmeticsPlugin.getInstance().getApi().isProxy() && !isPluginEnabled("BedWars")){
+                log.severe("Cosmetics addon requires BedWars1058, BedWars2023, BedWarsProxy or ScreamingBedWars to work!");
                 return false;
             }
         } else {

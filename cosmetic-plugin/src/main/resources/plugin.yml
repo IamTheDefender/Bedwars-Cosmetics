@@ -2,7 +2,7 @@ name: Cosmetics
 version: '1.4.8'
 main: xyz.iamthedefender.cosmetics.CosmeticsPlugin
 prefix: BedWars-Cosmetics
-softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, WorldEdit, FastAsyncWorldEdit]
+softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, WorldEdit, FastAsyncWorldEdit, BedWars]
 depend: [Vault, Citizens, PlaceholderAPI, ProtocolLib]
 author: IamTheDefender (iamthedefender)
 description: This addon adds a set of various cosmetics to your bedwars server
