@@ -1,17 +1,13 @@
 package xyz.iamthedefender.cosmetics.category.islandtoppers;
 
-import com.tomkeuper.bedwars.api.arena.GameState;
-import com.tomkeuper.bedwars.api.events.gameplay.GameStateChangeEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.screamingsandals.bedwars.api.events.BedwarsGameStartEvent;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
@@ -70,7 +66,8 @@ public class IslandTopperHandlerSBW implements Listener {
                 try {
                     String[] data = locationString.replace("[", "").replace("]", "").split(",");
                     location = new Location(Bukkit.getWorld(data[5]), Double.parseDouble(data[0]), Double.parseDouble(data[1]), Double.parseDouble(data[2]), Float.parseFloat(data[3]), Float.parseFloat(data[4]));
-                }catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
                 if (location == null) {
                     DebugUtil.addMessage("Invalid or no location found for team " + runningTeam.getName() + ", player " + player.getName() + " in " + event.getGame().getName());
@@ -78,8 +75,8 @@ public class IslandTopperHandlerSBW implements Listener {
                 }
 
                 String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
-                for(IslandTopper islandTopper : StartupUtils.islandTopperList){
-                    if (islandTopper.getIdentifier().equals(selected)){
+                for (IslandTopper islandTopper : StartupUtils.islandTopperList) {
+                    if (islandTopper.getIdentifier().equals(selected)) {
                         if (islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {
                             islandTopper.execute(player, location, selected);
                         }

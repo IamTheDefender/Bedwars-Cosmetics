@@ -22,7 +22,6 @@ public class FinalKillHandlerSBW implements Listener {
         boolean isFinalKillEffectsEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("final-kill-effects.enabled");
         if (!isFinalKillEffectsEnabled) return;
 
-
         String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.FinalKillEffects);
 
         RunningTeam victimTeam = event.getGame().getTeamOfPlayer(victim);

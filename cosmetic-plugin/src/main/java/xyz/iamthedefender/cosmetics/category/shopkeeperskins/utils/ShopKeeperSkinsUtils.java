@@ -92,6 +92,7 @@ public class ShopKeeperSkinsUtils {
         npc.getOrAddTrait(HologramTrait.class).clear();
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
+        npc.getEntity().setMetadata("shop_entity_cosmetics", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
         npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
         npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
         npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
@@ -122,6 +123,7 @@ public class ShopKeeperSkinsUtils {
 
         npc.spawn(loc);
         npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
+        npc.getEntity().setMetadata("shop_entity_cosmetics", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
 
         new BukkitRunnable() {
             int tick = ticks;

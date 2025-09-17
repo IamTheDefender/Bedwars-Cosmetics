@@ -6,6 +6,7 @@ package xyz.iamthedefender.cosmetics.api.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -36,11 +37,19 @@ public class Utility {
      * @param st the message when they hover.
      * @return a hover able message.
      */
-
-    public static TextComponent hoverablemsg(String s, String st) {
+    public static TextComponent hoverableMessage(String s, String st) {
         final TextComponent message = new TextComponent(ChatColor.translateAlternateColorCodes('&', s));
         message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', st)).create()));
         return message;
+    }
+
+    public static TextComponent hoverableClickableMessage(String message, String hoverMessage, String commandToExecute) {
+        TextComponent messageComp = new TextComponent(ColorUtil.translate(message));
+        messageComp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ColorUtil.translate(hoverMessage)).create()));
+        messageComp.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, commandToExecute.startsWith("/") ? commandToExecute : "/" + commandToExecute));
+
+        return messageComp;
+
     }
 
 

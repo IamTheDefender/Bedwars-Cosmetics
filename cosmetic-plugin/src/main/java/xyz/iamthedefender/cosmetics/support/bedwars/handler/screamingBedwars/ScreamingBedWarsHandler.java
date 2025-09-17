@@ -34,13 +34,11 @@ import java.util.stream.Collectors;
 public class ScreamingBedWarsHandler implements IHandler {
 
     private static final BedwarsAPI api = BedwarsAPI.getInstance();
-    private LanguageImpl language;
     private final File dataFolder = new File(Main.getInstance().getDataFolder(), "Addons/" + CosmeticsPlugin.getInstance().getDescription().getName());
+    private final LanguageImpl language = new LanguageImpl(new File(getAddonPath(), "messages.yml"));
 
     @Override
     public void register() {
-        language = new LanguageImpl(new File(dataFolder, "messages.yml"));
-
         StartupUtils.registerListeners(new ProjectileHandler(CosmeticsPlugin.getInstance()));
 
         StartupUtils.registerListeners(

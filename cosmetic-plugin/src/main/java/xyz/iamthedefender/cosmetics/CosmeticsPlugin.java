@@ -145,8 +145,7 @@ public class CosmeticsPlugin extends JavaPlugin {
         ConfigUtils.addExtrasToLang();
 
         getLogger().info("Loading data from resources in jar...");
-        DefaultsUtils defaultsUtils = new DefaultsUtils();
-        defaultsUtils.saveAllDefaults();
+        DefaultsUtils.saveAllDefaults();
         StartupUtils.unzipSpray();
 
         StartupUtils.loadLists();
@@ -184,11 +183,12 @@ public class CosmeticsPlugin extends JavaPlugin {
         StartupUtils.loadCosmetics();
         StartupUtils.convertSpraysURLs();
         getLogger().info("Addon have been loaded and enabled!");
-        // This is a check to make sure victory dance config doesn't have any issues.
-        VictoryDance.getDefault(null);
 
         metrics = new Metrics(this, 21340);
 
+    }
+
+    private void registerSchedulers() {
         Run.everyAsync(() -> {
             try (Connection connection = remoteDatabase.getConnection()){
                 connection.createStatement();
@@ -202,7 +202,6 @@ public class CosmeticsPlugin extends JavaPlugin {
                 getPlayerManager().getPlayerOwnedData(onlinePlayer.getUniqueId()).updateOwned();
             }
         }, 5 * 20L);
-
     }
 
     private IHandler findHandler() {
@@ -211,6 +210,7 @@ public class CosmeticsPlugin extends JavaPlugin {
             try {
                 return new ScreamingBedWarsHandler();
             }catch (Throwable throwable) {
+                throwable.printStackTrace();
                 throw new RuntimeException("Failed to find a valid BedWars plugin, are you using a supported BedWars plugin?");
             }
         }

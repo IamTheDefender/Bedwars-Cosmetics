@@ -29,8 +29,8 @@ public class KillMessagesSBW implements Listener {
         boolean isKillMessagesEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("kill-messages.enabled");
         if (!isKillMessagesEnabled) return;
 
-        Team victimTeam = (Team) e.getGame().getTeamOfPlayer(victim);
-        Team killerTeam = (Team) e.getGame().getTeamOfPlayer(killer);
+        RunningTeam victimTeam = e.getGame().getTeamOfPlayer(victim);
+        RunningTeam killerTeam = e.getGame().getTeamOfPlayer(killer);
 
         if (victimTeam == null || killerTeam == null) {
             return;
@@ -44,9 +44,7 @@ public class KillMessagesSBW implements Listener {
             return;
         }
 
-        DebugUtil.addMessage("Playing Kill message for " + e.getVictim());
-
-        boolean isFinalKill = !((RunningTeam) victimTeam).isTargetBlockExists();
+        boolean isFinalKill = !victimTeam.isTargetBlockExists();
 
         String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
 
