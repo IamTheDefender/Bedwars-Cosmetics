@@ -100,7 +100,7 @@ public class ShopKeeperHandlerSBW implements Listener {
         game.getGameStores().stream()
                 .filter(gameStore -> gameStore.getStoreLocation().distance(clicked.getLocation()) <= 0.2)
                 .filter(gameStore -> gameStore instanceof GameStore)
-                .map(gameStore -> (GameStore) game)
+                .map(gameStore -> (GameStore) gameStore)
                 .forEach(gameStore -> open(gameStore, event, game));
 
         event.setCancelled(true);
