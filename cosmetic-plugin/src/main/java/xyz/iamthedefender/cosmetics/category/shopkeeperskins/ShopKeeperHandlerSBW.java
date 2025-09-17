@@ -103,6 +103,7 @@ public class ShopKeeperHandlerSBW implements Listener {
                 .map(gameStore -> (GameStore) gameStore)
                 .forEach(gameStore -> open(gameStore, event, game));
 
+
         event.setCancelled(true);
     }
 
