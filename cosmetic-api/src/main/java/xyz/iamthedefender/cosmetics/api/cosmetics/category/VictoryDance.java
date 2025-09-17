@@ -111,7 +111,17 @@ public abstract class VictoryDance extends Cosmetics {
         if (tasks.containsKey(winner)) tasks.get(winner).forEach(BukkitTask::cancel);
 
         if (entities.containsKey(winner)) {
-            entities.get(winner).forEach(Entity::remove);
+            entities.get(winner).forEach((e) -> {
+				var passengers = e.getPassengers();
+				if (passengers != null)
+					passengers.forEach(Entity::remove);
+
+				var vehicle = e.getVehicle();
+				if (vehicle != null)
+					vehicle.remove();
+
+				e.remove();
+			});
         }
     }
 
