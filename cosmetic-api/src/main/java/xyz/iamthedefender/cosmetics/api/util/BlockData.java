@@ -1,4 +1,4 @@
-package xyz.iamthedefender.cosmetics.category.islandtoppers.util;
+package xyz.iamthedefender.cosmetics.api.util;
 
 import lombok.Getter;
 import org.bukkit.Material;

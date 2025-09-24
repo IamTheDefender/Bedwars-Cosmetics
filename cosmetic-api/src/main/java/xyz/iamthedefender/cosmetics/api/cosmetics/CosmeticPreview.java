@@ -70,11 +70,19 @@ public abstract class CosmeticPreview {
     }
 
     private void hidePlayer(Player player) {
-        Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.hidePlayer(Utility.getPlugin(), player));
+        try {
+            Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.hidePlayer(Utility.getPlugin(), player));
+        }catch (NoSuchMethodError e) {
+            Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.hidePlayer(player));
+        }
     }
 
     private void showPlayer(Player player) {
-        Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.showPlayer(Utility.getPlugin(), player));
+        try {
+            Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.showPlayer(Utility.getPlugin(), player));
+        }catch (NoSuchMethodError e) {
+            Bukkit.getOnlinePlayers().stream().filter(p -> !p.equals(player)).forEach(p -> p.showPlayer(player));
+        }
     }
 
     public void setOnEnd(Player player, Runnable runnable) {

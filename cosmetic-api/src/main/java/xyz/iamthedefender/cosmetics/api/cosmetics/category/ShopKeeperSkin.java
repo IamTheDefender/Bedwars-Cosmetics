@@ -97,7 +97,11 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      * @param shopLocation the location of the shopkeeper
      * @param upgradeLocation the location of the upgrade shopkeeper
      */
-    public abstract void execute(Player player, Location shopLocation, Location upgradeLocation);
+    public void execute(Player player, Location shopLocation, Location upgradeLocation) {
+        execute(player, Arrays.asList(shopLocation, upgradeLocation));
+    }
+
+    public abstract void execute(Player player, List<Location> spawnLocations);
 
     /**
      * Get the default shopkeeper skin

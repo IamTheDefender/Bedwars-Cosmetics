@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
@@ -16,6 +17,7 @@ import java.util.List;
 public interface CosmeticsAPI {
     IDatabase getDatabase();
     String getSelectedCosmetic(Player player, CosmeticsType type);
+
     void setSelectedCosmetic(Player player, CosmeticsType type, String value);
     boolean isProxy();
     boolean isMySQL();

@@ -1,13 +1,18 @@
 package xyz.iamthedefender.cosmetics.util;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class StringUtils {
 
 
     public static List<String> formatLore(List<String> lores, String name, int price, String status, String rarity){
+        DecimalFormat decimalFormat = new DecimalFormat();
+        decimalFormat.setDecimalFormatSymbols(new DecimalFormatSymbols(Locale.US));
+
         for(int i = 0; i < lores.size(); i++){
             if (lores.get(i).contains("{status}")){
                 lores.set(i, lores.get(i).replace("{status}", status));
@@ -16,7 +21,7 @@ public class StringUtils {
                 lores.set(i, lores.get(i).replace("{name}", name.replace("-", " ")));
             }
             if (lores.get(i).contains("{cost}")){
-                lores.set(i, lores.get(i).replace("{cost}", new DecimalFormat().format(price)));
+                lores.set(i, lores.get(i).replace("{cost}", decimalFormat.format(price)));
             }
             if (lores.get(i).contains("{rarity}")){
                 lores.set(i, lores.get(i).replace("{rarity}", rarity));

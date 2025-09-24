@@ -22,6 +22,7 @@ import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinHandler1058;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,14 +73,17 @@ public class BW1058Handler implements IHandler {
                     return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getName();
                 }
 
-                @Override
                 public Location getTeamUpgrades() {
                     return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getTeamUpgrades();
                 }
 
-                @Override
                 public Location getShop() {
                     return api.getArenaUtil().getArenaByPlayer(player1).getTeam(player1).getShop();
+                }
+
+                @Override
+                public List<Location> getStoreLocations() {
+                    return Arrays.asList(getShop(), getTeamUpgrades());
                 }
 
                 @Override

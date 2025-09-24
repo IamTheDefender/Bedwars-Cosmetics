@@ -29,10 +29,10 @@ public class FinalKillEffectHandler1058 implements Listener {
         Player victim = e.getVictim();
         Player killer = e.getKiller();
 
-        FinalKillEffectsExecuteEvent event = new FinalKillEffectsExecuteEvent(victim, killer, selected);
-        Bukkit.getPluginManager().callEvent(event);
         if (!e.getCause().isFinalKill()) return;
 
+        FinalKillEffectsExecuteEvent event = new FinalKillEffectsExecuteEvent(victim, killer, selected);
+        Bukkit.getPluginManager().callEvent(event);
 
         for(FinalKillEffect finalKillEffects : StartupUtils.finalKillList){
             if (selected.equals(finalKillEffects.getIdentifier())){

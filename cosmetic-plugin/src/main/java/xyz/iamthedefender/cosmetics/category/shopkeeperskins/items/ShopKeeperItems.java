@@ -19,11 +19,11 @@ import java.util.Random;
 
 public class ShopKeeperItems {
 
-    public void registerItems(){
+    public void registerItems() {
         ConfigurationSection section = CosmeticsType.ShopKeeperSkin.getConfig().getYml().getConfigurationSection(CosmeticsType.ShopKeeperSkin.getSectionKey());
         if (section == null) return;
         ConfigManager config = CosmeticsType.ShopKeeperSkin.getConfig();
-        for(String id : section.getKeys(false)){
+        for (String id : section.getKeys(false)) {
             String path = CosmeticsType.ShopKeeperSkin.getSectionKey() + "." + id + ".";
             ShopKeeperSkin shopKeeperSkin = new ShopKeeperSkin() {
                 @Override
@@ -48,10 +48,10 @@ public class ShopKeeperItems {
 
                 @Override
                 public List<String> getLore() {
-                    if (getRarity() == RarityType.NONE){
+                    if (getRarity() == RarityType.NONE) {
                         return List.of("&7Selecting this option disables your", "&7ShopKeeper Skin.");
                     }
-                    return List.of("&7Select " + getDisplayName()  + " as your", "&7shopkeeper skin!");
+                    return List.of("&7Select " + getDisplayName() + " as your", "&7shopkeeper skin!");
                 }
 
                 @Override
@@ -65,24 +65,29 @@ public class ShopKeeperItems {
                 }
 
                 @Override
-                public void execute(Player player, Location shopLocation, Location upgradeLocation) {
-                    if (getField(FieldsType.RARITY, player) == RarityType.RANDOM){
+                public void execute(Player player, List<Location> spawnLocations) {
+                    if (getField(FieldsType.RARITY, player) == RarityType.RANDOM) {
                         List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
                         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-                            if (player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())){
+                            if (player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
                                 shopKeeperSkins.add(shopKeeperSkin);
                             }
                         }
-                        if (shopKeeperSkins.isEmpty()){
+
+
+                        if (shopKeeperSkins.isEmpty()) {
                             // ShopKeeperSkin#getDefault should not return null!
-                            ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation, ShopKeeperSkin.getDefault(player).getIdentifier());
-                        }else{
+
+                            spawnLocations.forEach(loc -> ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, loc, ShopKeeperSkin.getDefault(player).getIdentifier()));
+                        } else {
                             ShopKeeperSkin shopKeeperSkin1 = shopKeeperSkins.get(new Random().nextInt(shopKeeperSkins.size()));
-                            ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation, shopKeeperSkin1.getIdentifier());
+
+                            spawnLocations.forEach(loc -> ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, loc, shopKeeperSkin1.getIdentifier()));
                         }
-                         return;
+                        return;
                     }
-                    ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, shopLocation, upgradeLocation);
+
+                    spawnLocations.forEach(loc -> ShopKeeperSkinsUtils.spawnShopKeeperNPC(player, loc, getIdentifier()));
                 }
             };
             shopKeeperSkin.register();

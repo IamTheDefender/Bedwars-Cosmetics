@@ -23,6 +23,7 @@ import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
+import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
@@ -39,6 +40,7 @@ import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Ha
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058ProxyHandler;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023Handler;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars2023.BW2023ProxyHandler;
+import xyz.iamthedefender.cosmetics.support.bedwars.handler.screamingBedwars.ScreamingBedWarsHandler;
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 import xyz.iamthedefender.cosmetics.util.Metrics;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
@@ -79,6 +81,8 @@ public class CosmeticsPlugin extends JavaPlugin {
 
     private List<CosmeticPreview> previewList;
 
+    private IWorldEditHandler worldEditHandler;
+
 
     @Override
     public void onEnable() {
@@ -95,7 +99,8 @@ public class CosmeticsPlugin extends JavaPlugin {
             return;
         }
 
-        handler = (api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler()));
+        handler = findHandler();
+
         StartupUtils.loadLibraries();
 
         versionSupport = StartupUtils.getVersionSupport();
@@ -105,6 +110,15 @@ public class CosmeticsPlugin extends JavaPlugin {
             dependenciesMissing = true;
             return;
         }
+
+        worldEditHandler = StartupUtils.getWorldEditHandler();
+        if(worldEditHandler == null){
+            getLogger().severe("Could not find a world edit handler for " + VersionSupportUtil.getVersion());
+            setEnabled(false);
+            dependenciesMissing = true;
+            return;
+        }
+
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null){
             getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");
@@ -131,8 +145,7 @@ public class CosmeticsPlugin extends JavaPlugin {
         ConfigUtils.addExtrasToLang();
 
         getLogger().info("Loading data from resources in jar...");
-        DefaultsUtils defaultsUtils = new DefaultsUtils();
-        defaultsUtils.saveAllDefaults();
+        DefaultsUtils.saveAllDefaults();
         StartupUtils.unzipSpray();
 
         StartupUtils.loadLists();
@@ -170,11 +183,12 @@ public class CosmeticsPlugin extends JavaPlugin {
         StartupUtils.loadCosmetics();
         StartupUtils.convertSpraysURLs();
         getLogger().info("Addon have been loaded and enabled!");
-        // This is a check to make sure victory dance config doesn't have any issues.
-        VictoryDance.getDefault(null);
 
         metrics = new Metrics(this, 21340);
 
+    }
+
+    private void registerSchedulers() {
         Run.everyAsync(() -> {
             try (Connection connection = remoteDatabase.getConnection()){
                 connection.createStatement();
@@ -188,7 +202,20 @@ public class CosmeticsPlugin extends JavaPlugin {
                 getPlayerManager().getPlayerOwnedData(onlinePlayer.getUniqueId()).updateOwned();
             }
         }, 5 * 20L);
+    }
 
+    private IHandler findHandler() {
+
+        if (StartupUtils.isPluginEnabled("BedWars")) {
+            try {
+                return new ScreamingBedWarsHandler();
+            }catch (Throwable throwable) {
+                throwable.printStackTrace();
+                throw new RuntimeException("Failed to find a valid BedWars plugin, are you using a supported BedWars plugin?");
+            }
+        }
+
+        return api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler());
     }
 
     @Override

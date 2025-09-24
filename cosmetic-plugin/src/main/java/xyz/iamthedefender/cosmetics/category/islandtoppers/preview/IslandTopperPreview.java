@@ -3,23 +3,16 @@ package xyz.iamthedefender.cosmetics.category.islandtoppers.preview;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
-import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
-import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.blocks.BaseBlock;
-import com.sk89q.worldedit.data.DataException;
-import com.sk89q.worldedit.schematic.SchematicFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,13 +23,13 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
+import xyz.iamthedefender.cosmetics.api.util.BlockData;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.util.BlockData;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static xyz.iamthedefender.cosmetics.util.StartupUtils.getCosmeticLocation;
@@ -48,7 +41,7 @@ public class IslandTopperPreview {
 
     public void sendIslandTopperPreview(Player player, String selected, SystemGui gui) {
         for (IslandTopper islandTopper : StartupUtils.islandTopperList) {
-            if (islandTopper.getIdentifier().equals(selected)){
+            if (islandTopper.getIdentifier().equals(selected)) {
                 if (islandTopper.getField(FieldsType.RARITY, player) == RarityType.NONE) {
                     gui.open(player);
                     XSound.ENTITY_VILLAGER_NO.play(player, 1.0f, 1.0f);
@@ -80,7 +73,7 @@ public class IslandTopperPreview {
         try {
             cosmeticLocation = getCosmeticLocation();
             playerLocation = getPlayerLocation();
-        }catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             player.sendMessage(ColorUtil.translate("&cEither Preview location or Player location is not set! Contact the admin."));
         }
@@ -125,7 +118,7 @@ public class IslandTopperPreview {
                 player1.showPlayer(player);
             }
 
-            for (Map.Entry<Integer, ItemStack> entry: items.entrySet()) {
+            for (Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
                 playerInv.setItem(entry.getKey(), entry.getValue());
             }
 
@@ -134,218 +127,115 @@ public class IslandTopperPreview {
     }
 
     private void sendIslandTopper(Player player, Location location, String selected) {
-        ConfigManager config = ConfigUtils.getIslandToppers();
+        BlockFace direction = BlockFace.SELF;
 
+        try {
+            direction = BlockFace.valueOf(rpGetPlayerDirection(player));
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        ConfigManager config = ConfigUtils.getIslandToppers();
         String topperFileName = config.getString(CosmeticsType.IslandTopper.getSectionKey() + "." + selected + ".file");
 
-        if (topperFileName == null){
+        if (topperFileName == null) {
             Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
             return;
         }
 
         File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/IslandToppers/" + topperFileName);
-        if (!file.exists()){
-            Bukkit.getLogger().severe("The file " + file.getName() + " does not exists!");
+        if (!file.exists()) {
+            Bukkit.getLogger().severe("The file " + file.getName() + " does not exist!");
             return;
         }
 
-        try {
-            SchematicFormat schematicFormat = SchematicFormat.getFormat(file);
-            if (schematicFormat == null){
-                Bukkit.getLogger().severe("Schematic format is null! most probably file is invalid! (" + file.getName() + ")");
-                return;
-            }
+        // Extract block data from clipboard
+        Map<Location, BlockData> blockLocations = CosmeticsPlugin.getInstance().getWorldEditHandler().extractBlockData(file, location, player.getWorld(), direction);
+        if (blockLocations.isEmpty()) return;
 
-            CuboidClipboard clipboard = schematicFormat.load(file);
-            location = location.add(0, clipboard.getHeight() + 1, 0);
-            clipboard = flipDirection(clipboard, rpGetPlayerDirection(player));
-            Vector newOrigin = new Vector(location.getX(), location.getY(), location.getZ());
-            newOrigin = newOrigin.add(clipboard.getOffset());
-
-            boolean order = CosmeticsPlugin.getInstance().getConfig().getBoolean("island-toppers.order");
-
-            if (!order){
-                HashMap<Location, BlockData> blockLocations = new HashMap<>();
-
-                for (int x = 0; x < clipboard.getSize().getBlockX(); x++) {
-                    for (int y = 0; y < clipboard.getSize().getBlockY(); y++) {
-                        for (int z = 0; z < clipboard.getSize().getBlockZ(); z++) {
-                            BaseBlock baseBlock = clipboard.getBlock(new Vector(x, y, z));
-
-                            if (baseBlock.isAir()) continue;
-
-                            Optional<XMaterial> xMaterial;
-                            try{
-                                xMaterial = XMaterial.matchXMaterial(Material.getMaterial(baseBlock.getId()).name());
-                            }catch (Exception e){
-                                xMaterial = Optional.of(XMaterial.matchXMaterial(new MaterialData(baseBlock.getId(), (byte) baseBlock.getData()).getItemType()));
-                            }
-
-                            if (xMaterial.isPresent()) {
-                                Vector targetVec = new Vector(x, y, z).add(newOrigin);
-                                Location targetLoc = new Location(location.getWorld(),
-                                        targetVec.getX(),
-                                        targetVec.getY(),
-                                        targetVec.getZ());
-
-                                BlockData blockData = new BlockData(xMaterial.get().parseMaterial(), xMaterial.get().getData());
-
-                                blockLocations.put(targetLoc, blockData);
-                            }
-                        }
-                    }
-                }
-
-                List<Location> keys = new ArrayList<>(blockLocations.keySet());
-
-                new BukkitRunnable() {
-                    int index = 0;
-                    boolean done = false;
-                    @Override
-                    public void run() {
-                        if (blockLocations.isEmpty()){
-                            cancel();
-                        }
-
-                        if (index >= blockLocations.size()){
-                            if (done){
-                                cancel();
-                            } else {
-                                index = 0;
-                                done = true;
-                            }
-                        } else {
-                            if (!done){
-                                Location loc = keys.get(index);
-                                Material material = blockLocations.get(loc).getMaterial();
-                                byte data = blockLocations.get(loc).getData();
-
-                                player.sendBlockChange(loc, material, data);
-
-                                index++;
-                            } else {
-                                Location loc = keys.get(index);
-
-                                player.sendBlockChange(loc, Material.AIR, (byte) 0);
-
-                                index++;
-                            }
-                        }
-                    }
-                }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
-            } else {
-                LinkedHashMap<Location, BlockData> blockLocations = new LinkedHashMap<>();
-
-                for (int x = 0; x < clipboard.getSize().getBlockX(); x++) {
-                    for (int y = 0; y < clipboard.getSize().getBlockY(); y++) {
-                        for (int z = 0; z < clipboard.getSize().getBlockZ(); z++) {
-                            BaseBlock baseBlock = clipboard.getBlock(new Vector(x, y, z));
-
-                            if (baseBlock.isAir()) continue;
-
-                            Optional<XMaterial> xMaterial;
-                            try{
-                                xMaterial = XMaterial.matchXMaterial(Material.getMaterial(baseBlock.getId()).name());
-                            }catch (Exception e){
-                                xMaterial = Optional.of(XMaterial.matchXMaterial(new MaterialData(baseBlock.getId(), (byte) baseBlock.getData()).getItemType()));
-                            }
-                            if (xMaterial.isPresent()) {
-                                Vector targetVec = new Vector(x, y, z).add(newOrigin);
-                                Location targetLoc = new Location(location.getWorld(),
-                                        targetVec.getX(),
-                                        targetVec.getY(),
-                                        targetVec.getZ());
-
-                                BlockData blockData = new BlockData(xMaterial.get().parseMaterial(), xMaterial.get().getData());
-
-                                blockLocations.put(targetLoc, blockData);
-                            }
-                        }
-                    }
-                }
-
-                List<Location> keys = new ArrayList<>(blockLocations.keySet());
-
-                new BukkitRunnable() {
-                    int index = 0;
-                    boolean done = false;
-                    @Override
-                    public void run() {
-                        if (blockLocations.isEmpty()){
-                            cancel();
-                        }
-
-                        if (index >= blockLocations.size()){
-                            if (done){
-                                cancel();
-                            } else {
-                                index = 0;
-                                done = true;
-                            }
-                        } else {
-                            if (!done){
-                                Location loc = keys.get(index);
-                                Material material = blockLocations.get(loc).getMaterial();
-                                byte data = blockLocations.get(loc).getData();
-
-                                player.sendBlockChange(loc, material, data);
-
-                                index++;
-                            } else {
-                                Location loc = keys.get(index);
-
-                                player.sendBlockChange(loc, Material.AIR, (byte) 0);
-
-                                index++;
-                            }
-                        }
-                    }
-                }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
-            }
-
-        } catch (DataException | IOException e) {
-            Bukkit.getLogger().severe("ERROR! ISLANDTOPPERPREVIEW, sendIslandTopper() method!");
-        }
+        // Start animation
+        boolean useOrder = CosmeticsPlugin.getInstance().getConfig().getBoolean("island-toppers.order");
+        startBlockAnimation(player, blockLocations, useOrder);
     }
 
-    private String rpGetPlayerDirection(Player playerSelf){
+
+    private void startBlockAnimation(Player player, Map<Location, BlockData> blockLocations, boolean useOrder) {
+        List<Location> locations = new ArrayList<>(blockLocations.keySet());
+
+        new BukkitRunnable() {
+            private int index = 0;
+            private boolean showingBlocks = true;
+
+            @Override
+            public void run() {
+                if (blockLocations.isEmpty() || index >= locations.size()) {
+                    if (showingBlocks) {
+                        // Switch to hiding blocks
+                        showingBlocks = false;
+                        index = 0;
+                    } else {
+                        // Animation complete
+                        cancel();
+                    }
+                    return;
+                }
+
+                Location loc = locations.get(index);
+
+                if (showingBlocks) {
+                    BlockData blockData = blockLocations.get(loc);
+                    player.sendBlockChange(loc, blockData.getMaterial(), blockData.getData());
+                } else {
+                    player.sendBlockChange(loc, Material.AIR, (byte) 0);
+                }
+
+                index++;
+            }
+        }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
+    }
+
+    private String rpGetPlayerDirection(Player playerSelf) {
         String dir;
         float y = playerSelf.getLocation().getYaw();
-        if ( y < 0 ){y += 360;}
+        if (y < 0) {
+            y += 360;
+        }
         y %= 360;
-        int i = (int)((y+8) / 22.5);
-        if (i == 0){dir = "west";}
-        else if (i == 1){dir = "west northwest";}
-        else if (i == 2){dir = "northwest";}
-        else if (i == 3){dir = "north northwest";}
-        else if (i == 4){dir = "north";}
-        else if (i == 5){dir = "north northeast";}
-        else if (i == 6){dir = "northeast";}
-        else if (i == 7){dir = "east northeast";}
-        else if (i == 8){dir = "east";}
-        else if (i == 9){dir = "east southeast";}
-        else if (i == 10){dir = "southeast";}
-        else if (i == 11){dir = "south southeast";}
-        else if (i == 12){dir = "south";}
-        else if (i == 13){dir = "south southwest";}
-        else if (i == 14){dir = "southwest";}
-        else if (i == 15){dir = "west southwest";}
-        else {dir = "west";}
+        int i = (int) ((y + 8) / 22.5);
+        if (i == 0) {
+            dir = "west";
+        } else if (i == 1) {
+            dir = "west northwest";
+        } else if (i == 2) {
+            dir = "northwest";
+        } else if (i == 3) {
+            dir = "north northwest";
+        } else if (i == 4) {
+            dir = "north";
+        } else if (i == 5) {
+            dir = "north northeast";
+        } else if (i == 6) {
+            dir = "northeast";
+        } else if (i == 7) {
+            dir = "east northeast";
+        } else if (i == 8) {
+            dir = "east";
+        } else if (i == 9) {
+            dir = "east southeast";
+        } else if (i == 10) {
+            dir = "southeast";
+        } else if (i == 11) {
+            dir = "south southeast";
+        } else if (i == 12) {
+            dir = "south";
+        } else if (i == 13) {
+            dir = "south southwest";
+        } else if (i == 14) {
+            dir = "southwest";
+        } else if (i == 15) {
+            dir = "west southwest";
+        } else {
+            dir = "west";
+        }
         return dir;
     }
-
-    private static CuboidClipboard flipDirection(CuboidClipboard clipboard, String direction) {
-        switch (direction.toUpperCase()) {
-            case "NORTH":
-                clipboard.rotate2D(180);
-                break;
-            case "EAST":
-                clipboard.rotate2D(270);
-                break;
-            case "WEST":
-                clipboard.rotate2D(90);
-                break;
-            }
-            return clipboard;
-        }
 }

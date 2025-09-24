@@ -108,10 +108,12 @@ public class CategoryMenu extends ChestSystemGui {
                         .itemFlag(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES)
                         .build(), (e) -> {
 
-                    if (e.getClick() == ClickType.RIGHT){
+                    if (e.getClick() == ClickType.RIGHT) {
                         previewClick(player, cosmeticsType, id, price);
-                    }else if (e.getClick() == ClickType.LEFT){
-                        DebugUtil.addMessage("Left Clicked");
+                        return;
+                    }
+
+                    if (e.getClick() == ClickType.LEFT){
                         onClick(player, cosmeticsType, price, id, false);
                     }
                 });
@@ -231,28 +233,49 @@ public class CategoryMenu extends ChestSystemGui {
         Economy eco = VaultUtils.getEconomy();
         Permission perm = VaultUtils.getPermissions();
 
-        if (selected.equals(id)) return -2;
+        if (selected.equals(id)) {
+            DebugUtil.addMessage("Cosmetic " + id + " is already selected");
+            return -2;
+        }
 
         if (!p.hasPermission(permissionFormat + "." + id)) {
-            if (!type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able")) return 2;
+            DebugUtil.addMessage("Cosmetic " + id + " is not unlocked (No permission)");
+
+            if (!type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able", true)) {
+                DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able");
+                return 2;
+            }
 
             if (eco == null || eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) < price) {
-                if (isOnlyForCheck) return 2;
+                DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able (no coins)");
+                if (isOnlyForCheck) {
+                    return 2;
+                }
+
                 p.playSound(p.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
                 return -2;
             }
 
-            if (isOnlyForCheck) return 1;
+            if (isOnlyForCheck) {
+                DebugUtil.addMessage("Cosmetic " + id + " is purchase-able");
+                return 1;
+            }
 
             CosmeticPurchaseEvent event = new CosmeticPurchaseEvent(p, type);
             Bukkit.getServer().getPluginManager().callEvent(event);
-            if (event.isCancelled()) return -1;
+            if (event.isCancelled()) {
+                DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able (event cancelled)");
+                return -1;
+            }
 
             if (perm != null) perm.playerAdd(p, permissionFormat + "." + id);
+
             api.setSelectedCosmetic(p, type, id);
             eco.withdrawPlayer(p, price);
             p.playSound(p.getLocation(), XSound.ENTITY_VILLAGER_YES.parseSound(), 1.0f, 1.0f);
             new CategoryMenu(cosmeticsType, title, page).open(p);
+
+            DebugUtil.addMessage("Selected " + id + " for " + type + " and paid " + price + " coins");
             return -2;
         }
 

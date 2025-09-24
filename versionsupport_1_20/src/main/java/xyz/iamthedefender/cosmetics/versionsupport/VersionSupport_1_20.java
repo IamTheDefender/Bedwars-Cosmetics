@@ -20,6 +20,7 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
@@ -234,4 +235,5 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
         ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
     }
+
 }

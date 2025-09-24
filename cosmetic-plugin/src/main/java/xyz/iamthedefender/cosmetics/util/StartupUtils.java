@@ -17,6 +17,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
+import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
@@ -28,7 +29,6 @@ import xyz.iamthedefender.cosmetics.category.finalkilleffects.preview.FinalKillE
 import xyz.iamthedefender.cosmetics.category.glyphs.items.GlyphItems;
 import xyz.iamthedefender.cosmetics.category.glyphs.preview.GlyphPreview;
 import xyz.iamthedefender.cosmetics.category.islandtoppers.items.IslandTopperItems;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.preview.IslandTopperPreview;
 import xyz.iamthedefender.cosmetics.category.killmessage.items.KillMessageItems;
 import xyz.iamthedefender.cosmetics.category.killmessage.preview.KillMessagePreview;
 import xyz.iamthedefender.cosmetics.category.projectiletrails.items.ProjectileTrailItems;
@@ -43,6 +43,8 @@ import xyz.iamthedefender.cosmetics.listener.CosmeticPurchaseListener;
 import xyz.iamthedefender.cosmetics.listener.PlayerJoinListener;
 import xyz.iamthedefender.cosmetics.support.placeholders.CosmeticsPlaceholders;
 import xyz.iamthedefender.cosmetics.util.lib.CosmeticsLibraryManager;
+import xyz.iamthedefender.cosmetics.versionsupport.LegacyWorldEditHandler;
+import xyz.iamthedefender.cosmetics.versionsupport.ModernWorldEditHandler;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_20;
 import xyz.iamthedefender.cosmetics.versionsupport.VersionSupport_1_8_R3;
 
@@ -144,6 +146,18 @@ public class StartupUtils
         }
 
         return versionSupport;
+    }
+
+    public static IWorldEditHandler getWorldEditHandler(){
+        IWorldEditHandler worldEditHandler = null;
+
+        if(VersionSupportUtil.isLowerThan("1.13")){
+            worldEditHandler = new LegacyWorldEditHandler();
+        } else if(VersionSupportUtil.isHigherThan("1.13")){
+            worldEditHandler = new ModernWorldEditHandler();
+        }
+
+        return worldEditHandler;
     }
 
 
@@ -268,8 +282,8 @@ public class StartupUtils
     public static boolean checkDependencies(){
         Logger log = Bukkit.getLogger();
         if (Bukkit.getPluginManager().getPlugin("BedWars2023") == null) {
-            if (!isPluginEnabled("BedWars1058") && !CosmeticsPlugin.getInstance().getApi().isProxy()){
-                log.severe("Cosmetics addon requires BedWars1058, BedWars2023, or BedWarsProxy to work!");
+            if (!isPluginEnabled("BedWars1058") && !CosmeticsPlugin.getInstance().getApi().isProxy() && !isPluginEnabled("BedWars")){
+                log.severe("Cosmetics addon requires BedWars1058, BedWars2023, BedWarsProxy or ScreamingBedWars to work!");
                 return false;
             }
         } else {
@@ -395,7 +409,7 @@ public class StartupUtils
         new GlyphPreview();
         new KillMessagePreview();
         new FinalKillEffectPreview();
-        new IslandTopperPreview();
+        // new IslandTopperPreview(); - temporarily disabled
         new DeathCryPreview();
         new SprayPreview();
     }
@@ -405,7 +419,7 @@ public class StartupUtils
         CosmeticsPlugin.getInstance().getLogger().info("Loading libraries...");
         CosmeticsLibraryManager libraryManager = new CosmeticsLibraryManager(CosmeticsPlugin.getInstance());
         Library mysql = new Library.Builder().groupId("com{}mysql").artifactId("mysql-connector-j").version("8.2.0").build();
-        Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.1.0").build();
+        Library hikariCP = new Library.Builder().groupId("com{}zaxxer").artifactId("HikariCP").version("5.1.0").relocate("com{}zaxxer{}hikari", "xyz{}iamthedefender{}cosmetics{}support{}hikari").build();
         Library fastutil = new Library.Builder().groupId("it{}unimi{}dsi").artifactId("fastutil").version("8.5.8").build();
         Library slf4j = new Library.Builder().groupId("org{}slf4j").artifactId("slf4j-api").version("2.0.7").build();
         libraryManager.addMavenCentral();

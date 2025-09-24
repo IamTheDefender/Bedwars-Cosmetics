@@ -6,7 +6,7 @@
     <parent>
         <groupId>xyz.iamthedefender</groupId>
         <artifactId>BedWars-Cosmetics</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
     </parent>
 
     <artifactId>cosmetic-plugin</artifactId>
@@ -34,18 +34,6 @@
             <groupId>xyz.iamthedefender</groupId>
             <artifactId>versionsupport_1_20</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>6.1.4-SNAPSHOT</version>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.byteflux</groupId>
@@ -100,6 +88,13 @@
             <artifactId>fastutil</artifactId>
             <version>8.5.9</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.screamingsandals.bedwars</groupId>
+            <artifactId>BedWars-API</artifactId>
+            <version>0.2.41-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/BedWars-0.2.41-SNAPSHOT-259.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -159,6 +154,10 @@
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
                             <shadedPattern>xyz.iamthedefender.cosmetics.support.aikar</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>xyz.iamthedefender.cosmetics.support.hikari</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>

@@ -15,7 +15,7 @@ public class DefaultsUtils {
      * the file located in the plugin folder, example
      * resources/Glyph.yml -> pluginFolder/Categories/Glyph.yml
      */
-    public void saveAllDefaults(){
+    public static void saveAllDefaults(){
         for(ConfigType type : ConfigType.values()){
             ConfigManager config = ConfigUtils.get(type);
             InputStream defaultConfigStream = Utility.getPlugin().getResource(type.getFileName() + ".yml");

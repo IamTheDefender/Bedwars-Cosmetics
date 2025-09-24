@@ -3,6 +3,10 @@ BackItemInCosmeticsMenu: true
 Final-Kill-Suffix: "&b&lFINAL KILL!"
 # plugins/BW1058-Cosmetics/Sprays
 Spray-Dir: "Sprays"
+settings:
+  shopkeeper_skins:
+    look_close: false
+
 mysql:
   enable: false
   host: "localhost"

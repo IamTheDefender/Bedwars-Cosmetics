@@ -95,10 +95,15 @@ public class KillMessageUtils {
     }
 
 
+
+    public static String sendKillMessage(String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
+        return sendKillMessage(null, victim, killer, finalKill, victimColor, killerColor, type);
+    }
+
     /**
      * Sends a kill message to a player based on the type of death.
      *
-     * @param player            The player to send the message to
+     * @param player            Unused
      * @param victim            The name of the victim
      * @param killer            The player object of the killer
      * @param finalKill         A flag indicating whether this was the final kill
@@ -106,13 +111,13 @@ public class KillMessageUtils {
      * @param killerColor       The color to use for the killer's name
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
      */
-    public static String sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
+    public static String sendKillMessage(@Deprecated Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
         String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
         if (victim.equalsIgnoreCase(killer.getName())) type = "Void";
         List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {
-                if (killMessage.getField(FieldsType.RARITY, player) == RarityType.NONE) return null;
+                if (killMessage.getField(FieldsType.RARITY, null) == RarityType.NONE) return null;
             }
         }
         if (messages.isEmpty()) return "Message is empty!";
