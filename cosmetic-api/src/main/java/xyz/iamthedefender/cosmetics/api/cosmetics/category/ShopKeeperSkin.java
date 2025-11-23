@@ -71,24 +71,44 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      * @param p the player to get the field
      * @return the field
      */
-    public Object getField(FieldsType fields, Player p){
+    public <T> T getField(FieldsType field, Player p) {
         String configPath = category + "." + getIdentifier() + ".";
 
-        switch (fields){
+        Object value;
+        switch (field) {
             case NAME:
-                return Utility.getMSGLang(p, "cosmetics." + configPath + "name");
+                value = Utility.getMSGLang(p, "cosmetics." + configPath + "name");
+                break;
             case PRICE:
-                return config.getInt(configPath + "price");
+                value = config.getInt(configPath + "price");
+                break;
             case LORE:
-                return Utility.getListLang(p, "cosmetics." + configPath + "lore");
+                value = Utility.getListLang(p, "cosmetics." + configPath + "lore");
+                break;
             case RARITY:
-                return RarityType.valueOf(config.getString(configPath + "rarity"));
+                value = RarityType.valueOf(config.getString(configPath + "rarity"));
+                break;
             case ITEM_STACK:
-                return config.getItemStack(configPath + "item");
+                value = config.getItemStack(configPath + "item");
+                break;
             default:
-                return null;
+                value = config.get(configPath + field.path());
+
+                if (field.type().isEnum()) {
+                    String stored = config.getString(configPath + field.path());
+
+                    if (stored != null)
+                        value = Enum.valueOf((Class<? extends Enum>) field.type(), stored);
+                }
+
+                break;
         }
+
+        if (value == null) return null;
+
+        return (T) field.getType().cast(value);
     }
+
 
     /**
      * Display the shopkeeper skin to the player

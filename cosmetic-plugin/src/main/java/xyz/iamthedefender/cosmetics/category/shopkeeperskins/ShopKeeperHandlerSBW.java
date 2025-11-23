@@ -1,8 +1,12 @@
 package xyz.iamthedefender.cosmetics.category.shopkeeperskins;
 
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,17 +20,15 @@ import org.screamingsandals.bedwars.api.game.Game;
 import org.screamingsandals.bedwars.game.CurrentTeam;
 import org.screamingsandals.bedwars.game.GameStore;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
-import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
-import xyz.iamthedefender.cosmetics.api.handler.IHandler;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.util.BedWarsWrapper;
-import xyz.iamthedefender.cosmetics.util.DebugUtil;
+import xyz.iamthedefender.cosmetics.util.CosmeticsUtil;
 import xyz.iamthedefender.cosmetics.util.MathUtil;
-import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopKeeperHandlerSBW implements Listener {
 
@@ -43,42 +45,40 @@ public class ShopKeeperHandlerSBW implements Listener {
                 if (runningTeam.getConnectedPlayers().isEmpty()) continue;
 
                 List<Location> storeLocations = BedWarsWrapper.wrap(runningTeam).getStoreLocations();
+                List<GameStore> gameStores = game.getGameStores().stream()
+                        .filter(gameStore -> gameStore.getStoreLocation() != null && storeLocations.stream().anyMatch(location -> location.distanceSquared(gameStore.getStoreLocation()) <= 0.5))
+                        .map(gameStore -> (GameStore) gameStore)
+                        .collect(Collectors.toList());
 
-                World world = runningTeam.getTeamSpawn().getWorld();
-                DebugUtil.addMessage("Executing ShopKeeper Skins for team " + runningTeam.getName());
-
-                // Delete existing NPCs
-                for (Location shopLocation : storeLocations) {
-                    world.getEntities().stream()
-                            .filter(e -> (e.getLocation().distance(shopLocation) <= 0.2))
-                            .forEach(Entity::remove);
-                }
+                if (gameStores.isEmpty()) return;
 
                 // Choose random player from the team
                 Player player = runningTeam.getConnectedPlayers().get(MathUtil.getRandom(0, runningTeam.getConnectedPlayers().size() - 1));
-                String skin = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
-                DebugUtil.addMessage("Selected skin: " + skin);
-                // Spawn new NPCs
-                for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {
-                    if (skin.equals(skins.getIdentifier())) {
-                        try {
-                            skins.execute(player, storeLocations);
-                        } catch (Exception ignored) {
-                        }
-                    }
-                }
+                ShopKeeperSkin shopKeeperSkin = CosmeticsUtil.getShopKeeperSkin(player);
 
+                if (shopKeeperSkin == null) return;
 
-                if (CosmeticsPlugin.getInstance().getHandler().getHandlerType() != HandlerType.BUNGEE) {
-                    for (Player p : runningTeam.getConnectedPlayers()) {
-                        IHandler handler = CosmeticsPlugin.getInstance().getHandler();
-                        handler.getScoreboardUtil().removePlayerScoreboard(p);
-                        handler.getScoreboardUtil().giveScoreboard(p, true);
+                // We don't apply the normal replacing logic here, as SBW has a good system for NPC type changing already
+                for (GameStore gameStore : gameStores) {
+                    gameStore.setEntityType(shopKeeperSkin.getField(FieldsType.ENTITY_TYPE, player) == null ? EntityType.PLAYER : shopKeeperSkin.getField(FieldsType.ENTITY_TYPE, player));
+                    gameStore.kill();
+                    LivingEntity livingEntity = gameStore.spawn();
+
+                    if (shopKeeperSkin.getField(FieldsType.SKIN_VALUE, player) != null && shopKeeperSkin.getField(FieldsType.SKIN_SIGN, player) != null) {
+                        String skinValue = shopKeeperSkin.getField(FieldsType.SKIN_VALUE, player);
+                        String skinSign = shopKeeperSkin.getField(FieldsType.SKIN_SIGN, player);
+
+                        if (!CitizensAPI.getNPCRegistry().isNPC(livingEntity)) continue;
+
+                        NPC npc = CitizensAPI.getNPCRegistry().getNPC(livingEntity);
+
+                        npc.getOrAddTrait(SkinTrait.class)
+                                .setTexture(skinValue, skinSign);
                     }
                 }
             }
 
-        }, 40L);
+        }, 10L);
     }
 
     @EventHandler
@@ -109,9 +109,10 @@ public class ShopKeeperHandlerSBW implements Listener {
 
     /**
      * Opens the shop, copied from <a href="https://github.com/ScreamingSandals/BedWars/blob/ver/0.2.x/plugin/src/main/java/org/screamingsandals/bedwars/listener/VillagerListener.java">ScreamingBedWars</a>]
+     *
      * @param store the game store instance
      * @param event the interaction event
-     * @param game the game instance
+     * @param game  the game instance
      */
     public void open(GameStore store, PlayerInteractEntityEvent event, Game game) {
         BedwarsOpenShopEvent openShopEvent = new BedwarsOpenShopEvent(game,

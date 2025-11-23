@@ -1,7 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.woodskin;
 
-import com.andrei1058.bedwars.BedWars;
-import com.andrei1058.bedwars.api.arena.IArena;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +13,9 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.WoodSkin;
+import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.util.BedWarsWrapper;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.util.Set;
@@ -63,7 +63,7 @@ public class WoodSkinSBW implements Listener {
 
         shopOpening.remove(p.getUniqueId());
 
-        IArena arena = BedWars.getAPI().getArenaUtil().getArenaByPlayer(p);
+        IArenaHandler arena = BedWarsWrapper.wrap(p);
         String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.WoodSkins);
         WoodSkin selectedWoodSkin = find(selected);
 
