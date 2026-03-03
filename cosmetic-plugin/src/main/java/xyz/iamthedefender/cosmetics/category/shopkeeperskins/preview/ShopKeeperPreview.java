@@ -18,7 +18,7 @@ import xyz.iamthedefender.cosmetics.category.shopkeeperskins.utils.ShopKeeperSki
 public class ShopKeeperPreview extends CosmeticPreview {
 
     public ShopKeeperPreview() {
-        super(CosmeticsType.ShopKeeperSkin);
+        super(CosmeticsType.ShopKeeperSkins);
     }
 
     @Override

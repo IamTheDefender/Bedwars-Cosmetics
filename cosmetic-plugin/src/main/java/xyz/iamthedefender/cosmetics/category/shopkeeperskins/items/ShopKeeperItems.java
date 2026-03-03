@@ -20,11 +20,11 @@ import java.util.Random;
 public class ShopKeeperItems {
 
     public void registerItems() {
-        ConfigurationSection section = CosmeticsType.ShopKeeperSkin.getConfig().getYml().getConfigurationSection(CosmeticsType.ShopKeeperSkin.getSectionKey());
+        ConfigurationSection section = CosmeticsType.ShopKeeperSkins.getConfig().getYml().getConfigurationSection(CosmeticsType.ShopKeeperSkins.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.ShopKeeperSkin.getConfig();
+        ConfigManager config = CosmeticsType.ShopKeeperSkins.getConfig();
         for (String id : section.getKeys(false)) {
-            String path = CosmeticsType.ShopKeeperSkin.getSectionKey() + "." + id + ".";
+            String path = CosmeticsType.ShopKeeperSkins.getSectionKey() + "." + id + ".";
             ShopKeeperSkin shopKeeperSkin = new ShopKeeperSkin() {
                 @Override
                 public ItemStack getItem() {
@@ -69,7 +69,7 @@ public class ShopKeeperItems {
                     if (getField(FieldsType.RARITY, player) == RarityType.RANDOM) {
                         List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
                         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-                            if (player.hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
+                            if (player.hasPermission(CosmeticsType.ShopKeeperSkins.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
                                 shopKeeperSkins.add(shopKeeperSkin);
                             }
                         }

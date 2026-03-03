@@ -65,7 +65,7 @@ public class ShopKeeperHandler1058 implements Listener {
 
                         // Choose random player from the team
                         Player player = team.getMembers().get(MathUtil.getRandom(0, team.getMembers().size() - 1));
-                        String skin = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
+                        String skin = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkins);
                         DebugUtil.addMessage("Selected skin: " + skin);
                         // Spawn new NPCs
                         for (ShopKeeperSkin skins : StartupUtils.shopKeeperSkinList) {

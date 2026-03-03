@@ -126,11 +126,19 @@ public class BW2023Handler implements IHandler {
         return new ILanguage() {
             @Override
             public String getMessage(Player player, String path) {
+                if (player == null) {
+                    return api.getDefaultLang().getString(path);
+                }
+
                 return api.getPlayerLanguage(player).getString(path);
             }
 
             @Override
             public List<String> getMessageList(Player player, String path) {
+                if (player == null) {
+                    return api.getDefaultLang().getList(path);
+                }
+
                 return api.getPlayerLanguage(player).getList(path);
             }
 

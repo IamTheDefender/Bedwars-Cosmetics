@@ -15,13 +15,13 @@ import java.util.List;
 public class KillMessageItems {
 
     public static void registerConfigItems(){
-        ConfigurationSection section = CosmeticsType.KillMessage.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessage.getSectionKey());
+        ConfigurationSection section = CosmeticsType.KillMessages.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessages.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.KillMessage.getConfig();
+        ConfigManager config = CosmeticsType.KillMessages.getConfig();
 
         for(String id : section.getKeys(false)){
             try {
-                String path = CosmeticsType.KillMessage.getSectionKey() + "." + id + ".";
+                String path = CosmeticsType.KillMessages.getSectionKey() + "." + id + ".";
                 KillMessage killMessage = new KillMessage() {
                     // Do nothing because API currently doesn't support it
                     @Override

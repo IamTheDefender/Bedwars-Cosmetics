@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 
 import java.io.File;
@@ -181,5 +182,11 @@ public class ConfigManager {
     }
     public void addDefaults(YamlConfiguration defaultConfig) {
         getYml().addDefaults(defaultConfig);
+    }
+
+    public Object get(@Nullable String s) {
+        if (s == null) return null;
+
+        return this.yml.get(s);
     }
 }

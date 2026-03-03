@@ -120,6 +120,6 @@ public abstract class KillMessage extends Cosmetics {
 
     @Override
     public CosmeticsType getCosmeticType() {
-        return CosmeticsType.KillMessage;
+        return CosmeticsType.KillMessages;
     }
 }

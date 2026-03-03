@@ -3,9 +3,12 @@ package xyz.iamthedefender.cosmetics.util;
 import com.andrei1058.bedwars.api.arena.team.ITeam;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.bedwars.api.RunningTeam;
 import org.screamingsandals.bedwars.api.game.Game;
 import org.screamingsandals.bedwars.game.GameStore;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
+import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
 import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
 
 import java.util.Arrays;
@@ -141,5 +144,9 @@ public class BedWarsWrapper {
                 return team.getConnectedPlayers().size();
             }
         };
+    }
+
+    public static @Nullable IArenaHandler wrap(Player player) {
+        return CosmeticsPlugin.getInstance().getHandler().getArenaUtil().getArenaByPlayer(player);
     }
 }

@@ -35,7 +35,7 @@ public class IslandTopperHandlerSBW implements Listener {
             event.getGame().getRunningTeams().forEach(runningTeam -> {
                 Player player = null;
                 for (Player p : runningTeam.getConnectedPlayers()) {
-                    if (!CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandTopper).equals("none")) {
+                    if (!CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandToppers).equals("none")) {
                         player = p;
 
                         if (new Random().nextDouble() < 0.5)
@@ -74,7 +74,7 @@ public class IslandTopperHandlerSBW implements Listener {
                     return;
                 }
 
-                String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
+                String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandToppers);
                 for (IslandTopper islandTopper : StartupUtils.islandTopperList) {
                     if (islandTopper.getIdentifier().equals(selected)) {
                         if (islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {

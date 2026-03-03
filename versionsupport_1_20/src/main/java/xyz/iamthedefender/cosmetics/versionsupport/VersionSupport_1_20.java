@@ -1,8 +1,5 @@
 package xyz.iamthedefender.cosmetics.versionsupport;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
@@ -20,7 +17,6 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
 import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
@@ -41,11 +37,11 @@ public class VersionSupport_1_20 implements IVersionSupport {
     public ItemStack getSkull(String base64) {
         ItemStack head = XMaterial.PLAYER_HEAD.parseItem();
 
-        if(head == null) throw new RuntimeException("Failed to get skull (v1.20)");
+        if (head == null) throw new RuntimeException("Failed to get skull (v1.20)");
 
         ItemMeta itemMeta = head.getItemMeta();
 
-        if(itemMeta == null) return head;
+        if (itemMeta == null) return head;
 
         itemMeta = XSkull.of(itemMeta).profile(Profileable.detect(base64)).lenient().apply();
 
@@ -60,7 +56,7 @@ public class VersionSupport_1_20 implements IVersionSupport {
         mapView.getRenderers().forEach(mapView::removeRenderer);
         mapView.addRenderer(mapRenderer);
         MapMeta mapMeta = (MapMeta) map.getItemMeta();
-        if(mapMeta == null) {
+        if (mapMeta == null) {
             Utility.getApi().getPlugin().getLogger().severe("Failed to apply renderer to map, map meta is null!");
             return map;
         }
@@ -72,7 +68,7 @@ public class VersionSupport_1_20 implements IVersionSupport {
     @Override
     public boolean isValidParticle(String name) {
 
-        try{
+        try {
             Particle.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
             return false;
@@ -104,136 +100,53 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particleWrapper, Color color) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_PARTICLES);
-
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-
-        packet.getFloat().write(0, 0f);
-        packet.getFloat().write(1, 0f);
-        packet.getFloat().write(2, 0f);
-
-        packet.getFloat().write(3, 1.0f);
-
-        packet.getIntegers().write(0, 1);
-
-        packet.getNewParticles().write(0, particleWrapper.getNewWrapperParticle());
-
-        packet.getFloat().write(4, color.getRed() / 255f);
-        packet.getFloat().write(5, color.getGreen() / 255f);
-        packet.getFloat().write(6, color.getBlue() / 255f);
-
-        if(player != null) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        Particle dustParticle;
+        try {
+            dustParticle = Particle.valueOf("DUST");
+        } catch (IllegalArgumentException e) {
+            dustParticle = Particle.valueOf("REDSTONE");
+        }
+        Particle.DustOptions dustOptions = new Particle.DustOptions(color, 1.0f);
+        if (player != null) {
+            player.spawnParticle(dustParticle, location, 1, 0, 0, 0, 0, dustOptions);
             return;
         }
-
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
+        location.getWorld().spawnParticle(dustParticle, location, 1, 0, 0, 0, 0, dustOptions);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_PARTICLES);
-
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-
-        packet.getFloat().write(0, 0f);
-        packet.getFloat().write(1, 0f);
-        packet.getFloat().write(2, 0f);
-
-        packet.getFloat().write(3, 1.0f);
-
-        packet.getIntegers().write(0, 1);
-
-        packet.getNewParticles().write(0, particle.getNewWrapperParticle());
-
-        if(player != null) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        if (player != null) {
+            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, 1);
             return;
         }
-
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
+        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, 1);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_PARTICLES);
-
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-
-        packet.getFloat().write(0, 0f);
-        packet.getFloat().write(1, 0f);
-        packet.getFloat().write(2, 0f);
-
-        packet.getFloat().write(3, 1.0f);
-
-        packet.getIntegers().write(0, count);
-
-        packet.getNewParticles().write(0, particle.getNewWrapperParticle());
-
-        if(player != null) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        if (player != null) {
+            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count);
             return;
         }
-
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
+        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count, float speed) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_PARTICLES);
-
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-
-        packet.getFloat().write(0, 0f);
-        packet.getFloat().write(1, 0f);
-        packet.getFloat().write(2, 0f);
-
-        packet.getFloat().write(3, speed);
-
-        packet.getIntegers().write(0, count);
-
-        packet.getNewParticles().write(0, particle.getNewWrapperParticle());
-
-        if(player != null) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        if (player != null) {
+            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, 0, 0, 0, speed);
             return;
         }
-
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
+        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, 0, 0, 0, speed);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count, float speed, Vector offset) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_PARTICLES);
-
-        packet.getDoubles().write(0, location.getX());
-        packet.getDoubles().write(1, location.getY());
-        packet.getDoubles().write(2, location.getZ());
-
-        packet.getFloat().write(0, (float) offset.getX());
-        packet.getFloat().write(1, (float) offset.getY());
-        packet.getFloat().write(2, (float) offset.getZ());
-
-        packet.getFloat().write(3, speed);
-
-        packet.getIntegers().write(0, count);
-
-        packet.getNewParticles().write(0, particle.getNewWrapperParticle());
-
-        if(player != null) {
-            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+        if (player != null) {
+            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
             return;
         }
-
-        ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
+        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
     }
-
 }

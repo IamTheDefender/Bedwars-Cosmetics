@@ -134,13 +134,13 @@ public class BwcAPI implements CosmeticsAPI {
                 return playerData.getFinalKillEffect();
             case Glyphs:
                 return playerData.getGlyph();
-            case IslandTopper:
+            case IslandToppers:
                 return playerData.getIslandTopper();
-            case KillMessage:
+            case KillMessages:
                 return playerData.getKillMessage();
             case ProjectileTrails:
                 return playerData.getProjectileTrail();
-            case ShopKeeperSkin:
+            case ShopKeeperSkins:
                 return playerData.getShopkeeperSkin();
             case Sprays:
                 return playerData.getSpray();
@@ -174,16 +174,16 @@ public class BwcAPI implements CosmeticsAPI {
                 DebugUtil.addMessage("Glyph: " + value);
                 playerData.setGlyph(value);
                 break;
-            case IslandTopper:
+            case IslandToppers:
                 playerData.setIslandTopper(value);
                 break;
-            case KillMessage:
+            case KillMessages:
                 playerData.setKillMessage(value);
                 break;
             case ProjectileTrails:
                 playerData.setProjectileTrail(value);
                 break;
-            case ShopKeeperSkin:
+            case ShopKeeperSkins:
                 playerData.setShopkeeperSkin(value);
                 break;
             case Sprays:

@@ -28,7 +28,7 @@ public class IslandTopperHandler1058 implements Listener {
             for (ITeam teams : e.getArena().getTeams()) {
                 Player player = null;
                 for (Player p : teams.getMembers()) {
-                    if (!CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandTopper).equals("none")) {
+                    if (!CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, CosmeticsType.IslandToppers).equals("none")) {
                         player = p;
                     }
                 }
@@ -40,7 +40,7 @@ public class IslandTopperHandler1058 implements Listener {
                 if (location == null) {
                     return;
                 }
-                String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandTopper);
+                String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.IslandToppers);
                 for(IslandTopper islandTopper : StartupUtils.islandTopperList){
                     if (islandTopper.getIdentifier().equals(selected)){
                         if (islandTopper.getField(FieldsType.RARITY, player) != RarityType.NONE) {

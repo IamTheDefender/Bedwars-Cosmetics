@@ -12,6 +12,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.Spray;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.util.function.Predicate;
@@ -68,7 +69,7 @@ public class SprayHandlerSBW implements Listener {
             ArmorStand stand = (ArmorStand) e.getWorld().spawnEntity(e.getLocation().subtract(0.0, 0.9, 0.0), EntityType.ARMOR_STAND);
             stand.setVisible(false);
             stand.setGravity(false);
-            stand.setCustomName(ColorUtil.translate("&eClick!"));
+            stand.setCustomName(Messages.SPRAY_CLICK.value(null));
             stand.setMetadata("HOLO_ITEM_FRAME", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
             stand.setCustomNameVisible(true);
             stand.setMarker(true);

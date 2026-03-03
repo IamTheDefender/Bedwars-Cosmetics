@@ -149,9 +149,9 @@ public class ShopKeeperSkinsUtils {
      */
     public static void spawnShopKeeperNPC(Player p, Location loc) {
         CosmeticsPlugin plugin = CosmeticsPlugin.getInstance();
-        String skin = plugin.getApi().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkin);
+        String skin = plugin.getApi().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkins);
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
+        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");
         String skinsign = config.getString(key + "." + skin + ".skin-sign");
         String etype = config.getString(key + "." + skin + ".entity-type");
@@ -170,7 +170,7 @@ public class ShopKeeperSkinsUtils {
 
     public static void spawnShopKeeperNPC(Player p, Location loc, String skin) {
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
+        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");
         String skinsign = config.getString(key + "." + skin + ".skin-sign");
         String etype = config.getString(key + "." + skin + ".entity-type");
@@ -190,7 +190,7 @@ public class ShopKeeperSkinsUtils {
     public static void spawnShopKeeperNPCForPreview(Player p, Location loc, String skin) {
         CosmeticsPlugin plugin = CosmeticsPlugin.getInstance();
         ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkin.getSectionKey();
+        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
         String skinvalue = config.getString(key + "." + skin + ".skin-value");
         String skinsign = config.getString(key + "." + skin + ".skin-sign");
         String etype = config.getString(key + "." + skin + ".entity-type");

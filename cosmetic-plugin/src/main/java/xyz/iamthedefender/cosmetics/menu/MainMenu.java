@@ -12,6 +12,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.menu.impl.ChestSystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ItemBuilder;
+import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 
@@ -20,7 +21,7 @@ import java.util.List;
 public class MainMenu extends ChestSystemGui {
 
     public MainMenu(Player player) {
-        super(Utility.getMSGLang(player, "cosmetics.gui-title") , 6);
+        super(Messages.MAIN_MENU_GUI_TITLE.value(player), 6);
     }
 
     @Override

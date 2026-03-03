@@ -43,9 +43,9 @@ public class CosmeticsPlaceholders extends PlaceholderExpansion {
             case "selected_spray":
                 return api.getSelectedCosmetic(player, CosmeticsType.Sprays);
             case "selected_km":
-                return api.getSelectedCosmetic(player, CosmeticsType.KillMessage);
+                return api.getSelectedCosmetic(player, CosmeticsType.KillMessages);
             case "selected_skin":
-                return api.getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkin);
+                return api.getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkins);
             case "selected_ws":
                 return api.getSelectedCosmetic(player, CosmeticsType.WoodSkins);
             case "selected_glyph":
@@ -57,7 +57,7 @@ public class CosmeticsPlaceholders extends PlaceholderExpansion {
             case "selected_finalkill":
                 return api.getSelectedCosmetic(player, CosmeticsType.FinalKillEffects);
             case "selected_islandtopper":
-                return api.getSelectedCosmetic(player, CosmeticsType.IslandTopper);
+                return api.getSelectedCosmetic(player, CosmeticsType.IslandToppers);
             case "owned_vd":
                 return String.valueOf(ownedData.getVictoryDance());
             case "owned_ws":

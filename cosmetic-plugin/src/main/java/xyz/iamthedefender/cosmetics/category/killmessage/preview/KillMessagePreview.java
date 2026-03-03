@@ -20,7 +20,7 @@ public class KillMessagePreview extends CosmeticPreview {
 
 
     public KillMessagePreview() {
-        super(CosmeticsType.KillMessage);
+        super(CosmeticsType.KillMessages);
     }
 
     @Override
