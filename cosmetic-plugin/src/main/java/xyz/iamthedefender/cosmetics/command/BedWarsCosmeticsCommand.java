@@ -32,33 +32,43 @@ import xyz.iamthedefender.cosmetics.util.StartupUtils;
 public class BedWarsCosmeticsCommand extends BaseCommand {
 
     private final CosmeticsPlugin plugin = CosmeticsPlugin.getInstance();
-    
+
     @Subcommand("help")
     @CommandPermission("bwcosmetics.help")
     @CatchUnknown
     public void helpCommand(Player player) {
-        player.sendMessage(ColorUtil.translate("&7-> &6BedWars1058-Cosmetics Addon &7- &cCommands &7<-"));
+        player.sendMessage(ColorUtil.translate("&8&l======================================"));
+        player.sendMessage(ColorUtil.translate("&6&l     BedWars Cosmetics — Commands"));
+        player.sendMessage(ColorUtil.translate("&8&l======================================"));
         player.sendMessage(" ");
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc reload    &8- &eclick for details", "Reloads the all the YAML's", "/bwc reload"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc menu    &8- &eclick for details", "Opens the Main Menu", "/bwc menu"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc km    &8- &eclick for details", "Opens the Kill message GUI", "/bwc km"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc shopkeeper    &8- &eclick for details", "Opens the ShopKeeperSkin GUI", "/bwc shopkeeper"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc sprays    &8- &eclick for details", "Opens the Sprays GUI", "/bwc sprays"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc dc    &8- &eclick for details", "Opens the Death Cries GUI", "/bwc dc"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc glyphs    &8- &eclick for details", "Opens the Glyphs GUI", "/bwc glyphs"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc bbe    &8- &eclick for details", "Opens the Bed Break Effect GUI", "/bwc bbe"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc finalke    &8- &eclick for details", "Opens the Final Kill Effect GUI","/bwc finalke"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc pt    &8- &eclick for details", "Opens the Projectile Trails GUI", "/bwc pt"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc vd    &8- &eclick for details", "Opens the Victory Dance GUI", "/bwc vd"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc ws    &8- &eclick for details", "Opens the Wood Skins GUI", "/bwc ws"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc it    &8- &eclick for details", "Opens the Island Toppers GUI", "/bwc it"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc setIslandTopperPosition" +
-                "    &8- &eclick for details", "Set the island topper location for an team in an arena", "/bwc setIslandTopperPosition <teamName>"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc setupPlayerLocation    &8- &eclick for details", "Set the player location for preview", "/bwc setupPlayerLocation"));
-        player.spigot().sendMessage(Utility.hoverableClickableMessage("&6-> &7/bwc setupPreviewLocation    &8- &eclick for details", "Set the preview location", "/bwc setupPreviewLocation"));
 
+        send(player, "/bwc reload", "Reloads all YAML files");
+        send(player, "/bwc menu", "Opens the Main Menu");
+        send(player, "/bwc km", "Opens the Kill Message GUI");
+        send(player, "/bwc shopkeeper", "Opens the Shopkeeper Skin GUI");
+        send(player, "/bwc sprays", "Opens the Sprays GUI");
+        send(player, "/bwc dc", "Opens the Death Cries GUI");
+        send(player, "/bwc glyphs", "Opens the Glyphs GUI");
+        send(player, "/bwc bbe", "Opens the Bed Break Effect GUI");
+        send(player, "/bwc finalke", "Opens the Final Kill Effect GUI");
+        send(player, "/bwc pt", "Opens the Projectile Trails GUI");
+        send(player, "/bwc vd", "Opens the Victory Dance GUI");
+        send(player, "/bwc ws", "Opens the Wood Skins GUI");
+        send(player, "/bwc it", "Opens the Island Toppers GUI");
+        send(player, "/bwc setIslandTopperPosition <teamName>", "Sets the topper location for a team");
+        send(player, "/bwc setupPlayerLocation", "Sets the preview player location");
+        send(player, "/bwc setupPreviewLocation", "Sets the preview location");
     }
 
+    private void send(Player player, String cmd, String desc) {
+        player.spigot().sendMessage(
+                Utility.hoverableClickableMessage(
+                        "&6-> &7" + cmd + "    &8- &eclick for details",
+                        desc,
+                        cmd
+                )
+        );
+    }
 
     @Subcommand("set")
     @CommandPermission("bwcosmetics.admin")
@@ -97,12 +107,12 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
 
     @Subcommand("km")
     public void onKmMenu(Player player) {
-        openMenu(player, CosmeticsType.KillMessage);
+        openMenu(player, CosmeticsType.KillMessages);
     }
 
     @Subcommand("shopkeeper")
     public void onShopkeeperMenu(Player player) {
-        openMenu(player, CosmeticsType.ShopKeeperSkin);
+        openMenu(player, CosmeticsType.ShopKeeperSkins);
     }
 
     @Subcommand("sprays")
@@ -147,7 +157,7 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
 
     @Subcommand("it")
     public void onItMenu(Player player) {
-        openMenu(player, CosmeticsType.IslandTopper);
+        openMenu(player, CosmeticsType.IslandToppers);
     }
 
     @Subcommand("setIslandTopperPosition")

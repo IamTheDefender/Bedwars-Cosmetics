@@ -25,7 +25,7 @@ public class KillMessageUtils {
      * @return true if exists, false otherwise.
      */
     public static boolean exists(String id, String type) {
-        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + id + "." + type + "-Kill");
+        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + id + "." + type + "-Kill");
         return !messages.isEmpty();
     }
 
@@ -59,12 +59,12 @@ public class KillMessageUtils {
      * @param oldMessage        never used, leave as null.
      */
     public static void sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type, String oldMessage, boolean preview, String previewID, String previewKillerName) {
-        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages);
         List<String> messages;
         if (preview) {
-            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + previewID + "." + type + "-Kill");
+            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + previewID + "." + type + "-Kill");
         } else {
-            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
+            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         }
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (preview) {
@@ -112,9 +112,9 @@ public class KillMessageUtils {
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
      */
     public static String sendKillMessage(@Deprecated Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
-        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages);
         if (victim.equalsIgnoreCase(killer.getName())) type = "Void";
-        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessage.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
+        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         for (KillMessage killMessage : StartupUtils.killMessageList) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {
                 if (killMessage.getField(FieldsType.RARITY, null) == RarityType.NONE) return null;

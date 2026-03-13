@@ -8,13 +8,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.bedwars.api.RunningTeam;
 import org.screamingsandals.bedwars.api.events.BedwarsPlayerDeathMessageSendEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsPlayerKilledEvent;
-import org.screamingsandals.bedwars.game.Team;
 import org.screamingsandals.bedwars.game.TeamColor;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
 import xyz.iamthedefender.cosmetics.category.killmessage.util.KillMessageUtils;
-import xyz.iamthedefender.cosmetics.util.DebugUtil;
 
 public class KillMessagesSBW implements Listener {
 
@@ -40,13 +37,13 @@ public class KillMessagesSBW implements Listener {
         ChatColor color3 = TeamColor.valueOf(victimTeam.getColor().name()).chatColor;
 
         // KILL MESSAGES!
-        if (CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage).equals("Default")) {
+        if (CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages).equals("Default")) {
             return;
         }
 
         boolean isFinalKill = !victimTeam.isTargetBlockExists();
 
-        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessage);
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages);
 
         DamageCause cause = findLastCause(e.getVictim());
 

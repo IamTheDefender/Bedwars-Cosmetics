@@ -136,14 +136,14 @@ public class PlayerOwnedData{
             }
         }
         for (IslandTopper topper : StartupUtils.islandTopperList) {
-            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.IslandTopper.getPermissionFormat() + "." + topper.getIdentifier())
-                    || Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.IslandTopper.getPermissionFormat() + ".*")) {
+            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.IslandToppers.getPermissionFormat() + "." + topper.getIdentifier())
+                    || Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.IslandToppers.getPermissionFormat() + ".*")) {
                 this.setIslandTopper(this.getIslandTopper() + 1);
             }
         }
         for (KillMessage message : StartupUtils.killMessageList) {
-            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.KillMessage.getPermissionFormat() + "." + message.getIdentifier())
-                    || Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.KillMessage.getPermissionFormat() + ".*")) {
+            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.KillMessages.getPermissionFormat() + "." + message.getIdentifier())
+                    || Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.KillMessages.getPermissionFormat() + ".*")) {
                 this.setKillMessage(this.getKillMessage() + 1);
             }
         }
@@ -157,7 +157,7 @@ public class PlayerOwnedData{
         }
 
         for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.ShopKeeperSkin.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())
+            if (Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.ShopKeeperSkins.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())
                     || Bukkit.getPlayer(uuid).hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + ".*") ){
                 this.setShopkeeperSkin(this.getShopkeeperSkin() + 1);
             }

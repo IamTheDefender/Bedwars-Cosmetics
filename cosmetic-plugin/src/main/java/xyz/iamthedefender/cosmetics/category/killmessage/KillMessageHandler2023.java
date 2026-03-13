@@ -29,7 +29,7 @@ public class KillMessageHandler2023 implements Listener {
         ChatColor color3 = e.getArena().getTeam(e.getVictim()).getColor().chat();
 
         // KILL MESSAGES!
-        if (CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage).equals("Default")){
+        if (CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessages).equals("Default")){
             return;
         }
 
@@ -38,7 +38,7 @@ public class KillMessageHandler2023 implements Listener {
         // Get the final kill flag based on the kill cause
         boolean isFinalKill = e.getCause().isFinalKill();
 
-        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessage);
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(e.getKiller(), CosmeticsType.KillMessages);
 
         // Send the appropriate kill message to all players in the arena
         switch (e.getCause()) {

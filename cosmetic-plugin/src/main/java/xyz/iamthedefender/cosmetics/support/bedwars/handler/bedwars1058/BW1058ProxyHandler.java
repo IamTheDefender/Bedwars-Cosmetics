@@ -47,6 +47,7 @@ public class BW1058ProxyHandler implements IHandler {
         return new ILanguage() {
             @Override
             public String getMessage(Player player, String path) {
+
                 return languageUtil.getMsg(player, path);
             }
 

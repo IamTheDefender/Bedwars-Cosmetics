@@ -135,7 +135,7 @@ public class IslandTopperPreview {
         }
 
         ConfigManager config = ConfigUtils.getIslandToppers();
-        String topperFileName = config.getString(CosmeticsType.IslandTopper.getSectionKey() + "." + selected + ".file");
+        String topperFileName = config.getString(CosmeticsType.IslandToppers.getSectionKey() + "." + selected + ".file");
 
         if (topperFileName == null) {
             Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");

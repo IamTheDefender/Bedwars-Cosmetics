@@ -19,16 +19,16 @@ public enum CosmeticsType {
     VictoryDances("Victory Dance", ConfigUtils.getVictoryDances(), Utility.getApi().getVictoryDanceList(), "victory-dance", "victorydance", VictoryDance.class),
     WoodSkins("Wood Skin", ConfigUtils.getWoodSkins(), Utility.getApi().getWoodSkinList(), "wood-skins", "woodskin", WoodSkin.class),
     Sprays("Spray", ConfigUtils.getSprays(), Utility.getApi().getSprayList(), "sprays", "spray", Spray.class),
-    KillMessage("Kill Message", ConfigUtils.getKillMessages(), Utility.getApi().getKillMessageList(), "kill-message", "killmessage", KillMessage.class),
-    ShopKeeperSkin("ShopKeeper Skin", ConfigUtils.getShopKeeperSkins(), Utility.getApi().getShopKeeperSkinList(), "shopkeeper-skins", "shopkeeperskin", ShopKeeperSkin.class),
-    IslandTopper("Island Topper", ConfigUtils.getIslandToppers(), Utility.getApi().getIslandTopperList(), "island-topper", "islandtopper", IslandTopper.class);
+    KillMessages("Kill Message", ConfigUtils.getKillMessages(), Utility.getApi().getKillMessageList(), "kill-message", "killmessage", KillMessage.class),
+    ShopKeeperSkins("ShopKeeper Skin", ConfigUtils.getShopKeeperSkins(), Utility.getApi().getShopKeeperSkinList(), "shopkeeper-skins", "shopkeeperskin", ShopKeeperSkin.class),
+    IslandToppers("Island Topper", ConfigUtils.getIslandToppers(), Utility.getApi().getIslandTopperList(), "island-topper", "islandtopper", IslandTopper.class);
 
     private final String formatedName;
     private final ConfigManager configManager;
     private final List<?> itemsList;
     private final String sectionKey;
     private final String permissionFormat;
-    private Class<?> cosmeticsClass;
+    private final Class<?> cosmeticsClass;
 
     CosmeticsType(String formatedName, ConfigManager configManager, List<?> itemsList, String sectionKey, String permissionFormat, Class<?> cosmeticsClass) {
         this.formatedName = formatedName;
@@ -41,6 +41,15 @@ public enum CosmeticsType {
 
     public ConfigManager getConfig() {
         return configManager;
+    }
+
+    public static CosmeticsType fromName(String name) {
+        for (CosmeticsType type : values()) {
+            if (type.name().replace("-", "").replace("_", "").equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        return null;
     }
 
 }

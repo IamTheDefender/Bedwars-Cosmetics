@@ -150,7 +150,7 @@ public abstract class IslandTopper extends Cosmetics {
 
     @Override
     public CosmeticsType getCosmeticType() {
-        return CosmeticsType.IslandTopper;
+        return CosmeticsType.IslandToppers;
     }
 
 }

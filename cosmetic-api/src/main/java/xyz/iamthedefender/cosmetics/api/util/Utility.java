@@ -17,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 
 import java.io.*;
@@ -64,7 +65,7 @@ public class Utility {
      * @param path Path where the string is located.
      * @return the result
      */
-    public static String getMSGLang(Player p, String path) {
+    public static @Nullable String getMSGLang(Player p, String path) {
         return ColorUtil.translate(api.getHandler().getLanguageUtil().getMessage(p, path));
     }
 
