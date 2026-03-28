@@ -1,9 +1,11 @@
 package xyz.iamthedefender.cosmetics.menu;
 
 import com.cryptomorin.xseries.XSound;
+import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -42,8 +44,10 @@ public class CategoryMenu extends ChestSystemGui {
     String title;
     List<Integer> slots;
     int page;
+    SortMode sortMode;
+    boolean ownedFirst;
 
-    public CategoryMenu(CosmeticsType type, String title, int page) {
+    public CategoryMenu(CosmeticsType type, String title, int page, SortMode sortMode, boolean ownedFirst) {
         super(title, 6);
         this.config = type.getConfig();
         this.cosmeticsType = type;
@@ -59,10 +63,16 @@ public class CategoryMenu extends ChestSystemGui {
             slots = Arrays.asList(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34);
         }
         this.page = page;
+        this.sortMode = sortMode;
+        this.ownedFirst = ownedFirst;
+    }
+
+    public CategoryMenu(CosmeticsType type, String title, int page) {
+        this(type, title, page, SortMode.RARITY_HIGH_LOW, false);
     }
 
     public CategoryMenu(CosmeticsType type, String title) {
-        this(type, title, 1);
+        this(type, title, 1, SortMode.RARITY_HIGH_LOW, false);
     }
 
     @Override
@@ -74,6 +84,7 @@ public class CategoryMenu extends ChestSystemGui {
 
         clearInventory();
         Map<ClickableItem, RarityType> rarityMap = new HashMap<>();
+        Map<ClickableItem, String> idMap = new HashMap<>();
 
         for (String id : section.getKeys(false)) {
             String path = cosmeticsType.getSectionKey() + "." + id + ".";
@@ -118,6 +129,7 @@ public class CategoryMenu extends ChestSystemGui {
 
             if (item != null) {
                 rarityMap.put(item, rarity);
+                idMap.put(item, id);
             }
         }
 
@@ -125,7 +137,15 @@ public class CategoryMenu extends ChestSystemGui {
             setItem(49, new ItemBuilder().material(Material.ARROW).name("&aBack").build(), (e) -> new MainMenu((Player) e.getWhoClicked()).open((Player) e.getWhoClicked()));
         }
 
-        createPages(rarityMap);
+        setItem(48, buildSortItem(), (e) -> {
+            if (e.getClick() == ClickType.RIGHT) {
+                new CategoryMenu(cosmeticsType, title, page, sortMode, !ownedFirst).open(player);
+            } else if (e.getClick() == ClickType.LEFT) {
+                new CategoryMenu(cosmeticsType, title, page, sortMode.next(), ownedFirst).open(player);
+            }
+        });
+
+        createPages(rarityMap, player, idMap);
     }
 
     @Override
@@ -133,8 +153,8 @@ public class CategoryMenu extends ChestSystemGui {
 
     }
 
-    public void createPages(Map<ClickableItem, RarityType> rarityMap) {
-        List<ClickableItem> items = new ArrayList<>(rarityMap.keySet());
+    public void createPages(Map<ClickableItem, RarityType> rarityMap, Player player, Map<ClickableItem, String> itemIdMap) {
+        List<ClickableItem> items = sortItems(rarityMap, player, itemIdMap);
 
         int itemsPerPage = slots.size();
         int totalPages = (items.size() / itemsPerPage) + 1;
@@ -144,18 +164,17 @@ public class CategoryMenu extends ChestSystemGui {
         List<ClickableItem> pageItems = items.subList(itemStartIndex, itemEndIndex);
 
         if (page < totalPages) {
-            setItem(47, new ItemBuilder().material(Material.ARROW).name("&aNext page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page + 1).open((Player) e.getWhoClicked()));
+            setItem(47, new ItemBuilder().material(Material.ARROW).name("&aNext page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page + 1, sortMode, ownedFirst).open((Player) e.getWhoClicked()));
         }
 
         if (page > 1) {
-            setItem(51, new ItemBuilder().material(Material.ARROW).name("&aPrevious page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page - 1).open((Player) e.getWhoClicked()));
+            setItem(51, new ItemBuilder().material(Material.ARROW).name("&aPrevious page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page - 1, sortMode, ownedFirst).open((Player) e.getWhoClicked()));
         }
 
-        Map<ClickableItem, RarityType> rarityMapNew = new HashMap<>(
-                pageItems.stream().collect(Collectors.toMap(c -> c, rarityMap::get))
-        );
+        Map<ClickableItem, RarityType> pageRarityMap = pageItems.stream()
+                .collect(Collectors.toMap(c -> c, rarityMap::get, (a, b) -> a, LinkedHashMap::new));
 
-        addItemsAccordingToRarity(rarityMapNew);
+        placeItems(pageRarityMap);
 
         String extrasPath = "Extras.fill-empty.";
         boolean extrasEnabled = config.getBoolean(extrasPath + "enabled");
@@ -166,6 +185,34 @@ public class CategoryMenu extends ChestSystemGui {
         while (getInventory().firstEmpty() != -1) {
             setItem(getInventory().firstEmpty(), new ItemBuilder(stack).name("&r").build());
         }
+    }
+
+    private List<ClickableItem> sortItems(Map<ClickableItem, RarityType> rarityMap, Player player, Map<ClickableItem, String> itemIdMap) {
+        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
+
+        Comparator<ClickableItem> comparator;
+        if (sortMode == SortMode.RARITY_HIGH_LOW) {
+            comparator = Comparator.comparing(rarityMap::get);
+        } else if (sortMode == SortMode.RARITY_LOW_HIGH) {
+            comparator = Comparator.comparing(rarityMap::get, Comparator.reverseOrder());
+        } else if (sortMode == SortMode.A_TO_Z) {
+            comparator = Comparator.comparing(item -> item.getItemStack().getItemMeta().getDisplayName());
+        } else {
+            comparator = Comparator.comparing((ClickableItem item) -> item.getItemStack().getItemMeta().getDisplayName(), Comparator.reverseOrder());
+        }
+
+        if (ownedFirst) {
+            Comparator<ClickableItem> owned = Comparator.comparing(item -> {
+                String name = ChatColor.stripColor(item.getItemStack().getItemMeta().getDisplayName());
+                String id = itemIdMap.getOrDefault(item, name);
+                return player.hasPermission(cosmeticsType.getPermissionFormat() + "." + id) ? 0 : 1;
+            });
+            comparator = owned.thenComparing(comparator);
+        }
+
+        return new ArrayList<>(rarityMap.keySet()).stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
     public int findFirstEmptySlot(Inventory inventory) {
@@ -181,6 +228,14 @@ public class CategoryMenu extends ChestSystemGui {
         return findFirstEmptySlot(inventory) == -1;
     }
 
+    public void placeItems(Map<ClickableItem, RarityType> rarityMap) {
+        rarityMap.forEach((item, rarity) -> {
+            int slot = findFirstEmptySlot(getInventory());
+            if (slot == -1) return;
+            setItem(slot, item);
+        });
+    }
+
     public void addItemsAccordingToRarity(Map<ClickableItem, RarityType> rarityMap) {
         List<ClickableItem> sortedClickableItems = new ArrayList<>(rarityMap.keySet()).stream()
                 .sorted(Comparator.comparing(item -> item.getItemStack().getItemMeta().getDisplayName()))
@@ -189,9 +244,7 @@ public class CategoryMenu extends ChestSystemGui {
 
         sortedClickableItems.forEach(item -> {
             int slot = findFirstEmptySlot(getInventory());
-
             if (slot == -1) return;
-
             setItem(slot, item);
         });
     }
@@ -218,7 +271,7 @@ public class CategoryMenu extends ChestSystemGui {
             return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.click-to-purchase"));
         }
 
-        return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.no-coins"));
+        return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.not-purchase-able"));
     }
 
     public ClickStatus onClick(Player p, CosmeticsType type, int price, String id, boolean isOnlyForCheck) {
@@ -268,7 +321,7 @@ public class CategoryMenu extends ChestSystemGui {
             api.setSelectedCosmetic(p, type, id);
             eco.withdrawPlayer(p, price);
             p.playSound(p.getLocation(), XSound.ENTITY_VILLAGER_YES.parseSound(), 1.0f, 1.0f);
-            new CategoryMenu(cosmeticsType, title, page).open(p);
+            new CategoryMenu(cosmeticsType, title, page, sortMode, ownedFirst).open(p);
 
             DebugUtil.addMessage("Selected " + id + " for " + type + " and paid " + price + " coins");
             return ClickStatus.PURCHASED_AND_SELECTED;
@@ -279,7 +332,7 @@ public class CategoryMenu extends ChestSystemGui {
         DebugUtil.addMessage("Selected " + id + " for " + type);
         api.setSelectedCosmetic(p, type, id);
         XSound.ENTITY_VILLAGER_YES.play(p);
-        new CategoryMenu(cosmeticsType, title, page).open(p);
+        new CategoryMenu(cosmeticsType, title, page, sortMode, ownedFirst).open(p);
         return ClickStatus.SELECTED;
     }
 
@@ -307,6 +360,24 @@ public class CategoryMenu extends ChestSystemGui {
         onClick(player, type, price, id, false);
     }
 
+    private ItemStack buildSortItem() {
+        String ownedTag = ownedFirst ? "&aYes" : "&cNo";
+
+        return new ItemBuilder()
+                .material(Material.HOPPER)
+                .name("&eSorted by: &6" + sortMode.getDisplay())
+                .lore(
+                        "&7Sorts by rarity: &f" + sortMode.getDisplay(),
+                        "",
+                        "&6Next sort: &f" + sortMode.next().getDisplay(),
+                        "&eLeft click to use!",
+                        "",
+                        "&7Owned items first: " + ownedTag,
+                        "&eRight click to toggle!"
+                )
+                .build();
+    }
+
     enum ClickStatus {
         ALREADY_SELECTED,
         UNLOCKED,
@@ -316,5 +387,24 @@ public class CategoryMenu extends ChestSystemGui {
         PURCHASE_CANCELLED,
         PURCHASED_AND_SELECTED,
         SELECTED
+    }
+
+    @Getter
+    public enum SortMode {
+        RARITY_LOW_HIGH("Lowest rarity first"),
+        RARITY_HIGH_LOW("Highest rarity first"),
+        A_TO_Z("A to Z"),
+        Z_TO_A("Z to A");
+
+        private final String display;
+
+        SortMode(String display) {
+            this.display = display;
+        }
+
+        public SortMode next() {
+            SortMode[] values = values();
+            return values[(ordinal() + 1) % values.length];
+        }
     }
 }
