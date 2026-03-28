@@ -137,7 +137,7 @@ public class CategoryMenu extends ChestSystemGui {
             setItem(49, new ItemBuilder().material(Material.ARROW).name("&aBack").build(), (e) -> new MainMenu((Player) e.getWhoClicked()).open((Player) e.getWhoClicked()));
         }
 
-        setItem(48, buildSortItem(), (e) -> {
+        setItem(50, buildSortItem(), (e) -> {
             if (e.getClick() == ClickType.RIGHT) {
                 new CategoryMenu(cosmeticsType, title, page, sortMode, !ownedFirst).open(player);
             } else if (e.getClick() == ClickType.LEFT) {
