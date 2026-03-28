@@ -34,7 +34,15 @@ public class Messages {
         }
 
         public String value(Player player) {
-            String found = Utility.getMSGLang(player, path);
+            String found;
+
+            try {
+                found = Utility.getMSGLang(player, path);
+            }catch (NullPointerException exception) {
+                // Apparently, BW2023-Proxy throws NPE if not found instead of returning null
+                found = null;
+            }
+
 
             if (found == null) {
                 found = defaultValue;

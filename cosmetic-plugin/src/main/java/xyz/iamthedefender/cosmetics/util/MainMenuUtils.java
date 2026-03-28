@@ -144,7 +144,11 @@ public class MainMenuUtils {
             }
         }
 
-        if (cosmeticsType == null) return;
+        if (cosmeticsType == null) {
+            CosmeticsPlugin.getInstance().getLogger()
+                    .warning("Failed to find a cosmetic type with ID: " + name);
+            return;
+        }
 
         title = Messages.of(
                         cosmeticsType.name().toLowerCase() + Constants.Key.COSMETICS_MENU_TITLES_SUFFIX, cosmeticsType.getFormatedName()

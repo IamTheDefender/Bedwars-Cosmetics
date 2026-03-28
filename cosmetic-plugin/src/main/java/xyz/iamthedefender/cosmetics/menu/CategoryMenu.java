@@ -55,10 +55,10 @@ public class CategoryMenu extends ChestSystemGui {
             integerList.add(Integer.parseInt(s));
         }
         slots = integerList;
-        if (slots.isEmpty()){
-            slots = Arrays.asList(10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34);
+        if (slots.isEmpty()) {
+            slots = Arrays.asList(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34);
         }
-       this.page = page;
+        this.page = page;
     }
 
     public CategoryMenu(CosmeticsType type, String title) {
@@ -75,30 +75,27 @@ public class CategoryMenu extends ChestSystemGui {
         clearInventory();
         Map<ClickableItem, RarityType> rarityMap = new HashMap<>();
 
-        // Set up the items
-        for(String id : section.getKeys(false)) {
-            // set the variables
+        for (String id : section.getKeys(false)) {
             String path = cosmeticsType.getSectionKey() + "." + id + ".";
 
             ItemStack stack = configManager.getItemStack(path + "item");
             int price = config.getInt(path + "price");
             RarityType rarity = RarityType.valueOf(config.getString(path + "rarity").toUpperCase());
-            // From language file
+
             String formattedName = Utility.getMSGLang(player, "cosmetics." + path + "name");
-            List<String> lore = Utility.getListLang(player ,"cosmetics." + path + "lore");
+            List<String> lore = Utility.getListLang(player, "cosmetics." + path + "lore");
             lore = StringUtils.formatLore(lore, formattedName, price, getItemStatus(player, cosmeticsType, id, price), rarity.getChatColor() + rarity.toString());
             boolean disabled = config.getBoolean(path + "disabled");
-            // Items
+
             ClickableItem item = null;
             List<String> lore1 = new ArrayList<>(lore);
 
             if (stack != null && !disabled) {
-                String colorCode = "&a";
-                int returnValue = onClick(player, cosmeticsType, price, id, true);
-                if (returnValue == 2){
-                    colorCode = "&c";
-                }
-                if (returnValue == -2 ){ // <- Selected
+                ClickStatus status = onClick(player, cosmeticsType, price, id, true);
+
+                String colorCode = status == ClickStatus.INSUFFICIENT_FUNDS || status == ClickStatus.NOT_PURCHASABLE ? "&c" : "&a";
+
+                if (status == ClickStatus.ALREADY_SELECTED) {
                     stack.addUnsafeEnchantment(Enchantment.LUCK, 1);
                 }
 
@@ -113,7 +110,7 @@ public class CategoryMenu extends ChestSystemGui {
                         return;
                     }
 
-                    if (e.getClick() == ClickType.LEFT){
+                    if (e.getClick() == ClickType.LEFT) {
                         onClick(player, cosmeticsType, price, id, false);
                     }
                 });
@@ -146,11 +143,11 @@ public class CategoryMenu extends ChestSystemGui {
 
         List<ClickableItem> pageItems = items.subList(itemStartIndex, itemEndIndex);
 
-        if(page < totalPages) {
+        if (page < totalPages) {
             setItem(47, new ItemBuilder().material(Material.ARROW).name("&aNext page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page + 1).open((Player) e.getWhoClicked()));
         }
 
-        if(page > 1) {
+        if (page > 1) {
             setItem(51, new ItemBuilder().material(Material.ARROW).name("&aPrevious page").build(), (e) -> new CategoryMenu(cosmeticsType, title, page - 1).open((Player) e.getWhoClicked()));
         }
 
@@ -163,14 +160,13 @@ public class CategoryMenu extends ChestSystemGui {
         String extrasPath = "Extras.fill-empty.";
         boolean extrasEnabled = config.getBoolean(extrasPath + "enabled");
 
-        if(!extrasEnabled) return;
+        if (!extrasEnabled) return;
 
         ItemStack stack = ConfigManager.getItemStack(config.getYml(), extrasPath + "item");
         while (getInventory().firstEmpty() != -1) {
             setItem(getInventory().firstEmpty(), new ItemBuilder(stack).name("&r").build());
         }
     }
-
 
     public int findFirstEmptySlot(Inventory inventory) {
         for (Integer slot : slots) {
@@ -180,8 +176,8 @@ public class CategoryMenu extends ChestSystemGui {
         }
         return -1;
     }
-    
-    public boolean isFull(Inventory inventory){
+
+    public boolean isFull(Inventory inventory) {
         return findFirstEmptySlot(inventory) == -1;
     }
 
@@ -200,33 +196,32 @@ public class CategoryMenu extends ChestSystemGui {
         });
     }
 
-
-    public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price){
+    public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price) {
         CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
         String selected = api.getSelectedCosmetic(p, type);
-        if (selected.equals(unformattedName)){
+        if (selected.equals(unformattedName)) {
             return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.selected"));
         }
 
-        if (p.hasPermission(type.getPermissionFormat() + "." + unformattedName)){
+        if (p.hasPermission(type.getPermissionFormat() + "." + unformattedName)) {
             return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.click-to-select"));
         }
 
-        if (type.getConfig().getString(type.getSectionKey() + "." + unformattedName + ".purchase-able") != null){
+        if (type.getConfig().getString(type.getSectionKey() + "." + unformattedName + ".purchase-able") != null) {
             boolean purchaseAble = type.getConfig().getBoolean(type.getSectionKey() + "." + unformattedName + ".purchase-able");
-            if (!purchaseAble){
+            if (!purchaseAble) {
                 return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.not-purchase-able"));
             }
         }
 
-        if (CosmeticsPlugin.getInstance().getEconomy().getBalance(p) >= price){
+        if (CosmeticsPlugin.getInstance().getEconomy().getBalance(p) >= price) {
             return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.click-to-purchase"));
         }
 
         return ColorUtil.translate(Utility.getMSGLang(p, "cosmetics.no-coins"));
     }
 
-    public int onClick(Player p, CosmeticsType type, int price, String id, boolean isOnlyForCheck) {
+    public ClickStatus onClick(Player p, CosmeticsType type, int price, String id, boolean isOnlyForCheck) {
         CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
         String selected = api.getSelectedCosmetic(p, type);
         String permissionFormat = type.getPermissionFormat();
@@ -235,7 +230,7 @@ public class CategoryMenu extends ChestSystemGui {
 
         if (selected.equals(id)) {
             DebugUtil.addMessage("Cosmetic " + id + " is already selected");
-            return -2;
+            return ClickStatus.ALREADY_SELECTED;
         }
 
         if (!p.hasPermission(permissionFormat + "." + id)) {
@@ -243,29 +238,29 @@ public class CategoryMenu extends ChestSystemGui {
 
             if (!type.getConfig().getBoolean(type.getSectionKey() + "." + id + ".purchase-able", true)) {
                 DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able");
-                return 2;
+                return ClickStatus.NOT_PURCHASABLE;
             }
 
             if (eco == null || eco.getBalance(Bukkit.getOfflinePlayer(p.getUniqueId())) < price) {
                 DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able (no coins)");
                 if (isOnlyForCheck) {
-                    return 2;
+                    return ClickStatus.INSUFFICIENT_FUNDS;
                 }
 
                 p.playSound(p.getLocation(), XSound.ENTITY_ENDERMAN_TELEPORT.parseSound(), 1.0f, 1.0f);
-                return -2;
+                return ClickStatus.INSUFFICIENT_FUNDS;
             }
 
             if (isOnlyForCheck) {
                 DebugUtil.addMessage("Cosmetic " + id + " is purchase-able");
-                return 1;
+                return ClickStatus.PURCHASABLE;
             }
 
             CosmeticPurchaseEvent event = new CosmeticPurchaseEvent(p, type);
             Bukkit.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 DebugUtil.addMessage("Cosmetic " + id + " is not purchase-able (event cancelled)");
-                return -1;
+                return ClickStatus.PURCHASE_CANCELLED;
             }
 
             if (perm != null) perm.playerAdd(p, permissionFormat + "." + id);
@@ -276,20 +271,19 @@ public class CategoryMenu extends ChestSystemGui {
             new CategoryMenu(cosmeticsType, title, page).open(p);
 
             DebugUtil.addMessage("Selected " + id + " for " + type + " and paid " + price + " coins");
-            return -2;
+            return ClickStatus.PURCHASED_AND_SELECTED;
         }
 
-        if (isOnlyForCheck) return 0;
+        if (isOnlyForCheck) return ClickStatus.UNLOCKED;
 
         DebugUtil.addMessage("Selected " + id + " for " + type);
         api.setSelectedCosmetic(p, type, id);
         XSound.ENTITY_VILLAGER_YES.play(p);
         new CategoryMenu(cosmeticsType, title, page).open(p);
-        return -2;
+        return ClickStatus.SELECTED;
     }
 
-
-    public void previewClick(Player player, CosmeticsType type, String id, int price){
+    public void previewClick(Player player, CosmeticsType type, String id, int price) {
         Cosmetics cosmetics = CosmeticsPlugin.findCosmetic(id, type);
 
         if (cosmetics == null) return;
@@ -311,5 +305,16 @@ public class CategoryMenu extends ChestSystemGui {
         if (found.get()) return;
 
         onClick(player, type, price, id, false);
+    }
+
+    enum ClickStatus {
+        ALREADY_SELECTED,
+        UNLOCKED,
+        PURCHASABLE,
+        INSUFFICIENT_FUNDS,
+        NOT_PURCHASABLE,
+        PURCHASE_CANCELLED,
+        PURCHASED_AND_SELECTED,
+        SELECTED
     }
 }

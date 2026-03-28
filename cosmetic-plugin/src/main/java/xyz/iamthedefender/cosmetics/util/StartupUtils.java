@@ -272,7 +272,7 @@ public class StartupUtils
         Utility.saveIfNotExistsLang("cosmetics.not-purchase-able", "&cLOCKED.");
         Utility.saveIfNotExistsLang("cosmetics.no-coins", "&cYou don't have enough coins!");
         Utility.saveIfNotExistsLang("cosmetics.spray-msg", "&cYou must wait 3 seconds between spray uses!");
-        Utility.saveIfNotExistsLang("cosmetics.gui-title", "Cosmetics");
+        Utility.saveIfNotExistsLang("cosmetics.title", "Cosmetics");
     }
 
     /**
