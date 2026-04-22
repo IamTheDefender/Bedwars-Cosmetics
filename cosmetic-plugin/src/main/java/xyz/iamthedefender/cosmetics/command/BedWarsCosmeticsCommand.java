@@ -217,7 +217,8 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
             title = PlaceholderAPI.setPlaceholders(player, title);
         }
 
-        SystemGui inv = new CategoryMenu(cosmeticsType, title);
+        xyz.iamthedefender.cosmetics.data.PlayerData data = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(player.getUniqueId());
+        SystemGui inv = new CategoryMenu(cosmeticsType, title, 1, data.getSortMode(), data.isOwnedFirst());
         inv.open(player);
     }
 

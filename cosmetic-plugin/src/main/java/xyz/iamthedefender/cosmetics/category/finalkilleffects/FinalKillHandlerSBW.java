@@ -17,22 +17,29 @@ public class FinalKillHandlerSBW implements Listener {
         Player victim = event.getPlayer();
         Player killer = event.getKiller();
 
-        if (victim == null || killer == null) return;
+        if (victim == null || killer == null)
+            return;
 
-        boolean isFinalKillEffectsEnabled = CosmeticsPlugin.getInstance().getConfig().getBoolean("final-kill-effects.enabled");
-        if (!isFinalKillEffectsEnabled) return;
+        boolean isFinalKillEffectsEnabled = CosmeticsPlugin.getInstance().getConfig()
+                .getBoolean("final-kill-effects.enabled");
+        if (!isFinalKillEffectsEnabled)
+            return;
 
-        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.FinalKillEffects);
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer,
+                CosmeticsType.FinalKillEffects);
 
         RunningTeam victimTeam = event.getGame().getTeamOfPlayer(victim);
 
-        if (victimTeam == null) return;
+        if (victimTeam == null)
+            return;
 
         boolean isFinalKill = !victimTeam.isTargetBlockExists();
 
-        if (!isFinalKill) return;
+        if (!isFinalKill)
+            return;
 
-        FinalKillEffectsExecuteEvent killEffectsExecuteEvent = new FinalKillEffectsExecuteEvent(victim, killer, selected);
+        FinalKillEffectsExecuteEvent killEffectsExecuteEvent = new FinalKillEffectsExecuteEvent(victim, killer,
+                selected);
         Bukkit.getPluginManager().callEvent(killEffectsExecuteEvent);
 
     }

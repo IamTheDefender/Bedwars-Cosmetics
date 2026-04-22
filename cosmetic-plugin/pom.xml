@@ -92,9 +92,9 @@
         <dependency>
             <groupId>org.screamingsandals.bedwars</groupId>
             <artifactId>BedWars-API</artifactId>
-            <version>0.2.41-SNAPSHOT</version>
+            <version>0.2.43</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/BedWars-0.2.41-SNAPSHOT-259.jar</systemPath>
+            <systemPath>${project.basedir}/lib/BedWars-0.2.43.jar</systemPath>
         </dependency>
     </dependencies>
 

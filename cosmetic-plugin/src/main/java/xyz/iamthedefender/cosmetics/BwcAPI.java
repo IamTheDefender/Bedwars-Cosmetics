@@ -125,31 +125,47 @@ public class BwcAPI implements CosmeticsAPI {
             return null;
         }
         PlayerData playerData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
+        String value = null;
         switch (cos){
             case BedBreakEffects:
-                return playerData.getBedDestroy();
+                value = playerData.getBedDestroy();
+                break;
             case DeathCries:
-                return playerData.getDeathCry();
+                value = playerData.getDeathCry();
+                break;
             case FinalKillEffects:
-                return playerData.getFinalKillEffect();
+                value = playerData.getFinalKillEffect();
+                break;
             case Glyphs:
-                return playerData.getGlyph();
+                value = playerData.getGlyph();
+                break;
             case IslandToppers:
-                return playerData.getIslandTopper();
+                value = playerData.getIslandTopper();
+                break;
             case KillMessages:
-                return playerData.getKillMessage();
+                value = playerData.getKillMessage();
+                break;
             case ProjectileTrails:
-                return playerData.getProjectileTrail();
+                value = playerData.getProjectileTrail();
+                break;
             case ShopKeeperSkins:
-                return playerData.getShopkeeperSkin();
+                value = playerData.getShopkeeperSkin();
+                break;
             case Sprays:
-                return playerData.getSpray();
+                value = playerData.getSpray();
+                break;
             case VictoryDances:
-                return playerData.getVictoryDance();
+                value = playerData.getVictoryDance();
+                break;
             case WoodSkins:
-                return playerData.getWoodSkin();
+                value = playerData.getWoodSkin();
+                if (value == null || value.isEmpty()) {
+                    WoodSkin def = WoodSkin.getDefault(p);
+                    return def != null ? def.getIdentifier() : "oak-plank";
+                }
+                break;
         }
-        return "User not found!";
+        return value;
     }
 
     /**

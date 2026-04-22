@@ -29,8 +29,6 @@ public class KillMessagePreview extends CosmeticPreview {
         List<String> message = Utility.getListLang(player, "cosmetics." + "kill-message" + ".preview.message");
         String selectedId = selected.getIdentifier();
 
-        SystemGui systemGui = CosmeticsPlugin.getInstance().getSystemGuiManager().getByPlayer(player);
-
         for (String s : message) {
             if (s.contains("%message%")){
                 KillMessageUtils.sendKillMessage(player, "Player", null, false, ChatColor.GREEN, ChatColor.GRAY, "PvP", "Old Message" ,true, selectedId, player.getDisplayName());
@@ -40,10 +38,6 @@ public class KillMessagePreview extends CosmeticPreview {
             }else{
                 player.sendMessage(ColorUtil.translate(s));
             }
-        }
-
-        if (systemGui != null) {
-            Run.delayed(() -> systemGui.open(player), getEndDelay());
         }
     }
 }

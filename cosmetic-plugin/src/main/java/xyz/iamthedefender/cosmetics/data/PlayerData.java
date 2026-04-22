@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
+import xyz.iamthedefender.cosmetics.menu.SortMode;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,10 @@ public class PlayerData {
     private final UUID uuid;
     @Setter
     private String woodSkin, bedDestroy, victoryDance, shopkeeperSkin, glyph, spray, projectileTrail, killMessage, finalKillEffect, islandTopper, deathCry;
+    @Setter
+    private SortMode sortMode = SortMode.RARITY_LOW_HIGH;
+    @Setter
+    private boolean ownedFirst = false;
 
     public PlayerData(UUID uuid) {
         this.uuid = uuid;
