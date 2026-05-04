@@ -5,6 +5,7 @@ package xyz.iamthedefender.cosmetics.util;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import net.byteflux.libby.Library;
 import org.bukkit.Bukkit;
@@ -41,6 +42,7 @@ import xyz.iamthedefender.cosmetics.category.woodskin.items.*;
 import xyz.iamthedefender.cosmetics.category.woodskin.items.log.*;
 import xyz.iamthedefender.cosmetics.listener.CosmeticPurchaseListener;
 import xyz.iamthedefender.cosmetics.listener.PlayerJoinListener;
+import xyz.iamthedefender.cosmetics.listener.PlayerQuitListener;
 import xyz.iamthedefender.cosmetics.support.placeholders.CosmeticsPlaceholders;
 import xyz.iamthedefender.cosmetics.util.lib.CosmeticsLibraryManager;
 import xyz.iamthedefender.cosmetics.versionsupport.LegacyWorldEditHandler;
@@ -83,7 +85,7 @@ public class StartupUtils
       @author IamTheDefender
      */
     public static void registerEvents() {
-        registerListeners(new CosmeticPurchaseListener(), new PlayerJoinListener());
+        registerListeners(new CosmeticPurchaseListener(), new PlayerJoinListener(), new PlayerQuitListener());
     }
 
     public static void registerListeners(Listener... listeners) {
@@ -392,11 +394,11 @@ public class StartupUtils
         new GuardiansDance().register();
 
         // Wood Skins
+        new OakPlank().register();
         new BirchPlank().register();
         new AcaciaPlank().register();
         new DarkOakPlank().register();
         new JunglePlank().register();
-        new OakPlank().register();
         new SprucePlank().register();
         new AcaciaLog().register();
         new BirchLog().register();
@@ -471,6 +473,54 @@ public class StartupUtils
                     if (!player.getUniqueId().equals(CosmeticsPlugin.getInstance().getEntityPlayerHashMap().get(entityID).getUniqueId())){
                         event.setCancelled(true);
                     }
+                }
+            }
+        });
+    }
+
+    public static void addPreviewInteractionListener() {
+        CosmeticsPlugin.getInstance().getProtocolManager().addPacketListener(new PacketAdapter(CosmeticsPlugin.getInstance(), PacketType.Play.Client.USE_ENTITY) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                Player player = event.getPlayer();
+                PacketContainer packet = event.getPacket();
+                
+                int targetId = packet.getIntegers().read(0);
+                
+                if (targetId == player.getEntityId()) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                boolean inPreview = CosmeticsPlugin.getInstance().getApi().getPreviewList().stream()
+                        .anyMatch(preview -> preview.getActiveTasks().containsKey(player));
+                
+                if (inPreview) {
+                    event.setCancelled(true);
+                }
+            }
+        });
+    }
+
+    public static void addWindowClickListener() {
+        CosmeticsPlugin.getInstance().getProtocolManager().addPacketListener(new PacketAdapter(CosmeticsPlugin.getInstance(), PacketType.Play.Client.WINDOW_CLICK) {
+            @Override
+            public void onPacketReceiving(PacketEvent event) {
+                Player player = event.getPlayer();
+                
+                boolean isClosing = CosmeticsPlugin.getInstance().getApi().getPreviewList().stream()
+                        .anyMatch(preview -> preview.isProgrammaticClose(player));
+                
+                if (isClosing) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                boolean inPreview = CosmeticsPlugin.getInstance().getApi().getPreviewList().stream()
+                        .anyMatch(preview -> preview.getActiveTasks().containsKey(player));
+
+                if (inPreview) {
+                    event.setCancelled(true);
                 }
             }
         });

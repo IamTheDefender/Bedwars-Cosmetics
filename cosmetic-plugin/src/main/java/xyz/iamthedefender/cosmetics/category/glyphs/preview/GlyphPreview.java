@@ -42,9 +42,12 @@ public class GlyphPreview extends CosmeticPreview {
 
         ArmorStand as = (ArmorStand) player.getWorld().spawnEntity(playerLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
+        as.setGravity(false);
+        as.setBasePlate(false);
+        as.setSmall(false);
+        as.teleport(playerLocation);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
-                100, 2));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 80, 2));
 
         sendGlyphParticles(player, previewLocation, selected.getIdentifier());
 
@@ -53,7 +56,13 @@ public class GlyphPreview extends CosmeticPreview {
 
         PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
         resetPacket.getIntegers().write(0, player.getEntityId());
-        CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+        
+        
+        Run.delayed(() -> {
+            if (player.isOnline() && !as.isDead()) {
+                CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+            }
+        }, 2L);
 
 
         setOnEnd(player, () -> {
@@ -71,7 +80,7 @@ public class GlyphPreview extends CosmeticPreview {
 
         if (glyphFile == null) {
             player.sendMessage(ColorUtil.translate("&cLooks like the glyphFile is null? Contact a developer!"));
-            Logger.getLogger("Minecraft").log(Level.SEVERE, glyphFile + " is null! 1");
+            Logger.getLogger("Minecraft").log(Level.SEVERE, selected + " glyphFile is null!");
             return;
         }
 
@@ -81,8 +90,8 @@ public class GlyphPreview extends CosmeticPreview {
                         glyphFile);
 
         if (!file.exists()){
-            player.sendMessage(ColorUtil.translate("&cLooks like the glyphFile is null? Contact a developer!"));
-            Logger.getLogger("Minecraft").log(Level.SEVERE, glyphFile + " is null! 2");
+            player.sendMessage(ColorUtil.translate("&cLooks like the glyphFile doesn't exist? Contact a developer!"));
+            Logger.getLogger("Minecraft").log(Level.SEVERE, file.getAbsolutePath() + " does not exist!");
             return;
         }
 
@@ -90,7 +99,7 @@ public class GlyphPreview extends CosmeticPreview {
         try {
             image = ImageIO.read(file);
         } catch (final IOException e) {
-            Logger.getLogger("Minecraft").log(Level.SEVERE, "UNABLE TO READ FILE! GLYPHUTIL()");
+            Logger.getLogger("Minecraft").log(Level.SEVERE, "UNABLE TO READ FILE! GlyphPreview");
         }
         if (image == null) return;
 
@@ -98,9 +107,9 @@ public class GlyphPreview extends CosmeticPreview {
         imageParticles.setAnchor(50, 10);
         imageParticles.setDisplayRatio(0.1);
 
-        location.add(0.5, 2, 0.5);
+        Location displayLoc = location.clone().add(0, 2, 0);
 
-        Map<Location, Color> particles = imageParticles.getParticles(location, location.getPitch(), 180.0f);
+        Map<Location, Color> particles = imageParticles.getParticles(displayLoc, displayLoc.getPitch(), 180.0f);
 
         long perIteration = 2L;
         long time = getEndDelay() / perIteration;

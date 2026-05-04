@@ -134,6 +134,8 @@ public class CosmeticsPlugin extends JavaPlugin {
         entityPlayerHashMap  = new HashMap<>();
         playerManager = new PlayerManager();
         StartupUtils.addEntityHideListener();
+        StartupUtils.addPreviewInteractionListener();
+        StartupUtils.addWindowClickListener();
         // Download Glyphs
         StartupUtils.downloadGlyphs();
         this.menuData = new ConfigManager(this, "MainMenu", getHandler().getAddonPath());

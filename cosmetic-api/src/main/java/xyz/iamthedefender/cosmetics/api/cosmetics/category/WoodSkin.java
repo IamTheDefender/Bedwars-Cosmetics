@@ -100,7 +100,7 @@ public abstract class WoodSkin extends Cosmetics {
      */
     public static @NotNull WoodSkin getDefault(Player player){
         for(WoodSkin woodSkin : Utility.getApi().getWoodSkinList()){
-            if (XMaterial.OAK_PLANKS.isSimilar(woodSkin.getItem())){
+            if (woodSkin.getIdentifier().equals("oak-plank") || XMaterial.OAK_PLANKS.isSimilar(woodSkin.getItem())){
                 return woodSkin;
             }
         }

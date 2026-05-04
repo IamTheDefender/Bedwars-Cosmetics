@@ -133,16 +133,21 @@ public class MainMenuUtils {
     public static void openMenus(Player p, String name) {
         String title;
 
-        CosmeticsType cosmeticsType = CosmeticsType.fromName(name);
-
-        if (name.equals("Back")) {
+        if (name.equalsIgnoreCase("Back")) {
             String command = CosmeticsPlugin.getInstance().menuData.getString("Main-Menu.Back.custom-command");
             if (command == null) {
-                p.getOpenInventory().close();
+                p.closeInventory();
             } else {
                 Bukkit.dispatchCommand(p, command);
             }
+            return;
         }
+
+        if (name.equalsIgnoreCase("Balance")) {
+            return;
+        }
+
+        CosmeticsType cosmeticsType = CosmeticsType.fromName(name);
 
         if (cosmeticsType == null) {
             CosmeticsPlugin.getInstance().getLogger()
@@ -155,7 +160,8 @@ public class MainMenuUtils {
                 )
                 .value(p);
 
-        new CategoryMenu(cosmeticsType, title).open(p);
+        xyz.iamthedefender.cosmetics.data.PlayerData data = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
+        new CategoryMenu(cosmeticsType, title, 1, data.getSortMode(), data.isOwnedFirst()).open(p);
 
     }
 }

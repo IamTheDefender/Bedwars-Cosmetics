@@ -1,5 +1,6 @@
 package xyz.iamthedefender.cosmetics.menu;
 
+import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.XSound;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
@@ -28,6 +29,8 @@ import xyz.iamthedefender.cosmetics.api.menu.impl.ChestSystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.ItemBuilder;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
+import xyz.iamthedefender.cosmetics.data.PlayerData;
+import xyz.iamthedefender.cosmetics.menu.SortMode;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 import xyz.iamthedefender.cosmetics.util.StringUtils;
@@ -68,23 +71,27 @@ public class CategoryMenu extends ChestSystemGui {
     }
 
     public CategoryMenu(CosmeticsType type, String title, int page) {
-        this(type, title, page, SortMode.RARITY_HIGH_LOW, false);
+        this(type, title, page, SortMode.RARITY_LOW_HIGH, false);
     }
 
     public CategoryMenu(CosmeticsType type, String title) {
-        this(type, title, 1, SortMode.RARITY_HIGH_LOW, false);
+        this(type, title, 1, SortMode.RARITY_LOW_HIGH, false);
     }
 
     @Override
     public void onOpen(@NotNull Player player) {
+        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
+        // Stop any active previews for this player
+        api.getPreviewList().forEach(preview -> preview.stopPreview(player));
+
         ConfigManager configManager = cosmeticsType.getConfig();
         ConfigurationSection section = config.getYml().getConfigurationSection(cosmeticsType.getSectionKey());
 
         if (section == null) return;
 
         clearInventory();
-        Map<ClickableItem, RarityType> rarityMap = new HashMap<>();
-        Map<ClickableItem, String> idMap = new HashMap<>();
+        Map<ClickableItem, RarityType> rarityMap = new LinkedHashMap<>();
+        Map<ClickableItem, String> idMap = new LinkedHashMap<>();
 
         for (String id : section.getKeys(false)) {
             String path = cosmeticsType.getSectionKey() + "." + id + ".";
@@ -138,10 +145,14 @@ public class CategoryMenu extends ChestSystemGui {
         }
 
         setItem(50, buildSortItem(), (e) -> {
+            PlayerData data = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(player.getUniqueId());
             if (e.getClick() == ClickType.RIGHT) {
+                data.setOwnedFirst(!ownedFirst);
                 new CategoryMenu(cosmeticsType, title, page, sortMode, !ownedFirst).open(player);
             } else if (e.getClick() == ClickType.LEFT) {
-                new CategoryMenu(cosmeticsType, title, page, sortMode.next(), ownedFirst).open(player);
+                SortMode next = sortMode.next();
+                data.setSortMode(next);
+                new CategoryMenu(cosmeticsType, title, page, next, ownedFirst).open(player);
             }
         });
 
@@ -150,7 +161,11 @@ public class CategoryMenu extends ChestSystemGui {
 
     @Override
     public void onClose(Player player) {
-
+        Utility.getApi().getPreviewList().forEach(preview -> {
+            if (!preview.isProgrammaticClose(player)) {
+                preview.stopPreview(player);
+            }
+        });
     }
 
     public void createPages(Map<ClickableItem, RarityType> rarityMap, Player player, Map<ClickableItem, String> itemIdMap) {
@@ -190,28 +205,49 @@ public class CategoryMenu extends ChestSystemGui {
     private List<ClickableItem> sortItems(Map<ClickableItem, RarityType> rarityMap, Player player, Map<ClickableItem, String> itemIdMap) {
         CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
 
-        Comparator<ClickableItem> comparator;
+        // 1. Always put 'NONE' rarity item first
+        Comparator<ClickableItem> nonePriority = Comparator.comparing(item -> rarityMap.get(item) == RarityType.NONE ? 0 : 1);
+
+        // 2. Put SELECTED item next
+        String selectedId = api.getSelectedCosmetic(player, cosmeticsType);
+        Comparator<ClickableItem> selectedPriority = Comparator.comparing(item -> {
+            String id = itemIdMap.get(item);
+            return id != null && id.equals(selectedId) ? 0 : 1;
+        });
+
+        // 3. Determine base sorting based on sortMode
+        Comparator<ClickableItem> baseComparator;
+        Comparator<ClickableItem> nameComparator = Comparator.comparing(item -> ChatColor.stripColor(item.getItemStack().getItemMeta().getDisplayName()));
+        Comparator<ClickableItem> idComparator = Comparator.comparing(item -> itemIdMap.getOrDefault(item, ""));
+
         if (sortMode == SortMode.RARITY_HIGH_LOW) {
-            comparator = Comparator.comparing(rarityMap::get);
+            baseComparator = Comparator.comparing((ClickableItem item) -> rarityMap.get(item)).thenComparing(nameComparator).thenComparing(idComparator);
         } else if (sortMode == SortMode.RARITY_LOW_HIGH) {
-            comparator = Comparator.comparing(rarityMap::get, Comparator.reverseOrder());
+            baseComparator = Comparator.comparing((ClickableItem item) -> rarityMap.get(item), Comparator.reverseOrder()).thenComparing(nameComparator).thenComparing(idComparator);
         } else if (sortMode == SortMode.A_TO_Z) {
-            comparator = Comparator.comparing(item -> item.getItemStack().getItemMeta().getDisplayName());
+            baseComparator = nameComparator.thenComparing(idComparator);
         } else {
-            comparator = Comparator.comparing((ClickableItem item) -> item.getItemStack().getItemMeta().getDisplayName(), Comparator.reverseOrder());
+            baseComparator = nameComparator.reversed().thenComparing(idComparator);
         }
 
+        // 4. Handle 'Owned First' toggle
+        Comparator<ClickableItem> finalComparator;
         if (ownedFirst) {
             Comparator<ClickableItem> owned = Comparator.comparing(item -> {
-                String name = ChatColor.stripColor(item.getItemStack().getItemMeta().getDisplayName());
-                String id = itemIdMap.getOrDefault(item, name);
+                if (rarityMap.get(item) == RarityType.NONE) return 0; // None is always 'owned'
+                String id = itemIdMap.get(item);
+                if (id == null) return 1;
                 return player.hasPermission(cosmeticsType.getPermissionFormat() + "." + id) ? 0 : 1;
             });
-            comparator = owned.thenComparing(comparator);
+            // Chain: None First -> Selected -> Owned -> Sort Mode
+            finalComparator = nonePriority.thenComparing(selectedPriority).thenComparing(owned).thenComparing(baseComparator);
+        } else {
+            // Chain: None First -> Selected -> Sort Mode
+            finalComparator = nonePriority.thenComparing(selectedPriority).thenComparing(baseComparator);
         }
 
         return new ArrayList<>(rarityMap.keySet()).stream()
-                .sorted(comparator)
+                .sorted(finalComparator)
                 .collect(Collectors.toList());
     }
 
@@ -236,18 +272,6 @@ public class CategoryMenu extends ChestSystemGui {
         });
     }
 
-    public void addItemsAccordingToRarity(Map<ClickableItem, RarityType> rarityMap) {
-        List<ClickableItem> sortedClickableItems = new ArrayList<>(rarityMap.keySet()).stream()
-                .sorted(Comparator.comparing(item -> item.getItemStack().getItemMeta().getDisplayName()))
-                .sorted(Comparator.comparing(rarityMap::get, Comparator.reverseOrder()))
-                .collect(Collectors.toList());
-
-        sortedClickableItems.forEach(item -> {
-            int slot = findFirstEmptySlot(getInventory());
-            if (slot == -1) return;
-            setItem(slot, item);
-        });
-    }
 
     public String getItemStatus(Player p, CosmeticsType type, String unformattedName, int price) {
         CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
@@ -337,6 +361,10 @@ public class CategoryMenu extends ChestSystemGui {
     }
 
     public void previewClick(Player player, CosmeticsType type, String id, int price) {
+        if (id == null || id.equalsIgnoreCase("Back") || id.equalsIgnoreCase("Balance")) {
+            return;
+        }
+
         Cosmetics cosmetics = CosmeticsPlugin.findCosmetic(id, type);
 
         if (cosmetics == null) return;
@@ -389,22 +417,4 @@ public class CategoryMenu extends ChestSystemGui {
         SELECTED
     }
 
-    @Getter
-    public enum SortMode {
-        RARITY_LOW_HIGH("Lowest rarity first"),
-        RARITY_HIGH_LOW("Highest rarity first"),
-        A_TO_Z("A to Z"),
-        Z_TO_A("Z to A");
-
-        private final String display;
-
-        SortMode(String display) {
-            this.display = display;
-        }
-
-        public SortMode next() {
-            SortMode[] values = values();
-            return values[(ordinal() + 1) % values.length];
-        }
-    }
 }

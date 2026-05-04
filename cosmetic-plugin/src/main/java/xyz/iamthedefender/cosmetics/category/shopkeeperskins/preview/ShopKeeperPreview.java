@@ -13,6 +13,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.category.shopkeeperskins.utils.ShopKeeperSkinsUtils;
 
 public class ShopKeeperPreview extends CosmeticPreview {
@@ -27,16 +28,25 @@ public class ShopKeeperPreview extends CosmeticPreview {
 
         ArmorStand as = (ArmorStand) player.getWorld().spawnEntity(playerLocation, EntityType.ARMOR_STAND);
         as.setVisible(false);
+        as.setGravity(false);
+        as.setBasePlate(false);
+        as.setSmall(false); // Normal size
+        as.teleport(playerLocation);
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
-                100, 2));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 80, 2));
 
         PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
         cameraPacket.getIntegers().write(0, as.getEntityId());
 
         PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
         resetPacket.getIntegers().write(0, player.getEntityId());
-        CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+        
+        // Small delay for client sync
+        Run.delayed(() -> {
+            if (player.isOnline() && !as.isDead()) {
+                CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+            }
+        }, 2L);
 
         ShopKeeperSkinsUtils.spawnShopKeeperNPCForPreview(player, previewLocation, selected.getIdentifier());
 
