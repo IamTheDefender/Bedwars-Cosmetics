@@ -159,3 +159,67 @@ death-cry:
     pitch: 2
     price: 15000
     rarity: "RARE"
+
+  deflated-toy:
+    sound: "ENTITY_BAT_HURT"
+    item: "SLIME_BALL:0"
+    volume: 1
+    pitch: 0.5
+    price: 5000
+    rarity: "COMMON"
+
+    dinosaur:
+      sound: "ENTITY_ENDERDRAGON_GROWL"
+      item: "DRAGON_EGG:0"
+      volume: 1
+      pitch: 0.5
+      price: 5000
+      rarity: "COMMON"
+
+    robot-mouse:
+      sound: "ENTITY_WITCH_HURT"
+      item: "MONSTER_EGG:66"
+      volume: 1
+      pitch: 2.0
+      price: 5000
+      rarity: "COMMON"
+
+    grumpy-villager:
+      sound: "ENTITY_VILLAGER_HURT"
+      item: "EMERALD:0"
+      volume: 1
+      pitch: 0.7
+      price: 5000
+      rarity: "COMMON"
+
+    dry-bones:
+      sound: "ENTITY_SKELETON_HURT"
+      item: "BONE:0"
+      volume: 1
+      pitch: 0.6
+      price: 5000
+      rarity: "COMMON"
+
+    aww:
+      sound: "ENTITY_VILLAGER_DEATH"
+      item: "COOKIE:0"
+      volume: 1
+      pitch: 0.5
+      price: 25000
+      rarity: "EPIC"
+
+    energy:
+      sound: "ENTITY_WITHER_SHOOT"
+      item: "NETHER_STAR:0"
+      volume: 1
+      pitch: 1.5
+      price: 25000
+      rarity: "EPIC"
+
+    grumble:
+      sound: "ENTITY_ZOMBIE_HURT"
+      item: "ROTTEN_FLESH:0"
+      volume: 1
+      pitch: 0.3
+      price: 25000
+      rarity: "EPIC"
