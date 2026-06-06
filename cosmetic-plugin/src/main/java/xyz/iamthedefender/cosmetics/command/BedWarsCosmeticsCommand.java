@@ -19,6 +19,7 @@ import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
 import xyz.iamthedefender.cosmetics.api.handler.ISetupSession;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
@@ -144,6 +145,21 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 
+    @Subcommand("testvd")
+    public void testVd(Player player, String id) {
+        VictoryDance victoryDance = CosmeticRegistry.getById(CosmeticType.VICTORY_DANCES, id);
+
+        if (victoryDance == null) {
+            throw new ConditionFailedException("No victory dance with ID: " + id);
+        }
+
+        victoryDance.execute(player);
+
+        player.sendMessage("Started execution of " + victoryDance.getDisplayName());
+
+        Run.delayed(() -> victoryDance.stopExecution(player), 10 * 20L);
+    }
+
     private void openMenu(Player player, CosmeticType<?> CosmeticType) {
         if (Utility.isInArena(player)) {
             player.sendMessage(ChatColor.RED + "You cannot do that while in a game!");
@@ -159,6 +175,7 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
         SystemGui inv = new CategoryMenu(CosmeticType, title, 1, data.getSortMode(), data.isOwnedFirst());
         inv.open(player);
     }
+
 
     private ChatColor getColorForTeam(ConfigurationSection section, String teamName) {
         if (teamName.equalsIgnoreCase("Pink")) {

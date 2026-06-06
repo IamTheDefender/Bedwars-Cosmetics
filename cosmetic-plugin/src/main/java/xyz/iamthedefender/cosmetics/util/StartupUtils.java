@@ -368,6 +368,7 @@ public class StartupUtils {
         new WitherRiderDance().register();
         new YeeHawDance().register();
         new GuardiansDance().register();
+        new MeteorShowerDance().register();
 
         // Wood Skins
         new OakPlank().register();
