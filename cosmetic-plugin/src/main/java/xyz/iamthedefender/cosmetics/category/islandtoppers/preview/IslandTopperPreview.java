@@ -1,8 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.islandtoppers.preview;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XSound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,7 +15,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.IslandTopper;
@@ -28,6 +26,7 @@ import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 import java.io.File;
 import java.util.*;
@@ -40,7 +39,7 @@ public class IslandTopperPreview {
     private final Map<UUID, Map<Integer, ItemStack>> inventories = new HashMap<>();
 
     public void sendIslandTopperPreview(Player player, String selected, SystemGui gui) {
-        for (IslandTopper islandTopper : StartupUtils.islandTopperList) {
+        for (IslandTopper islandTopper : CosmeticRegistry.getByCategory(CosmeticType.ISLAND_TOPPERS)) {
             if (islandTopper.getIdentifier().equals(selected)) {
                 if (islandTopper.getField(FieldsType.RARITY, player) == RarityType.NONE) {
                     gui.open(player);
@@ -94,13 +93,7 @@ public class IslandTopperPreview {
 
             player1.hidePlayer(player);
         }
-
-        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        cameraPacket.getIntegers().write(0, as.getEntityId());
-
-        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        resetPacket.getIntegers().write(0, player.getEntityId());
-        CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+        PacketEventsBridge.sendCamera(player, as.getEntityId());
 
 
         sendIslandTopper(player, finalCosmeticLocation, selected);
@@ -108,7 +101,7 @@ public class IslandTopperPreview {
         Run.delayed(() -> {
             if (!as.isDead()) as.remove();
 
-            CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
+            PacketEventsBridge.sendCamera(player, player.getEntityId());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
             player.teleport(beforeLocation);
 
@@ -135,7 +128,7 @@ public class IslandTopperPreview {
         }
 
         ConfigManager config = ConfigUtils.getIslandToppers();
-        String topperFileName = config.getString(CosmeticsType.IslandToppers.getSectionKey() + "." + selected + ".file");
+        String topperFileName = config.getString(CosmeticType.ISLAND_TOPPERS.getSectionKey() + "." + selected + ".file");
 
         if (topperFileName == null) {
             Bukkit.getLogger().severe("Can't find file for " + selected + " island topper!");
@@ -153,7 +146,7 @@ public class IslandTopperPreview {
         if (blockLocations.isEmpty()) return;
 
         // Start animation
-        boolean useOrder = CosmeticsPlugin.getInstance().getConfig().getBoolean("island-toppers.order");
+        boolean useOrder = StartupUtils.useIslandTopperOrder();
         startBlockAnimation(player, blockLocations, useOrder);
     }
 

@@ -4,7 +4,8 @@ import org.bukkit.Color;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ProjectileTrail;
@@ -24,12 +25,12 @@ public class ProjectileEffectsUtil {
 	 * @param p The player who owns the entity
 	 */
 	public static void sendEffect(Entity e, Player p) {
-		CosmeticsType type = CosmeticsType.ProjectileTrails;
+		CosmeticType<?> type = CosmeticType.PROJECTILE_TRAILS;
 		String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, type);
 		String effect = ConfigUtils.getProjectileTrails().getString(type.getSectionKey() + "." + selected + ".particle");
 		Color color = ConfigUtils.getProjectileTrails().getYml().getColor(type.getSectionKey() + "." + selected + ".color");
 		ProjectileTrail projectileTrail = null;
-		for(ProjectileTrail trail : StartupUtils.projectileTrailList){
+		for(ProjectileTrail trail : CosmeticRegistry.getByCategory(CosmeticType.PROJECTILE_TRAILS)){
 			if (selected.equals(trail.getIdentifier())){
 				projectileTrail = trail;
 			}

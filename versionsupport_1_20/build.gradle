@@ -1,0 +1,18 @@
+tasks.withType(JavaCompile).configureEach {
+    options.release = 17
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencies {
+    compileOnly project(':cosmetic-api')
+    compileOnly 'org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT'
+    compileOnly('com.sk89q.worldedit:worldedit-bukkit:7.3.0') {
+        exclude group: 'org.bukkit', module: 'bukkit'
+    }
+    compileOnly 'com.github.retrooper:packetevents-spigot:2.12.1'
+}

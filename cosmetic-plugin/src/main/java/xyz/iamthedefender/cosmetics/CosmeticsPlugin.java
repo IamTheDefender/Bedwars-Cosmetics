@@ -2,9 +2,8 @@
 package xyz.iamthedefender.cosmetics;
 
 import co.aikar.commands.PaperCommandManager;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,9 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.HandlerType;
@@ -33,7 +32,11 @@ import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.command.BedWarsCosmeticsCommand;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
+import xyz.iamthedefender.cosmetics.data.database.MariaDB;
+import xyz.iamthedefender.cosmetics.data.database.MongoDB;
 import xyz.iamthedefender.cosmetics.data.database.MySQL;
+import xyz.iamthedefender.cosmetics.data.database.PostgreSQL;
+import xyz.iamthedefender.cosmetics.data.database.Redis;
 import xyz.iamthedefender.cosmetics.data.database.SQLite;
 import xyz.iamthedefender.cosmetics.data.manager.PlayerManager;
 import xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058.BW1058Handler;
@@ -44,15 +47,17 @@ import xyz.iamthedefender.cosmetics.support.bedwars.handler.screamingBedwars.Scr
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 import xyz.iamthedefender.cosmetics.util.Metrics;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
-import xyz.iamthedefender.cosmetics.util.VersionSupportUtil;
+import xyz.iamthedefender.cosmetics.util.version.VersionSupportUtil;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBootstrap;
+import xyz.iamthedefender.cosmetics.support.npc.PacketNpcManager;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Getter
 public class CosmeticsPlugin extends JavaPlugin {
 
@@ -67,7 +72,7 @@ public class CosmeticsPlugin extends JavaPlugin {
     @Getter
     private static CosmeticsPlugin instance;
 
-    private ProtocolManager protocolManager;
+    private PacketNpcManager packetNpcManager;
 
     private HashMap<Integer, Player> entityPlayerHashMap;
 
@@ -83,28 +88,54 @@ public class CosmeticsPlugin extends JavaPlugin {
 
     private IWorldEditHandler worldEditHandler;
 
+    @Override
+    public void onLoad() {
+        getLogger().info("Checking if PacketEvents is installed and enabled...");
+
+        if (!PacketEventsBootstrap.ensureInstalledAndEnabled(this)) {
+            getLogger().severe("PacketEvents could not be installed or enabled automatically. Please manually download and install it.");
+            getServer().getPluginManager().disablePlugin(this);
+            dependenciesMissing = true;
+            return;
+        }
+
+    }
 
     @Override
     public void onEnable() {
         instance = this;
+
+        String[] banner = {
+                " ▄   ▄▄▄▄                                             ",
+                "  ▀██████▀                            █▄               ",
+                "    ██                 ▄             ▄██▄▀▀            ",
+                "    ██     ▄███▄ ▄██▀█ ███▄███▄ ▄█▀█▄ ██ ██ ▄███▀ ▄██▀█",
+                "    ██     ██ ██ ▀███▄ ██ ██ ██ ██▄█▀ ██ ██ ██    ▀███▄",
+                "    ▀█████▄▀███▀█▄▄██▀▄██ ██ ▀█▄▀█▄▄▄▄██▄██▄▀███▄█▄▄██▀",
+                ""
+        };
+
+        for (String line : banner) {
+            Bukkit.getLogger().info(line);
+        }
+
         api = new BwcAPI();
         previewList = new ArrayList<>();
         Bukkit.getServicesManager().register(CosmeticsAPI.class, api, this, ServicePriority.Highest);
         systemGuiManager = new SystemGuiManager(this);
 
-        if (!StartupUtils.checkDependencies()){
-            getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed!");
+        if (!StartupUtils.checkDependencies()) {
+            getLogger().severe("Cosmetics addon will now disable, make sure you have all dependencies installed before reporting this as a bug.");
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
             return;
         }
 
         handler = findHandler();
-
         StartupUtils.loadLibraries();
 
         versionSupport = StartupUtils.getVersionSupport();
-        if(versionSupport == null){
+        if (versionSupport == null) {
             getLogger().severe("Could not find a version support for " + VersionSupportUtil.getVersion());
             setEnabled(false);
             dependenciesMissing = true;
@@ -112,7 +143,7 @@ public class CosmeticsPlugin extends JavaPlugin {
         }
 
         worldEditHandler = StartupUtils.getWorldEditHandler();
-        if(worldEditHandler == null){
+        if (worldEditHandler == null) {
             getLogger().severe("Could not find a world edit handler for " + VersionSupportUtil.getVersion());
             setEnabled(false);
             dependenciesMissing = true;
@@ -120,23 +151,22 @@ public class CosmeticsPlugin extends JavaPlugin {
         }
 
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null){
-            getLogger().severe("Cosmetics addon will now disable, make sure you have Vault supported Economy plugin installed!");
+        if (rsp == null) {
+            getLogger().severe("Looks like no vault-supported economy plugins are installed! Refer to the guide, as this is required for the cosmetic addon to work!");
             getServer().getPluginManager().disablePlugin(this);
             dependenciesMissing = true;
             return;
         }
 
-        getLogger().info("All dependencies found, continuing with plugin startup.");
-
         economy = rsp.getProvider();
-        protocolManager = ProtocolLibrary.getProtocolManager();
-        entityPlayerHashMap  = new HashMap<>();
+        packetNpcManager = new PacketNpcManager(this);
+        entityPlayerHashMap = new HashMap<>();
         playerManager = new PlayerManager();
+
         StartupUtils.addEntityHideListener();
         StartupUtils.addPreviewInteractionListener();
         StartupUtils.addWindowClickListener();
-        // Download Glyphs
+
         StartupUtils.downloadGlyphs();
         this.menuData = new ConfigManager(this, "MainMenu", getHandler().getAddonPath());
 
@@ -145,61 +175,50 @@ public class CosmeticsPlugin extends JavaPlugin {
         }
 
         ConfigUtils.addExtrasToLang();
-
-        getLogger().info("Loading data from resources in jar...");
         DefaultsUtils.saveAllDefaults();
         StartupUtils.unzipSpray();
-
-        StartupUtils.loadLists();
-        getLogger().info("Cosmetics list successfully loaded.");
-
-        getLogger().info("Saving data to configs...");
         MainMenuUtils.saveLores();
         StartupUtils.updateConfigs();
-        getLogger().info("Creating folders...");
         StartupUtils.createFolders();
         ConfigUtils.addSlotsList();
 
-        getLogger().info("Configuration file successfully loaded.");
-        getLogger().info("Loading " + (api.isMySQL() ? "MySQL" : "SQLite") + " database...");
-        if (api.isMySQL()){
-            remoteDatabase = new MySQL(this);
-        }else{
-            if (handler.getHandlerType() == HandlerType.BUNGEE){
-                getLogger().severe("You cannot use SQLite in Bungee mode!");
-                getServer().getPluginManager().disablePlugin(this);
-                return;
-            }
-            remoteDatabase = new SQLite(this);
-        }
+        remoteDatabase = createDatabase();
+        registerSchedulers();
         handler.register();
-        
-        getLogger().info("Registering event listeners...");
+
         StartupUtils.registerEvents();
 
-        getLogger().info("Registering commands...");
         PaperCommandManager commandManager = new PaperCommandManager(this);
+        commandManager.getCommandContexts()
+                .registerContext(CosmeticType.class, (c) -> CosmeticType.fromName(c.popFirstArg()));
+        commandManager.getCommandCompletions()
+                        .registerAsyncCompletion("cosmeticTypes", (c) -> CosmeticType.values().stream().map(CosmeticType::name).collect(Collectors.toList()));
+        commandManager.getCommandCompletions()
+                        .registerAsyncCompletion("cosmetics", c -> {
+                            CosmeticType<Cosmetics> type = c.getContextValue(CosmeticType.class);
+                            return CosmeticRegistry.getByCategory(type).stream()
+                                    .map(Cosmetics::getIdentifier)
+                                    .collect(Collectors.toList());
+                        });
+
+
+        commandManager.enableUnstableAPI("help");
         commandManager.registerCommand(new BedWarsCosmeticsCommand());
 
-        getLogger().info("Loading cosmetics...");
         StartupUtils.loadCosmetics();
         StartupUtils.convertSpraysURLs();
-        getLogger().info("Addon have been loaded and enabled!");
 
         metrics = new Metrics(this, 21340);
 
+        getLogger().info("BedWars Cosmetics v" + getDescription().getVersion() + " loaded. "
+                + "Backend: " + remoteDatabase.getDisplayName() + ", "
+                + "Version support: " + versionSupport.getClass().getSimpleName());
     }
 
     private void registerSchedulers() {
-        Run.everyAsync(() -> {
-            try (Connection connection = remoteDatabase.getConnection()){
-                connection.createStatement();
-            }catch (Exception e){
-                remoteDatabase.connect();
-            }
-        }, 5L);
+        Run.everyAsync(remoteDatabase::validateConnection, 5L);
 
-        Run.everyAsync(() -> {
+        Run.every(() -> {
             for (Player onlinePlayer : getServer().getOnlinePlayers()) {
                 getPlayerManager().getPlayerOwnedData(onlinePlayer.getUniqueId()).updateOwned();
             }
@@ -217,7 +236,7 @@ public class CosmeticsPlugin extends JavaPlugin {
             }
         }
 
-        return api.isProxy() ? (StartupUtils.isBw2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.isBw2023 ? new BW2023Handler() : new BW1058Handler());
+        return api.isProxy() ? (StartupUtils.BW2023 ? new BW2023ProxyHandler() : new BW1058ProxyHandler()) : (StartupUtils.BW2023 ? new BW2023Handler() : new BW1058Handler());
     }
 
     @Override
@@ -226,6 +245,7 @@ public class CosmeticsPlugin extends JavaPlugin {
             getLogger().severe("Detected forced disable! plugin will not unload anything!");
             return;
         }
+
         if (remoteDatabase != null && remoteDatabase.getDatabaseType() == DatabaseType.SQLITE){
             getLogger().info("Saving player data to SQLite database...");
             getLogger().info("Please wait it may take some time!");
@@ -239,10 +259,10 @@ public class CosmeticsPlugin extends JavaPlugin {
         }
         try {
            if (remoteDatabase != null){
-               remoteDatabase.getConnection().close();
+               remoteDatabase.close();
            }
-        } catch (SQLException e) {
-            getLogger().severe("There was an error while closing connection to database: " + e.getMessage());
+        } catch (Exception e) {
+            getLogger().severe("There was an error while closing storage backend, this may have cause data loss! Make sure to backup every so often: " + e.getMessage());
         }
 
         if(metrics != null) metrics.shutdown();
@@ -270,10 +290,10 @@ public class CosmeticsPlugin extends JavaPlugin {
     /**
      * Find cosmetic by id
      * @param cosmeticId case-sensitive cosmetic id
-     * @param cosmeticsType cosmetic type
+     * @param CosmeticType<?> cosmetic type
      * @return null if not found or else the {@link Cosmetics} object
      */
-    public static @Nullable Cosmetics findCosmetic(String cosmeticId, CosmeticsType cosmeticsType) {
+    public static @Nullable Cosmetics findCosmetic(String cosmeticId, CosmeticType<?> CosmeticType) {
         CosmeticsAPI cosmeticsAPI = instance.getApi();
 
         List<Cosmetics> cosmetics = new ArrayList<>();
@@ -289,7 +309,43 @@ public class CosmeticsPlugin extends JavaPlugin {
         cosmetics.addAll(cosmeticsAPI.getShopKeeperSkinList());
         cosmetics.addAll(cosmeticsAPI.getIslandTopperList());
 
-        return cosmetics.stream().filter(cosmetic -> cosmetic.getIdentifier().equals(cosmeticId) && cosmetic.getCosmeticType() == cosmeticsType).findFirst().orElse(null);
+        return cosmetics.stream().filter(cosmetic -> cosmetic.getIdentifier().equals(cosmeticId) && cosmetic.getCosmeticType() == CosmeticType).findFirst().orElse(null);
+    }
+
+    private IDatabase createDatabase() {
+        DatabaseType databaseType = StartupUtils.getConfiguredDatabaseType();
+        if (handler.getHandlerType() == HandlerType.BUNGEE && databaseType == DatabaseType.SQLITE) {
+            getLogger().severe("You cannot use SQLite in Bungee mode!");
+            getServer().getPluginManager().disablePlugin(this);
+            throw new IllegalStateException("SQLite is not supported in Bungee mode.");
+        }
+
+        getLogger().info("Selected storage backend: " + databaseType.name());
+        IDatabase database;
+        switch (databaseType) {
+            case MYSQL:
+                database = new MySQL();
+                break;
+            case MARIADB:
+                database = new MariaDB();
+                break;
+            case POSTGRESQL:
+                database = new PostgreSQL();
+                break;
+            case MONGODB:
+                database = new MongoDB();
+                break;
+            case REDIS:
+                database = new Redis();
+                break;
+            case SQLITE:
+            default:
+                database = new SQLite();
+                break;
+        }
+        database.connect();
+        database.createTable();
+        return database;
     }
 
 

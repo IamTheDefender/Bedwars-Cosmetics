@@ -6,15 +6,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.*;
+import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.database.IDatabase;
 import xyz.iamthedefender.cosmetics.api.handler.IHandler;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGuiManager;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 import xyz.iamthedefender.cosmetics.data.PlayerData;
-import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class BwcAPI implements CosmeticsAPI {
      * @return true if enabled.
      */
     public boolean isMySQL() {
-        return  CosmeticsPlugin.getInstance().getConfig().getBoolean("mysql.enable");
+        return StartupUtils.getConfiguredDatabaseType() == DatabaseType.MYSQL;
     }
 
     @Override
@@ -51,57 +52,57 @@ public class BwcAPI implements CosmeticsAPI {
 
     @Override
     public List<BedDestroy> getBedDestroyList() {
-        return StartupUtils.bedDestroyList;
+        return CosmeticRegistry.getByCategory(CosmeticType.BED_DESTROY);
     }
 
     @Override
     public List<DeathCry> getDeathCryList() {
-        return StartupUtils.deathCryList;
+        return CosmeticRegistry.getByCategory(CosmeticType.DEATH_CRIES);
     }
 
     @Override
     public List<FinalKillEffect> getFinalKillList() {
-        return StartupUtils.finalKillList;
+        return CosmeticRegistry.getByCategory(CosmeticType.FINAL_KILL_EFFECTS);
     }
 
     @Override
     public List<ProjectileTrail> getProjectileTrailList() {
-        return StartupUtils.projectileTrailList;
+        return CosmeticRegistry.getByCategory(CosmeticType.PROJECTILE_TRAILS);
     }
 
     @Override
     public List<Glyph> getGlyphsList() {
-        return StartupUtils.glyphsList;
+        return CosmeticRegistry.getByCategory(CosmeticType.GLYPHS);
     }
 
     @Override
     public List<VictoryDance> getVictoryDanceList() {
-        return StartupUtils.victoryDancesList;
+        return CosmeticRegistry.getByCategory(CosmeticType.VICTORY_DANCES);
     }
 
     @Override
     public List<WoodSkin> getWoodSkinList() {
-        return StartupUtils.woodSkinsList;
+        return CosmeticRegistry.getByCategory(CosmeticType.WOOD_SKINS);
     }
 
     @Override
     public List<Spray> getSprayList() {
-        return StartupUtils.sprayList;
+        return CosmeticRegistry.getByCategory(CosmeticType.SPRAYS);
     }
 
     @Override
     public List<KillMessage> getKillMessageList() {
-        return StartupUtils.killMessageList;
+        return CosmeticRegistry.getByCategory(CosmeticType.KILL_MESSAGES);
     }
 
     @Override
     public List<ShopKeeperSkin> getShopKeeperSkinList() {
-        return StartupUtils.shopKeeperSkinList;
+        return CosmeticRegistry.getByCategory(CosmeticType.SHOPKEEPER_SKINS);
     }
 
     @Override
     public List<IslandTopper> getIslandTopperList() {
-        return StartupUtils.islandTopperList;
+        return CosmeticRegistry.getByCategory(CosmeticType.ISLAND_TOPPERS);
     }
 
     @Override
@@ -120,50 +121,38 @@ public class BwcAPI implements CosmeticsAPI {
      * @param cos Cosmetic type
      * @return    String
      */
-    public String getSelectedCosmetic(Player p, CosmeticsType cos){
+    public String getSelectedCosmetic(Player p, CosmeticType<?> cos){
         if (p == null){
             return null;
         }
         PlayerData playerData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
         String value = null;
-        switch (cos){
-            case BedBreakEffects:
-                value = playerData.getBedDestroy();
-                break;
-            case DeathCries:
-                value = playerData.getDeathCry();
-                break;
-            case FinalKillEffects:
-                value = playerData.getFinalKillEffect();
-                break;
-            case Glyphs:
-                value = playerData.getGlyph();
-                break;
-            case IslandToppers:
-                value = playerData.getIslandTopper();
-                break;
-            case KillMessages:
-                value = playerData.getKillMessage();
-                break;
-            case ProjectileTrails:
-                value = playerData.getProjectileTrail();
-                break;
-            case ShopKeeperSkins:
-                value = playerData.getShopkeeperSkin();
-                break;
-            case Sprays:
-                value = playerData.getSpray();
-                break;
-            case VictoryDances:
-                value = playerData.getVictoryDance();
-                break;
-            case WoodSkins:
-                value = playerData.getWoodSkin();
-                if (value == null || value.isEmpty()) {
-                    WoodSkin def = WoodSkin.getDefault(p);
-                    return def != null ? def.getIdentifier() : "oak-plank";
-                }
-                break;
+        if (cos == CosmeticType.BED_DESTROY) {
+            value = playerData.getBedDestroy();
+        } else if (cos == CosmeticType.DEATH_CRIES) {
+            value = playerData.getDeathCry();
+        } else if (cos == CosmeticType.FINAL_KILL_EFFECTS) {
+            value = playerData.getFinalKillEffect();
+        } else if (cos == CosmeticType.GLYPHS) {
+            value = playerData.getGlyph();
+        } else if (cos == CosmeticType.ISLAND_TOPPERS) {
+            value = playerData.getIslandTopper();
+        } else if (cos == CosmeticType.KILL_MESSAGES) {
+            value = playerData.getKillMessage();
+        } else if (cos == CosmeticType.PROJECTILE_TRAILS) {
+            value = playerData.getProjectileTrail();
+        } else if (cos == CosmeticType.SHOPKEEPER_SKINS) {
+            value = playerData.getShopkeeperSkin();
+        } else if (cos == CosmeticType.SPRAYS) {
+            value = playerData.getSpray();
+        } else if (cos == CosmeticType.VICTORY_DANCES) {
+            value = playerData.getVictoryDance();
+        } else if (cos == CosmeticType.WOOD_SKINS) {
+            value = playerData.getWoodSkin();
+            if (value == null || value.isEmpty()) {
+                WoodSkin def = WoodSkin.getDefault(p);
+                return def != null ? def.getIdentifier() : "oak-plank";
+            }
         }
         return value;
     }
@@ -174,44 +163,9 @@ public class BwcAPI implements CosmeticsAPI {
      * @param cos   Cosmetic type.
      * @param value Cosmetic value.
      */
-    public void setSelectedCosmetic(Player p, CosmeticsType cos, String value){
+    public void setSelectedCosmetic(Player p, CosmeticType<?> cos, String value){
         PlayerData playerData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(p.getUniqueId());
-        switch (cos){
-            case BedBreakEffects:
-                playerData.setBedDestroy(value);
-                break;
-            case DeathCries:
-                playerData.setDeathCry(value);
-                break;
-            case FinalKillEffects:
-                playerData.setFinalKillEffect(value);
-                break;
-            case Glyphs:
-                DebugUtil.addMessage("Glyph: " + value);
-                playerData.setGlyph(value);
-                break;
-            case IslandToppers:
-                playerData.setIslandTopper(value);
-                break;
-            case KillMessages:
-                playerData.setKillMessage(value);
-                break;
-            case ProjectileTrails:
-                playerData.setProjectileTrail(value);
-                break;
-            case ShopKeeperSkins:
-                playerData.setShopkeeperSkin(value);
-                break;
-            case Sprays:
-                playerData.setSpray(value);
-                break;
-            case VictoryDances:
-                playerData.setVictoryDance(value);
-                break;
-            case WoodSkins:
-                playerData.setWoodSkin(value);
-                break;
-        }
+        playerData.setSelectedData(cos, value);
         
         Run.async(playerData::save);
     }

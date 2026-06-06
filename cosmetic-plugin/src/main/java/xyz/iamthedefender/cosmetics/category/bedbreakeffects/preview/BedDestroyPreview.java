@@ -1,8 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.bedbreakeffects.preview;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,19 +8,19 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
 import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 public class BedDestroyPreview extends CosmeticPreview {
 
 
     // TODO
     public BedDestroyPreview() {
-        super(CosmeticsType.BedBreakEffects);
+        super(CosmeticType.BED_DESTROY);
     }
 
     @Override
@@ -37,18 +34,12 @@ public class BedDestroyPreview extends CosmeticPreview {
                 100, 2));
 
         Runnable onEnd = sendBedBreakEffect(player, previewLocation, (BedDestroy) selected);
-
-        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        cameraPacket.getIntegers().write(0, as.getEntityId());
-
-        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        resetPacket.getIntegers().write(0, player.getEntityId());
-        CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+        PacketEventsBridge.sendCamera(player, as.getEntityId());
 
         setOnEnd(player, () -> {
             if (!as.isDead()) as.remove();
 
-            CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
+            PacketEventsBridge.sendCamera(player, player.getEntityId());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
 
             onEnd.run();

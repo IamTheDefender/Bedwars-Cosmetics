@@ -7,10 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.*;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
 
@@ -62,9 +58,6 @@ public abstract class DeathCry extends Cosmetics {
         saveIfNotFound(type, configPath + "volume", getVolume());
         saveIfNotFound(type, configPath + "sound", getSound().name());
 
-        // save to language file
-        saveIfNotExistsLang("cosmetics." + configPath + "name", getDisplayName());
-        // Format the lore
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8Death Cry", ""));
         finalLore.addAll(getLore());
@@ -74,8 +67,8 @@ public abstract class DeathCry extends Cosmetics {
             finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
         }
 
-        saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        Utility.getApi().getDeathCryList().add(this);
+        ConfigUtils.saveCosmeticDisplayDefaults(type, configPath, getDisplayName(), finalLore);
+        CosmeticRegistry.register(CosmeticType.DEATH_CRIES, this);
     }
 
     /**
@@ -90,11 +83,15 @@ public abstract class DeathCry extends Cosmetics {
         ConfigManager config = ConfigUtils.getDeathCries();
         switch (fields){
             case NAME:
-                return Utility.getMSGLang(p, "cosmetics." + configPath + "name");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayName(
+                        configPath, Utility.getMSGLang(p, "cosmetics." + configPath + "name")
+                ).value(p);
             case PRICE:
                 return config.getInt(configPath + "price");
             case LORE:
-                return Utility.getListLang(p, "cosmetics." + configPath + "lore");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayLore(
+                        configPath, Utility.getListLang(p, "cosmetics." + configPath + "lore")
+                ).list(p);
             case RARITY:
                 return RarityType.valueOf(config.getString(configPath + "rarity"));
             case ITEM_STACK:
@@ -127,7 +124,7 @@ public abstract class DeathCry extends Cosmetics {
     }
 
     @Override
-    public CosmeticsType getCosmeticType() {
-        return CosmeticsType.DeathCries;
+    public CosmeticType<?> getCosmeticType() {
+        return CosmeticType.DEATH_CRIES;
     }
 }

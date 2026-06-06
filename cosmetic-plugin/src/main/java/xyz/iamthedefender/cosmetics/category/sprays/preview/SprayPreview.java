@@ -1,10 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.sprays.preview;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
 import com.cryptomorin.xseries.XSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,23 +11,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.Spray;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.category.sprays.util.SpraysUtil;
+import xyz.iamthedefender.cosmetics.util.EntityUtil;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 public class SprayPreview extends CosmeticPreview {
 
     private ItemFrame frame;
-    private PacketAdapter adapter;
 
     public SprayPreview() {
-        super(CosmeticsType.Sprays);
+        super(CosmeticType.SPRAYS);
     }
 
     @Override
@@ -62,16 +57,10 @@ public class SprayPreview extends CosmeticPreview {
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 80, 2));
 
         sendFrame(player, selected, previewLocation);
-
-        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        cameraPacket.getIntegers().write(0, as.getEntityId());
-
-        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        resetPacket.getIntegers().write(0, player.getEntityId());
         
         Run.delayed(() -> {
             if (player.isOnline() && !as.isDead()) {
-                CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+                PacketEventsBridge.sendCamera(player, as.getEntityId());
             }
         }, 2L);
 
@@ -83,10 +72,7 @@ public class SprayPreview extends CosmeticPreview {
                 frame.setItem(new ItemStack(Material.AIR));
                 frame.remove();
             }
-            if (adapter != null) {
-                CosmeticsPlugin.getInstance().getProtocolManager().removePacketListener(adapter);
-            }
-            CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
+            PacketEventsBridge.sendCamera(player, player.getEntityId());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
         });
     }
@@ -102,18 +88,7 @@ public class SprayPreview extends CosmeticPreview {
         supportBlock.getBlock().setType(Material.BARRIER);
         
         frame = (ItemFrame) loc.getWorld().spawnEntity(loc, EntityType.ITEM_FRAME);
-
-        adapter = new PacketAdapter(CosmeticsPlugin.getInstance(), PacketType.Play.Server.SPAWN_ENTITY) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                if (event.getPacket().getIntegers().read(0) == frame.getEntityId() &&
-                !event.getPlayer().getUniqueId().equals(player.getUniqueId())) {
-                    event.setCancelled(true);
-                }
-            }
-        };
-
-        CosmeticsPlugin.getInstance().getProtocolManager().addPacketListener(adapter);
+        EntityUtil.entityForPlayerOnly(frame, player);
         frame.setFacingDirection(face, true);
         SpraysUtil.spawnSprays(player, frame, true, (Spray) selected);
 

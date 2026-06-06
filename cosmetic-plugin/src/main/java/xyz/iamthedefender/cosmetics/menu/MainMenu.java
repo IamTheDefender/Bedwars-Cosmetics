@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.menu.impl.ChestSystemGui;
+import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.ItemBuilder;
 import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
@@ -21,23 +22,29 @@ import java.util.List;
 public class MainMenu extends ChestSystemGui {
 
     public MainMenu(Player player) {
-        super(Messages.MAIN_MENU_GUI_TITLE.value(player), 6);
+        super(resolveTitle(), resolveRows());
     }
 
     @Override
     public void onOpen(@NotNull Player player) {
-        String loc = "Main-Menu";
         String langLoc = "cosmetics.main-menu";
         FileConfiguration config = CosmeticsPlugin.getInstance().getMenuData().getYml();
+        String itemsPath = config.contains("main-menu.items") ? "main-menu.items" : "Main-Menu";
 
-        for(String name : config.getConfigurationSection(loc).getKeys(false)) {
+        ConfigurationSection section = config.getConfigurationSection(itemsPath);
+        if (section == null) {
+            return;
+        }
+
+        for(String name : section.getKeys(false)) {
             try {
-                ItemStack itemStack = ConfigManager.getItemStack(config, loc + "." + name + ".item");
-                List<String> lore = Utility.getListLang(player, langLoc + "." + name + ".lore");
-                String itemName = Utility.getMSGLang(player, langLoc + "." + name + ".name");
-                int slot = config.getInt(loc + "." + name + ".slot");
+                String itemPath = itemsPath + "." + name + ".";
+                ItemStack itemStack = ConfigManager.getItemStack(config, itemPath + "item");
+                List<String> lore = Messages.mainMenuItemLore(name, Utility.getListLang(player, langLoc + "." + name + ".lore")).list(player);
+                String itemName = Messages.mainMenuItemName(name, Utility.getMSGLang(player, langLoc + "." + name + ".name")).value(player);
+                int slot = config.getInt(itemPath + "slot");
                 List<String> lores = MainMenuUtils.formatLore(lore, player);
-                boolean disabled = config.getBoolean(loc + "." + name + ".disabled");
+                boolean disabled = config.getBoolean(itemPath + "disabled");
 
                 // Translate for XItemStack
                 ConfigurationSection configurationSection = new MemoryConfiguration();
@@ -47,7 +54,7 @@ public class MainMenu extends ChestSystemGui {
                 if (itemStack != null && !disabled) {
 
                     super.setItem(slot, XItemStack.edit(itemStack, configurationSection, s -> s, null), (e) -> {
-                        MainMenuUtils.openMenus((Player) e.getWhoClicked(), name);
+                        MainMenuUtils.handleItemClick((Player) e.getWhoClicked(), name);
                     });
                 }
             }catch (Exception exception){
@@ -55,7 +62,7 @@ public class MainMenu extends ChestSystemGui {
                 throw new RuntimeException(exception);
             }
         }
-        String extrasPath = "Extras.fill-empty.";
+        String extrasPath = config.contains("main-menu.fill-empty.enabled") ? "main-menu.fill-empty." : "Extras.fill-empty.";
         if (config.getBoolean(extrasPath + "enabled")){
             ItemStack stack = ConfigManager.getItemStack(config, extrasPath + "item");
             while (getInventory().firstEmpty() != -1){
@@ -67,5 +74,17 @@ public class MainMenu extends ChestSystemGui {
     @Override
     public void onClose(Player player) {
 
+    }
+
+    private static int resolveRows() {
+        FileConfiguration config = CosmeticsPlugin.getInstance().getMenuData().getYml();
+        if (config.contains("main-menu.layout.rows")) {
+            return Math.min(6, Math.max(1, config.getInt("main-menu.layout.rows")));
+        }
+        return 6;
+    }
+
+    private static String resolveTitle() {
+        return ColorUtil.translate(Messages.MAIN_MENU_GUI_TITLE.value(null));
     }
 }

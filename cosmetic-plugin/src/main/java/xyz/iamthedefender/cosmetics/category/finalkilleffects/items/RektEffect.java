@@ -1,8 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.finalkilleffects.items;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import com.cryptomorin.xseries.XMaterial;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import org.bukkit.Location;
@@ -15,6 +12,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.FinalKillEffect;
 import xyz.iamthedefender.cosmetics.util.EntityUtil;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 import java.util.Arrays;
 import java.util.List;
@@ -95,14 +93,8 @@ public class RektEffect extends FinalKillEffect {
         new BukkitRunnable() {
             @Override
             public void run() {
-                // Create packet to destroy the entity
-                PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_DESTROY);
-                int[] entityIds = new int[] { stand.getEntityId() };
-                packet.getIntegerArrays().write(0, entityIds);
-
-                // Clean up and send packet
                 CosmeticsPlugin.getInstance().getEntityPlayerHashMap().remove(stand.getEntityId());
-                ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
+                PacketEventsBridge.destroyEntities(player, stand.getEntityId());
                 stand.remove();
             }
         }.runTaskLater(CosmeticsPlugin.getInstance(), delay);

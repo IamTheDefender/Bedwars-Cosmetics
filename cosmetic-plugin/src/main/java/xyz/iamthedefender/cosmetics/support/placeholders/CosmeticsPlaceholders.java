@@ -5,7 +5,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
@@ -37,27 +38,27 @@ public class CosmeticsPlaceholders extends PlaceholderExpansion {
         PlayerOwnedData ownedData = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerOwnedData(player.getUniqueId());
         switch (placeholder.toLowerCase()) {
             case "selected_dc":
-                return api.getSelectedCosmetic(player, CosmeticsType.DeathCries);
+                return api.getSelectedCosmetic(player, CosmeticType.DEATH_CRIES);
             case "selected_vd":
-                return api.getSelectedCosmetic(player, CosmeticsType.VictoryDances);
+                return api.getSelectedCosmetic(player, CosmeticType.VICTORY_DANCES);
             case "selected_spray":
-                return api.getSelectedCosmetic(player, CosmeticsType.Sprays);
+                return api.getSelectedCosmetic(player, CosmeticType.SPRAYS);
             case "selected_km":
-                return api.getSelectedCosmetic(player, CosmeticsType.KillMessages);
+                return api.getSelectedCosmetic(player, CosmeticType.KILL_MESSAGES);
             case "selected_skin":
-                return api.getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkins);
+                return api.getSelectedCosmetic(player, CosmeticType.SHOPKEEPER_SKINS);
             case "selected_ws":
-                return api.getSelectedCosmetic(player, CosmeticsType.WoodSkins);
+                return api.getSelectedCosmetic(player, CosmeticType.WOOD_SKINS);
             case "selected_glyph":
-                return api.getSelectedCosmetic(player, CosmeticsType.Glyphs);
+                return api.getSelectedCosmetic(player, CosmeticType.GLYPHS);
             case "selected_bbe":
-                return api.getSelectedCosmetic(player, CosmeticsType.BedBreakEffects);
+                return api.getSelectedCosmetic(player, CosmeticType.BED_DESTROY);
             case "selected_pt":
-                return api.getSelectedCosmetic(player, CosmeticsType.ProjectileTrails);
+                return api.getSelectedCosmetic(player, CosmeticType.PROJECTILE_TRAILS);
             case "selected_finalkill":
-                return api.getSelectedCosmetic(player, CosmeticsType.FinalKillEffects);
+                return api.getSelectedCosmetic(player, CosmeticType.FINAL_KILL_EFFECTS);
             case "selected_islandtopper":
-                return api.getSelectedCosmetic(player, CosmeticsType.IslandToppers);
+                return api.getSelectedCosmetic(player, CosmeticType.ISLAND_TOPPERS);
             case "owned_vd":
                 return String.valueOf(ownedData.getVictoryDance());
             case "owned_ws":
@@ -81,25 +82,25 @@ public class CosmeticsPlaceholders extends PlaceholderExpansion {
             case "owned_island":
                 return String.valueOf(ownedData.getIslandTopper());
             case "total_vd":
-                return StartupUtils.victoryDancesList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.VICTORY_DANCES).size() + "";
             case "total_bbe":
-                return StartupUtils.bedDestroyList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.BED_DESTROY).size() + "";
             case "total_dc":
-                return StartupUtils.deathCryList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.DEATH_CRIES).size() + "";
             case "total_finalkill":
-                return StartupUtils.finalKillList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.FINAL_KILL_EFFECTS).size() + "";
             case "total_shopkeeper":
-                return StartupUtils.shopKeeperSkinList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.SHOPKEEPER_SKINS).size() + "";
             case "total_ws":
-                return StartupUtils.woodSkinsList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.WOOD_SKINS).size() + "";
             case "total_km":
-                return StartupUtils.killMessageList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.KILL_MESSAGES).size() + "";
             case "total_pt":
-                return StartupUtils.projectileTrailList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.PROJECTILE_TRAILS).size() + "";
             case "total_spray":
-                return StartupUtils.sprayList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.SPRAYS).size() + "";
             case "total_island":
-                return StartupUtils.islandTopperList.size() + "";
+                return CosmeticRegistry.getByCategory(CosmeticType.ISLAND_TOPPERS).size() + "";
             default:
                 return null;
         }

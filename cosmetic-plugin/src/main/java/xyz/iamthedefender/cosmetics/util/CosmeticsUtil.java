@@ -2,7 +2,8 @@ package xyz.iamthedefender.cosmetics.util;
 
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class CosmeticsUtil {
 
     public static ShopKeeperSkin getShopKeeperSkin(Player player) {
-        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticsType.ShopKeeperSkins);
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticType.SHOPKEEPER_SKINS);
 
         List<ShopKeeperSkin> shopKeeperSkins = getShopKeeperSkins(player);
 
@@ -36,8 +37,8 @@ public class CosmeticsUtil {
     public static List<ShopKeeperSkin> getShopKeeperSkins(Player player) {
         List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
 
-        for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-            if (player.hasPermission(CosmeticsType.ShopKeeperSkins.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
+        for (ShopKeeperSkin shopKeeperSkin : CosmeticRegistry.getByCategory(CosmeticType.SHOPKEEPER_SKINS)) {
+            if (player.hasPermission(CosmeticType.SHOPKEEPER_SKINS.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
                 shopKeeperSkins.add(shopKeeperSkin);
             }
         }

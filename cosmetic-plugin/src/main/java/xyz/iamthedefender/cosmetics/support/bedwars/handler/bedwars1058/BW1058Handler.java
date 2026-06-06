@@ -8,17 +8,18 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
-import xyz.iamthedefender.cosmetics.category.bedbreakeffects.BedDestroyHandler1058;
-import xyz.iamthedefender.cosmetics.category.deathcries.DeathCryHandler1058;
-import xyz.iamthedefender.cosmetics.category.finalkilleffects.FinalKillEffectHandler1058;
-import xyz.iamthedefender.cosmetics.category.glyphs.GlyphHandler1058;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.IslandTopperHandler1058;
-import xyz.iamthedefender.cosmetics.category.killmessage.KillMessageHandler1058;
-import xyz.iamthedefender.cosmetics.category.projectiletrails.ProjectileHandler;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
-import xyz.iamthedefender.cosmetics.category.sprays.SpraysHandler1058;
-import xyz.iamthedefender.cosmetics.category.victorydance.VictoryDanceHandler1058;
-import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinHandler1058;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.handler.BedDestroyHandler1058;
+import xyz.iamthedefender.cosmetics.category.deathcries.handler.DeathCryHandler1058;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillEffectHandler1058;
+import xyz.iamthedefender.cosmetics.category.glyphs.handler.GlyphHandler1058;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.handler.IslandTopperHandler1058;
+import xyz.iamthedefender.cosmetics.category.killmessage.handler.KillMessageHandler1058;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.handler.ProjectileHandler;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.handler.ShopKeeperHandler1058;
+import xyz.iamthedefender.cosmetics.category.sprays.SprayProtectionListener;
+import xyz.iamthedefender.cosmetics.category.sprays.handler.SpraysHandler1058;
+import xyz.iamthedefender.cosmetics.category.victorydance.handler.VictoryDanceHandler1058;
+import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinHandler1058;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
@@ -42,6 +43,7 @@ public class BW1058Handler implements IHandler {
         StartupUtils.registerListeners(new IslandTopperHandler1058());
         StartupUtils.registerListeners(new ProjectileHandler(CosmeticsPlugin.getInstance()));
         StartupUtils.registerListeners(new DeathCryHandler1058());
+        StartupUtils.registerListeners(new SprayProtectionListener());
         StartupUtils.registerListeners(new SpraysHandler1058());
     }
 
@@ -175,3 +177,4 @@ public class BW1058Handler implements IHandler {
         };
     }
 }
+

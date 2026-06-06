@@ -10,7 +10,7 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.category.DeathCry;
 public class DeathCryPreview extends CosmeticPreview {
 
     public DeathCryPreview() {
-        super(CosmeticsType.DeathCries);
+        super(CosmeticType.DEATH_CRIES);
     }
 
     @Override

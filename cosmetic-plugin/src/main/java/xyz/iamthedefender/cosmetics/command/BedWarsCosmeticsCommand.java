@@ -1,8 +1,10 @@
 package xyz.iamthedefender.cosmetics.command;
 
 import co.aikar.commands.BaseCommand;
+import co.aikar.commands.CommandHelp;
 import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,10 +16,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.handler.ISetupSession;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
@@ -36,132 +41,63 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
     @Subcommand("help")
     @CommandPermission("bwcosmetics.help")
     @CatchUnknown
-    public void helpCommand(Player player) {
-        player.sendMessage(ColorUtil.translate("&8&l======================================"));
-        player.sendMessage(ColorUtil.translate("&6&l     BedWars Cosmetics — Commands"));
-        player.sendMessage(ColorUtil.translate("&8&l======================================"));
-        player.sendMessage(" ");
-
-        send(player, "/bwc reload", "Reloads all YAML files");
-        send(player, "/bwc menu", "Opens the Main Menu");
-        send(player, "/bwc km", "Opens the Kill Message GUI");
-        send(player, "/bwc shopkeeper", "Opens the Shopkeeper Skin GUI");
-        send(player, "/bwc sprays", "Opens the Sprays GUI");
-        send(player, "/bwc dc", "Opens the Death Cries GUI");
-        send(player, "/bwc glyphs", "Opens the Glyphs GUI");
-        send(player, "/bwc bbe", "Opens the Bed Break Effect GUI");
-        send(player, "/bwc finalke", "Opens the Final Kill Effect GUI");
-        send(player, "/bwc pt", "Opens the Projectile Trails GUI");
-        send(player, "/bwc vd", "Opens the Victory Dance GUI");
-        send(player, "/bwc ws", "Opens the Wood Skins GUI");
-        send(player, "/bwc it", "Opens the Island Toppers GUI");
-        send(player, "/bwc setIslandTopperPosition <teamName>", "Sets the topper location for a team");
-        send(player, "/bwc setupPlayerLocation", "Sets the preview player location");
-        send(player, "/bwc setupPreviewLocation", "Sets the preview location");
+    @HelpCommand
+    public void helpCommand(CommandHelp help) {
+        help.showHelp();
     }
 
-    private void send(Player player, String cmd, String desc) {
-        player.spigot().sendMessage(
-                Utility.hoverableClickableMessage(
-                        "&6-> &7" + cmd + "    &8- &eclick for details",
-                        desc,
-                        cmd
-                )
-        );
-    }
-
-    @Subcommand("set")
+    @Subcommand("set cosmetic")
     @CommandPermission("bwcosmetics.admin")
-    public void setCommand(CommandSender sender, CosmeticsType cosmeticsType, String cosmeticID, String playerName) {
-        Player player = Bukkit.getPlayer(playerName);
+    @Description("Manually set a cosmetic for an user")
+    @CommandCompletion("@cosmeticTypes @cosmetics @players")
+    public void setCosmetic(CommandSender sender, CosmeticType<?> cosmeticType, String cosmeticID, OnlinePlayer onlinePlayer) {
+        Player player = onlinePlayer.getPlayer();
 
-        if (player == null || !player.isOnline()) {
-            sender.sendMessage(ChatColor.RED + "Invalid or offline player: " + playerName);
-            return;
+        if (!(CosmeticRegistry.cosmeticExist(cosmeticType, cosmeticID))) {
+            throw new ConditionFailedException(Messages.ERROR_NO_COSMETIC_FOUND.value(sender instanceof Player ? (Player) sender : null));
         }
 
-        plugin.getApi().setSelectedCosmetic(player, cosmeticsType, cosmeticID);
-        sender.sendMessage(ColorUtil.translate("&aSuccess! Note, this command will not check if cosmeticsID is valid!"));
+        plugin.getApi().setSelectedCosmetic(player, cosmeticType, cosmeticID);
+        sender.sendMessage(ColorUtil.translate(String.format("&6Successfully set the selected cosmetic for %s to %s for category %s",
+                player.getName(),
+                cosmeticID,
+                cosmeticType.getFormattedName()
+        )));
     }
-
 
     @Subcommand("reload")
     @CommandPermission("bwcosmetics.reload")
+    @Description("Reload the plugin configuration files")
     public void reloadCommand(CommandSender sender) {
-        sender.sendMessage("§aReloading the YAML's, please wait...");
+        sender.sendMessage(ColorUtil.translate("&eReloading configuration files, please wait up to 60 seconds.."));
         StartupUtils.updateConfigs();
         MainMenuUtils.saveLores();
-        for(ConfigType configType : ConfigType.values()){
+
+        for (ConfigType configType : ConfigType.values()) {
             ConfigUtils.get(configType).reload();
         }
-        sender.sendMessage("§aReloaded the YAML's!");
+
+        sender.sendMessage(ColorUtil.translate("&aSuccess! &6Report any issues to the developer."));
     }
 
 
     @Subcommand("menu")
-    public void menuCommand(Player player) {
+    @Description("Open the main menu or the menu for a category")
+    @CommandCompletion("@cosmeticTypes")
+    public void menuCommand(Player player, @Optional CosmeticType<?> cosmeticType) {
         if (Utility.isInArena(player)) throw new ConditionFailedException("You cannot do that while in a game!");
+
+        if (cosmeticType != null) {
+            openMenu(player, cosmeticType);
+            return;
+        }
 
         new MainMenu(player).open(player);
     }
 
-    @Subcommand("km")
-    public void onKmMenu(Player player) {
-        openMenu(player, CosmeticsType.KillMessages);
-    }
-
-    @Subcommand("shopkeeper")
-    public void onShopkeeperMenu(Player player) {
-        openMenu(player, CosmeticsType.ShopKeeperSkins);
-    }
-
-    @Subcommand("sprays")
-    public void onSpraysMenu(Player player) {
-        openMenu(player, CosmeticsType.Sprays);
-    }
-
-    @Subcommand("dc")
-    public void onDcMenu(Player player) {
-        openMenu(player, CosmeticsType.DeathCries);
-    }
-
-    @Subcommand("glyphs")
-    public void onGlyphsMenu(Player player) {
-        openMenu(player, CosmeticsType.Glyphs);
-    }
-
-    @Subcommand("bbe")
-    public void onBbeMenu(Player player) {
-        openMenu(player, CosmeticsType.BedBreakEffects);
-    }
-
-    @Subcommand("finalke")
-    public void onFinalkeMenu(Player player) {
-        openMenu(player, CosmeticsType.FinalKillEffects);
-    }
-
-    @Subcommand("pt")
-    public void onPtMenu(Player player) {
-        openMenu(player, CosmeticsType.ProjectileTrails);
-    }
-
-    @Subcommand("vd")
-    public void onVdMenu(Player player) {
-        openMenu(player, CosmeticsType.VictoryDances);
-    }
-
-    @Subcommand("ws")
-    public void onWsMenu(Player player) {
-        openMenu(player, CosmeticsType.WoodSkins);
-    }
-
-    @Subcommand("it")
-    public void onItMenu(Player player) {
-        openMenu(player, CosmeticsType.IslandToppers);
-    }
-
-    @Subcommand("setIslandTopperPosition")
+    @Subcommand("set islandtopperpos")
     @CommandPermission("bwcosmetics.admin")
+    @Description("Set IslandTopper position for a team in an arena")
     public void onSetIslandTopperPosition(Player player, String teamName) {
         ISetupSession setupSession = plugin.getHandler().getSetupSession(player.getUniqueId());
 
@@ -192,33 +128,35 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as Island Topper location for team " + teamName);
     }
 
-    @Subcommand("setupPreviewLocation")
+    @Subcommand("set previewloc")
     @CommandPermission("bwcosmetics.admin")
+    @Description("Set preview location, where preview will be spawned at")
     public void onSetPreviewLocation(Player player) {
-        saveLocation(player, "cosmetic-preview.cosmetic-location");
+        saveLocation(player, "preview.locations.cosmetic", "cosmetic-preview.cosmetic-location");
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as preview location.");
     }
 
-    @Subcommand("setupPlayerLocation")
+    @Subcommand("set playerloc")
     @CommandPermission("bwcosmetics.admin")
+    @Description("Set player preview location, player will be teleported to this during previews")
     public void onSetPlayerLocation(Player player) {
-        saveLocation(player, "cosmetic-preview.player-location");
+        saveLocation(player, "preview.locations.player", "cosmetic-preview.player-location");
         player.sendMessage(ChatColor.GREEN + "Done! saved your current location as player location for preview.");
     }
 
-    private void openMenu(Player player, CosmeticsType cosmeticsType) {
+    private void openMenu(Player player, CosmeticType<?> CosmeticType) {
         if (Utility.isInArena(player)) {
             player.sendMessage(ChatColor.RED + "You cannot do that while in a game!");
             return;
         }
 
-        String title = cosmeticsType.getFormatedName();
+        String title = CosmeticType.getFormatedName();
         if (CosmeticsPlugin.isPlaceholderAPI()) {
             title = PlaceholderAPI.setPlaceholders(player, title);
         }
 
         xyz.iamthedefender.cosmetics.data.PlayerData data = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerData(player.getUniqueId());
-        SystemGui inv = new CategoryMenu(cosmeticsType, title, 1, data.getSortMode(), data.isOwnedFirst());
+        SystemGui inv = new CategoryMenu(CosmeticType, title, 1, data.getSortMode(), data.isOwnedFirst());
         inv.open(player);
     }
 
@@ -234,17 +172,22 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
         }
     }
 
-    private void saveLocation(Player player, String path) {
+    private void saveLocation(Player player, String primaryPath, String legacyPath) {
         Location location = player.getLocation();
         ConfigManager config = ConfigUtils.getMainConfig();
+        writeLocation(config, primaryPath, location);
+        writeLocation(config, legacyPath, location);
+        config.save();
+        config.reload();
+    }
+
+    private void writeLocation(ConfigManager config, String path, Location location) {
         config.set(path + ".world", location.getWorld().getName());
         config.set(path + ".x", location.getX());
         config.set(path + ".y", location.getY());
         config.set(path + ".z", location.getZ());
         config.set(path + ".yaw", location.getYaw());
         config.set(path + ".pitch", location.getPitch());
-        config.save();
-        config.reload();
     }
 
 }

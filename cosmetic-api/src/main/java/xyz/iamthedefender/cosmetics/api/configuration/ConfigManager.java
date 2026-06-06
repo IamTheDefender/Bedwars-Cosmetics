@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,10 @@ public class ConfigManager {
         return this.yml.getStringList(path).stream().map((s) -> {
             return s.replace("&", "§");
         }).collect(Collectors.toList());
+    }
+
+    public List<Integer> getIntegerList(String path) {
+        return this.yml.getIntegerList(path);
     }
 
 
@@ -167,6 +172,18 @@ public class ConfigManager {
 
     public String getString(String path) {
         return this.yml.getString(path);
+    }
+
+    public String getString(String path, String defaultValue) {
+        return this.yml.getString(path, defaultValue);
+    }
+
+    public boolean contains(String path) {
+        return this.yml.contains(path);
+    }
+
+    public org.bukkit.configuration.ConfigurationSection getSection(String path) {
+        return Objects.requireNonNullElseGet(this.yml.getConfigurationSection(path), YamlConfiguration::new);
     }
 
     public boolean isFirstTime() {

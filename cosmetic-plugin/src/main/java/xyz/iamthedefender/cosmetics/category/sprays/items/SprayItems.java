@@ -5,7 +5,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.Spray;
 import xyz.iamthedefender.cosmetics.category.sprays.util.SpraysUtil;
@@ -16,11 +16,11 @@ import java.util.List;
 public class SprayItems {
 
     public static void registerConfigItems(){
-        ConfigurationSection section = CosmeticsType.Sprays.getConfig().getYml().getConfigurationSection(CosmeticsType.Sprays.getSectionKey());
+        ConfigurationSection section = CosmeticType.SPRAYS.getConfig().getYml().getConfigurationSection(CosmeticType.SPRAYS.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.Sprays.getConfig();
+        ConfigManager config = CosmeticType.SPRAYS.getConfig();
         for(String id : section.getKeys(false)) {
-            String path = CosmeticsType.Sprays.getSectionKey() + "." + id + ".";
+            String path = CosmeticType.SPRAYS.getSectionKey() + "." + id + ".";
             Spray spray = new Spray() {
                 @Override
                 public ItemStack getItem() {

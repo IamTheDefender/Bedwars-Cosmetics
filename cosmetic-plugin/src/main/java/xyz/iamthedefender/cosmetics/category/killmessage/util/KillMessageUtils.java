@@ -1,11 +1,12 @@
 package xyz.iamthedefender.cosmetics.category.killmessage.util;
 
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.KillMessage;
@@ -25,7 +26,7 @@ public class KillMessageUtils {
      * @return true if exists, false otherwise.
      */
     public static boolean exists(String id, String type) {
-        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + id + "." + type + "-Kill");
+        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticType.KILL_MESSAGES.getSectionKey() + "." + id + "." + type + "-Kill");
         return !messages.isEmpty();
     }
 
@@ -35,7 +36,7 @@ public class KillMessageUtils {
      * @return true if it is None, false if it isn't
      */
     public static boolean isNone(String id){
-        for (KillMessage killMessage : StartupUtils.killMessageList) {
+        for (KillMessage killMessage : CosmeticRegistry.getByCategory(CosmeticType.KILL_MESSAGES)) {
             if (killMessage.getIdentifier().equals(id)) {
                 if (killMessage.getField(FieldsType.RARITY, null) == RarityType.NONE) return true;
             }
@@ -59,14 +60,14 @@ public class KillMessageUtils {
      * @param oldMessage        never used, leave as null.
      */
     public static void sendKillMessage(Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type, String oldMessage, boolean preview, String previewID, String previewKillerName) {
-        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages);
+        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticType.KILL_MESSAGES);
         List<String> messages;
         if (preview) {
-            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + previewID + "." + type + "-Kill");
+            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticType.KILL_MESSAGES.getSectionKey() + "." + previewID + "." + type + "-Kill");
         } else {
-            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
+            messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticType.KILL_MESSAGES.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
         }
-        for (KillMessage killMessage : StartupUtils.killMessageList) {
+        for (KillMessage killMessage : CosmeticRegistry.getByCategory(CosmeticType.KILL_MESSAGES)) {
             if (preview) {
                 if (killMessage.getIdentifier().equals(previewID)) {
                     if (killMessage.getField(FieldsType.RARITY, player) != RarityType.NONE) {
@@ -112,10 +113,10 @@ public class KillMessageUtils {
      * @param type              The type of death. Accepted values: "PvP", "Void", "Shoot", "Explosion"
      */
     public static String sendKillMessage(@Deprecated Player player, String victim, Player killer, boolean finalKill, ChatColor victimColor, ChatColor killerColor, String type) {
-        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticsType.KillMessages);
+        String selectedMessage = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(killer, CosmeticType.KILL_MESSAGES);
         if (victim.equalsIgnoreCase(killer.getName())) type = "Void";
-        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticsType.KillMessages.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
-        for (KillMessage killMessage : StartupUtils.killMessageList) {
+        List<String> messages = ConfigUtils.getKillMessages().getYml().getStringList(CosmeticType.KILL_MESSAGES.getSectionKey() + "." + selectedMessage + "." + type + "-Kill");
+        for (KillMessage killMessage : CosmeticRegistry.getByCategory(CosmeticType.KILL_MESSAGES)) {
             if (killMessage.getIdentifier().equals(selectedMessage)) {
                 if (killMessage.getField(FieldsType.RARITY, null) == RarityType.NONE) return null;
             }
@@ -124,9 +125,11 @@ public class KillMessageUtils {
         String message = messages.get(ThreadLocalRandom.current().nextInt(messages.size()));
         message = message.replace("{victim}", victimColor + victim);
         message = message.replace("{killer}", killerColor + killer.getName());
-        message = PlaceholderAPI.setPlaceholders(killer, message);
+        if (CosmeticsPlugin.isPlaceholderAPI()) {
+            message = PlaceholderAPI.setPlaceholders(killer, message);
+        }
         if (finalKill) {
-            message += " " + ConfigUtils.getMainConfig().getString("Final-Kill-Suffix");
+            message += " " + StartupUtils.getFinalKillSuffix();
         }
         return ColorUtil.translate(message);
     }

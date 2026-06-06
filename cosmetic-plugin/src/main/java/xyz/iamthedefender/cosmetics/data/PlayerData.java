@@ -4,16 +4,17 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.util.DebugUtil;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
+import xyz.iamthedefender.cosmetics.api.database.PlayerCosmeticsData;
 import xyz.iamthedefender.cosmetics.menu.SortMode;
+import xyz.iamthedefender.cosmetics.util.DebugUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @ToString
@@ -21,8 +22,10 @@ import java.util.UUID;
 public class PlayerData {
 
     private final UUID uuid;
-    @Setter
-    private String woodSkin, bedDestroy, victoryDance, shopkeeperSkin, glyph, spray, projectileTrail, killMessage, finalKillEffect, islandTopper, deathCry;
+
+    @Getter
+    private final Map<CosmeticType<?>, String> selectedData = new ConcurrentHashMap<>();
+
     @Setter
     private SortMode sortMode = SortMode.RARITY_LOW_HIGH;
     @Setter
@@ -33,92 +36,110 @@ public class PlayerData {
         load();
     }
 
-
     public void load() {
-        try {
-            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM cosmetics_player_data WHERE uuid = ?");
-            statement.setString(1, uuid.toString());
-            ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                bedDestroy = result.getString("bed_destroy");
-                woodSkin = result.getString("wood_skin");
-                victoryDance = result.getString("victory_dance");
-                shopkeeperSkin = result.getString("shopkeeper_skin");
-                glyph = result.getString("glyph");
-                spray = result.getString("spray");
-                projectileTrail = result.getString("projectile_trail");
-                killMessage = result.getString("kill_message");
-                finalKillEffect = result.getString("final_kill_effect");
-                islandTopper = result.getString("island_topper");
-                deathCry = result.getString("death_cry");
-            }
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            Bukkit.getLogger().severe("Failed to load player-data: " + e.getMessage());
+        PlayerCosmeticsData data = CosmeticsPlugin.getInstance().getRemoteDatabase().loadPlayerData(uuid);
+        if (data == null) {
+            return;
         }
+
+        setSelectedData(CosmeticType.BED_DESTROY, data.getBedDestroy());
+        setSelectedData(CosmeticType.WOOD_SKINS, data.getWoodSkin());
+        setSelectedData(CosmeticType.VICTORY_DANCES, data.getVictoryDance());
+        setSelectedData(CosmeticType.SHOPKEEPER_SKINS, data.getShopkeeperSkin());
+        setSelectedData(CosmeticType.GLYPHS, data.getGlyph());
+        setSelectedData(CosmeticType.PROJECTILE_TRAILS, data.getProjectileTrail());
+        setSelectedData(CosmeticType.KILL_MESSAGES, data.getKillMessage());
+        setSelectedData(CosmeticType.FINAL_KILL_EFFECTS, data.getFinalKillEffect());
+        setSelectedData(CosmeticType.ISLAND_TOPPERS, data.getIslandTopper());
+        setSelectedData(CosmeticType.DEATH_CRIES, data.getDeathCry());
+        setSelectedData(CosmeticType.SPRAYS, data.getSpray());
     }
 
-    public void createData(){
-        String sql = "INSERT INTO cosmetics_player_data (uuid, bed_destroy, wood_skin, victory_dance, shopkeeper_skin, glyph, spray, projectile_trail, kill_message, final_kill_effect, island_topper, death_cry) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    public void setSelectedData(@NotNull CosmeticType<?> type, @NotNull String identifier) {
+        if (identifier == null) return;
 
-        try {
-            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, uuid.toString());
-            statement.setString(2, bedDestroy);
-            statement.setString(3, woodSkin);
-            statement.setString(4, victoryDance);
-            statement.setString(5, shopkeeperSkin);
-            statement.setString(6, glyph);
-            statement.setString(7, spray);
-            statement.setString(8, projectileTrail);
-            statement.setString(9, killMessage);
-            statement.setString(10, finalKillEffect);
-            statement.setString(11, islandTopper);
-            statement.setString(12, deathCry);
-            statement.executeUpdate();
-            statement.close();
-            connection.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+        selectedData.put(type, identifier);
+    }
+
+    public @Nullable String getSelected(CosmeticType<?> type) {
+        return  selectedData.get(type);
+    }
+
+
+    public void createData() {
+        CosmeticsPlugin.getInstance().getRemoteDatabase().createPlayerData(uuid, toStorageData());
     }
 
     public void save() {
-        try {
-            DebugUtil.addMessage("Saving player-data for " + uuid.toString());
-            Connection connection = CosmeticsPlugin.getInstance().getRemoteDatabase().getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE cosmetics_player_data SET bed_destroy = ?, wood_skin = ?, victory_dance = ?, shopkeeper_skin = ?, glyph = ?, spray = ?, projectile_trail = ?, kill_message = ?, final_kill_effect = ?, island_topper = ?, death_cry = ? WHERE uuid = ?");
-            statement.setString(1, bedDestroy);
-            statement.setString(2, woodSkin);
-            statement.setString(3, victoryDance);
-            statement.setString(4, shopkeeperSkin);
-            statement.setString(5, glyph);
-            statement.setString(6, spray);
-            statement.setString(7, projectileTrail);
-            statement.setString(8, killMessage);
-            statement.setString(9, finalKillEffect);
-            statement.setString(10, islandTopper);
-            statement.setString(11, deathCry);
-            statement.setString(12, uuid.toString());
-            statement.executeUpdate();
-            statement.close();
-            connection.close();
-        } catch (SQLException e) {
-            Bukkit.getLogger().severe("Failed to save player-data: " + e.getMessage());
-        }
+        DebugUtil.addMessage("Saving player-data for " + uuid.toString());
+        CosmeticsPlugin.getInstance().getRemoteDatabase().savePlayerData(uuid, toStorageData());
     }
-
 
     public boolean exists() {
-       if (getWoodSkin() == null){
-           return false;
-       }else return !getWoodSkin().equals("Demo");
+        if (getWoodSkin() == null) {
+            return false;
+
+        } else return !getWoodSkin().equals("Demo");
     }
 
+    private PlayerCosmeticsData toStorageData() {
+        return new PlayerCosmeticsData(
+                getWoodSkin(),
+                getBedDestroy(),
+                getVictoryDance(),
+                getShopkeeperSkin(),
+                getGlyph(),
+                getSpray(),
+                getProjectileTrail(),
+                getKillMessage(),
+                getFinalKillEffect(),
+                getIslandTopper(),
+                getDeathCry()
+        );
+    }
+
+    public String getFinalKillEffect() {
+        return getSelected(CosmeticType.FINAL_KILL_EFFECTS);
+    }
+
+    public String getProjectileTrail() {
+        return getSelected(CosmeticType.PROJECTILE_TRAILS);
+    }
+
+    public String getBedDestroy() {
+        return getSelected(CosmeticType.BED_DESTROY);
+    }
+
+    public String getGlyph() {
+        return getSelected(CosmeticType.GLYPHS);
+    }
+
+    public String getDeathCry() {
+        return getSelected(CosmeticType.DEATH_CRIES);
+    }
+
+    public String getVictoryDance() {
+        return getSelected(CosmeticType.VICTORY_DANCES);
+    }
+
+    public String getWoodSkin() {
+        return getSelected(CosmeticType.WOOD_SKINS);
+    }
+
+    public String getSpray() {
+        return getSelected(CosmeticType.SPRAYS);
+    }
+
+    public String getKillMessage() {
+        return getSelected(CosmeticType.KILL_MESSAGES);
+    }
+
+    public String getShopkeeperSkin() {
+        return getSelected(CosmeticType.SHOPKEEPER_SKINS);
+    }
+
+    public String getIslandTopper() {
+        return getSelected(CosmeticType.ISLAND_TOPPERS);
+    }
 
 }

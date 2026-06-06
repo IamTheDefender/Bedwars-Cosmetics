@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 
 /**
@@ -34,7 +34,7 @@ public class BedBreakEffectExecuteEvent extends Event implements Cancellable {
     public BedBreakEffectExecuteEvent(Player WhoBroke){
         this.cancelled = false;
         this.WhoBrokeTheBed = WhoBroke;
-        this.selected = Utility.getApi().getSelectedCosmetic(WhoBroke, CosmeticsType.BedBreakEffects);
+        this.selected = Utility.getApi().getSelectedCosmetic(WhoBroke, CosmeticType.BED_DESTROY);
     }
 
 

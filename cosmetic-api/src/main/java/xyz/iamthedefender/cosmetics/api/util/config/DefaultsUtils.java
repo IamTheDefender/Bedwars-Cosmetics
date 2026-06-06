@@ -34,13 +34,6 @@ public class DefaultsUtils {
 
             config.reload();
             config.save();
-            String extrasPath = "Extras.fill-empty.";
-            if (config.isFirstTime() && !config.getBoolean(extrasPath + "enabled")){
-                config.set(extrasPath + "enabled", true);
-                config.set(extrasPath + "item", "BLACK_STAINED_GLASS_PANE:0");
-                config.save();
-                config.reload();
-            }
         }
     }
 

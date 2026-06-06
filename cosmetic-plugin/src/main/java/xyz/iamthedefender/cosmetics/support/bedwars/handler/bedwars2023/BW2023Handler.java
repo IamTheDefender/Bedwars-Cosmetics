@@ -8,17 +8,18 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
-import xyz.iamthedefender.cosmetics.category.bedbreakeffects.BedDestroyHandler2023;
-import xyz.iamthedefender.cosmetics.category.deathcries.DeathCryHandler2023;
-import xyz.iamthedefender.cosmetics.category.finalkilleffects.FinalKillEffectHandler2023;
-import xyz.iamthedefender.cosmetics.category.glyphs.GlyphHandler2023;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.IslandTopperHandler2023;
-import xyz.iamthedefender.cosmetics.category.killmessage.KillMessageHandler2023;
-import xyz.iamthedefender.cosmetics.category.projectiletrails.ProjectileHandler;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler2023;
-import xyz.iamthedefender.cosmetics.category.sprays.SpraysHandler2023;
-import xyz.iamthedefender.cosmetics.category.victorydance.VictoryDanceHandler2023;
-import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinHandler2023;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.handler.BedDestroyHandler2023;
+import xyz.iamthedefender.cosmetics.category.deathcries.handler.DeathCryHandler2023;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillEffectHandler2023;
+import xyz.iamthedefender.cosmetics.category.glyphs.handler.GlyphHandler2023;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.handler.IslandTopperHandler2023;
+import xyz.iamthedefender.cosmetics.category.killmessage.handler.KillMessageHandler2023;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.handler.ProjectileHandler;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.handler.ShopKeeperHandler2023;
+import xyz.iamthedefender.cosmetics.category.sprays.SprayProtectionListener;
+import xyz.iamthedefender.cosmetics.category.sprays.handler.SpraysHandler2023;
+import xyz.iamthedefender.cosmetics.category.victorydance.handler.VictoryDanceHandler2023;
+import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinHandler2023;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
@@ -46,6 +47,7 @@ public class BW2023Handler implements IHandler {
         StartupUtils.registerListeners(new GlyphHandler2023());
         StartupUtils.registerListeners(new FinalKillEffectHandler2023());
         StartupUtils.registerListeners(new BedDestroyHandler2023());
+        StartupUtils.registerListeners(new SprayProtectionListener());
         StartupUtils.registerListeners(new SpraysHandler2023());
         StartupUtils.registerListeners(new DeathCryHandler2023());
     }
@@ -182,3 +184,4 @@ public class BW2023Handler implements IHandler {
         return cosmeticsSessionHandler;
     }
 }
+

@@ -32,7 +32,13 @@ public class BW2023ProxyHandler implements IHandler {
         return new ILanguage() {
             @Override
             public String getMessage(Player player, String path) {
-                return languageUtil.getMsg(player, path);
+                try {
+                    return languageUtil.getMsg(player, path);
+                }catch (NullPointerException exception) {
+                    CosmeticsPlugin.getInstance().getLogger()
+                            .warning("Unable to find message at " + path + " (BW2023-Proxy: " + exception.getMessage() + ")");
+                    return "Not found: " + path;
+                }
             }
 
             @Override

@@ -1,213 +1,250 @@
 package xyz.iamthedefender.cosmetics.category.shopkeeperskins.utils;
 
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.MemoryNPCDataStore;
-import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.trait.trait.PlayerFilter;
-import net.citizensnpcs.trait.HologramTrait;
-import net.citizensnpcs.trait.LookClose;
-import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
-import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.util.Utility;
-import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
+import xyz.iamthedefender.cosmetics.api.util.Run;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.AbstractShopKeeperSkin;
+import xyz.iamthedefender.cosmetics.support.npc.PacketNpc;
+import xyz.iamthedefender.cosmetics.util.CosmeticsUtil;
+import xyz.iamthedefender.cosmetics.util.EntityUtil;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
+import xyz.iamthedefender.cosmetics.support.npc.PacketNpcManager;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 public class ShopKeeperSkinsUtils {
-    
 
-    /**
-     * This creates an entity NPC.
-     * */
-    private static void createEntityNPC(final EntityType ent, final Location loc) {
-        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
-        NPC npc = registry.createNPC(ent, "");
-        npc.setBukkitEntityType(ent);
-        npc.getOrAddTrait(LookClose.class).lookClose(getLookClose());
-        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
-        npc.spawn(loc);
+    private static final Map<String, List<RuntimeDisplay>> ACTIVE_RUNTIME_DISPLAYS = new ConcurrentHashMap<>();
 
+    public static void spawnShopKeeperNPC(Player player, Location location) {
+        String selected = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(player, CosmeticType.SHOPKEEPER_SKINS);
+        spawnRuntimeShopKeeper(player, location, selected, null);
     }
 
-    /**
-     * This creates an entity NPC but with a timer.
-     * */
-    private static void createEntityNPC(final Player p,final EntityType ent, final Location loc, int ticks) {
-        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
-        NPC npc = registry.createNPC(ent, "");
-        npc.setBukkitEntityType(ent);
-        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
-        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
+    public static void spawnShopKeeperNPC(Player player, Location location, String skinId) {
+        spawnRuntimeShopKeeper(player, location, skinId, null);
+    }
 
-        npc.spawn(loc);
-        npc.data().setPersistent(NPC.Metadata.NAMEPLATE_VISIBLE, false);
-        npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.SILENT, true);
+    public static void  spawnRuntimeShopKeeper(Player skinOwner, Location location, String skinId, Consumer<Player> interactionHandler) {
+        if (skinOwner == null || location == null || location.getWorld() == null) {
+            return;
+        }
 
-        new BukkitRunnable() {
-            int tick = ticks;
-            @Override
-            public void run() {
-                if (tick == 0){
-                    npc.despawn();
-                    cancel();
+        ShopKeeperSkin skin = resolveDisplaySkin(skinOwner, skinId);
+        if (skin == null) {
+            return;
+        }
+
+        RuntimeDisplay display = createDisplay(
+                skinOwner,
+                location,
+                skin,
+                location.getWorld().getPlayers(),
+                interactionHandler,
+                true
+        );
+        if (display == null) {
+            return;
+        }
+
+        ACTIVE_RUNTIME_DISPLAYS.computeIfAbsent(location.getWorld().getName(), key -> new ArrayList<>()).add(display);
+    }
+
+    public static Runnable spawnShopKeeperNPCForPreview(Player player, Location location, String skinId) {
+        if (player == null || location == null || location.getWorld() == null) {
+            return () -> {
+            };
+        }
+
+        ShopKeeperSkin skin = resolveDisplaySkin(player, skinId);
+        if (skin == null) {
+            return () -> {
+            };
+        }
+
+        RuntimeDisplay display = createDisplay(player, location, skin, List.of(player), null, false);
+        if (display == null) {
+            return () -> {
+            };
+        }
+
+        return display::destroy;
+    }
+
+    public static void spawnRuntimeDisplaysForWorld(String worldName, Player player) {
+        if (worldName == null || player == null || !player.isOnline()) {
+            return;
+        }
+
+        ACTIVE_RUNTIME_DISPLAYS.getOrDefault(worldName, List.of()).forEach(display -> display.spawnFor(player));
+    }
+
+    public static void clearRuntimeDisplays(String worldName) {
+        if (worldName == null) {
+            return;
+        }
+
+        List<RuntimeDisplay> displays = ACTIVE_RUNTIME_DISPLAYS.remove(worldName);
+        if (displays == null) {
+            return;
+        }
+
+        displays.forEach(RuntimeDisplay::destroy);
+    }
+
+    private static RuntimeDisplay createDisplay(Player skinOwner, Location location, ShopKeeperSkin skin,
+                                                Collection<? extends Player> viewers, Consumer<Player> interactionHandler,
+                                                boolean runtime) {
+        EntityType entityType = skin.getField(FieldsType.ENTITY_TYPE, skinOwner);
+        if (entityType != null) {
+            if (StartupUtils.usePacketShopkeeperEntityNpcs()) {
+                PacketNpc packetNpc = CosmeticsPlugin.getInstance().getPacketNpcManager().createEntity(entityType, location);
+                if (interactionHandler != null) {
+                    packetNpc.interaction(interactionHandler);
                 }
-                tick--;
-            }
-        }.runTaskTimer(CosmeticsPlugin.getInstance(), 0, 20);
-    }
+                packetNpc.spawn(viewers);
 
-    /**
-     * This method should only be used
-     * When playing in game.
-     * */
-    private static void createShopKeeperNPC(Player p, Location loc, String value, String sign, Boolean mirror) {
-        if (mirror) {
-            List<String> values = Arrays.asList(Objects.requireNonNull(Utility.getFromName(p.getName())));
-            value = values.get(0);
-            sign = values.get(1);
-        }
-        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
-
-        // Shop NPC
-        NPC npc = registry.createNPC(EntityType.PLAYER, "");
-        npc.setName("&r");
-
-        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-
-        npc.getTrait(LookClose.class).lookClose(getLookClose());
-        npc.getOrAddTrait(HologramTrait.class).clear();
-        npc.spawn(loc);
-        npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
-        npc.getEntity().setMetadata("shop_entity_cosmetics", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
-        npc.data().setPersistent(NPC.Metadata.DEATH_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.AMBIENT_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.HURT_SOUND, "");
-        npc.data().setPersistent(NPC.Metadata.SILENT, true);
-    }
-
-    /**
-     * This method should only be used
-     * When sending a preview.
-     * */
-    private static void createShopKeeperNPC(Player p, Location loc, String value, String sign, Boolean mirror, int ticks) {
-        // mirror skin
-        if (mirror) {
-            List<String> values = Arrays.asList(Objects.requireNonNull(Utility.getFromName(p.getName())));
-            value = values.get(0);
-            sign = values.get(1);
-        }
-        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
-        // Shop NPC
-        NPC npc = registry.createNPC(EntityType.PLAYER, "");
-        npc.setName("&r");
-        npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), sign, value);
-        npc.getOrAddTrait(SkinTrait.class).setTexture(value, sign);
-        npc.getOrAddTrait(HologramTrait.class).clear();
-
-        npc.getOrAddTrait(PlayerFilter.class).setAllowlist();
-        npc.getOrAddTrait(PlayerFilter.class).addPlayer(p.getUniqueId());
-
-        npc.spawn(loc);
-        npc.getEntity().setMetadata("NPC2", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
-        npc.getEntity().setMetadata("shop_entity_cosmetics", new FixedMetadataValue(CosmeticsPlugin.getInstance(), ""));
-
-        new BukkitRunnable() {
-            int tick = ticks;
-            @Override
-            public void run() {
-                if (tick == 0){
-                    npc.despawn();
-                    cancel();
+                BukkitTask lookTask = null;
+                if (runtime && StartupUtils.shouldShopkeeperLookClose()) {
+                    lookTask = Run.every(() -> {
+                        location.getWorld().getPlayers().stream()
+                                .filter(AbstractShopKeeperSkin::canSeeRuntimeShopkeepers)
+                                .min(Comparator.comparingDouble(left -> left.getLocation().distanceSquared(location)))
+                                .ifPresent(nearest -> packetNpc.lookAt(nearest.getEyeLocation()));
+                    }, 10L);
                 }
-                tick--;
+
+                return new RuntimeDisplay(location, packetNpc, null, lookTask);
             }
-        }.runTaskTimer(CosmeticsPlugin.getInstance(), 0, 20);
+
+            Entity entity = location.getWorld().spawnEntity(location, entityType);
+            configureEntity(entity);
+
+            if (!runtime && viewers.size() == 1) {
+                Player viewer = viewers.iterator().next();
+                EntityUtil.entityForPlayerOnly(entity, viewer);
+            }
+
+            return new RuntimeDisplay(location, null, entity, null);
+        }
+
+        String skinValue = skin.getField(FieldsType.SKIN_VALUE, skinOwner);
+        String skinSignature = skin.getField(FieldsType.SKIN_SIGN, skinOwner);
+        boolean mirror = Boolean.TRUE.equals(skin.getField(FieldsType.MIRROR, skinOwner));
+
+        PacketNpc packetNpc;
+        if (mirror) {
+            packetNpc = CosmeticsPlugin.getInstance().getPacketNpcManager().createClone(skinOwner, skinOwner, location);
+        } else if (skinValue != null && skinSignature != null) {
+            packetNpc = CosmeticsPlugin.getInstance().getPacketNpcManager().createSkinned(skinOwner, skinValue, skinSignature, location);
+        } else {
+            return null;
+        }
+
+        if (interactionHandler != null) {
+            packetNpc.interaction(interactionHandler);
+        }
+        packetNpc.spawn(viewers);
+
+        BukkitTask lookTask = null;
+        if (runtime && StartupUtils.shouldShopkeeperLookClose()) {
+            lookTask = Run.every(() -> {
+                Player nearest = location.getWorld().getPlayers().stream()
+                        .filter(AbstractShopKeeperSkin::canSeeRuntimeShopkeepers)
+                        .min((left, right) -> Double.compare(
+                                left.getLocation().distanceSquared(location),
+                                right.getLocation().distanceSquared(location)
+                        ))
+                        .orElse(null);
+                if (nearest != null) {
+                    packetNpc.lookAt(nearest.getEyeLocation());
+                }
+            }, 10L);
+        }
+
+        return new RuntimeDisplay(location, packetNpc, null, lookTask);
     }
 
+    private static ShopKeeperSkin resolveDisplaySkin(Player player, String skinId) {
+        ShopKeeperSkin requested = CosmeticRegistry.getById(CosmeticType.SHOPKEEPER_SKINS, skinId, ShopKeeperSkin.class).orElse(null);
+        if (requested == null) {
+            return ShopKeeperSkin.getDefault(player);
+        }
 
-    /**
+        if (requested.getField(FieldsType.RARITY, player) != RarityType.RANDOM) {
+            return requested;
+        }
 
-     Spawns a NPC in the form of a shopkeeper at the provided location using the selected skin from the player's
-     cosmetic selection. If the selected skin has the option to be mirrored, it will use the player's current skin.
-     Also spawns another NPC at the provided location1.
-     @param p The player whose selected skin will be used for the NPC.
-     @param loc The location where the first NPC will be spawned.
-     */
-    public static void spawnShopKeeperNPC(Player p, Location loc) {
-        CosmeticsPlugin plugin = CosmeticsPlugin.getInstance();
-        String skin = plugin.getApi().getSelectedCosmetic(p, CosmeticsType.ShopKeeperSkins);
-        ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
-        String skinvalue = config.getString(key + "." + skin + ".skin-value");
-        String skinsign = config.getString(key + "." + skin + ".skin-sign");
-        String etype = config.getString(key + "." + skin + ".entity-type");
-        boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
+        List<ShopKeeperSkin> unlocked = CosmeticsUtil.getShopKeeperSkins(player).stream()
+                .filter(skin -> skin.getField(FieldsType.RARITY, player) != RarityType.RANDOM)
+                .filter(skin -> skin.getField(FieldsType.RARITY, player) != RarityType.NONE)
+                .collect(java.util.stream.Collectors.toList());
 
-        if (mirror){
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, true);
+        if (unlocked.isEmpty()) {
+            return ShopKeeperSkin.getDefault(player);
+        }
+
+        return unlocked.get(ThreadLocalRandom.current().nextInt(unlocked.size()));
+    }
+
+    private static void configureEntity(Entity entity) {
+        if (!(entity instanceof LivingEntity)) {
             return;
         }
-        if (etype != null) {
-            createEntityNPC(EntityType.valueOf(etype), loc);
-        }else if (skinvalue != null && skinsign != null) {
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, false);
-        }
+
+        LivingEntity livingEntity = (LivingEntity) entity;
+        livingEntity.setAI(false);
+        livingEntity.setSilent(true);
+        livingEntity.setRemoveWhenFarAway(false);
+        livingEntity.setCanPickupItems(false);
     }
 
-    public static void spawnShopKeeperNPC(Player p, Location loc, String skin) {
-        ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
-        String skinvalue = config.getString(key + "." + skin + ".skin-value");
-        String skinsign = config.getString(key + "." + skin + ".skin-sign");
-        String etype = config.getString(key + "." + skin + ".entity-type");
-        boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
+    private static class RuntimeDisplay {
+        private final Location location;
+        private final PacketNpc packetNpc;
+        private final Entity entity;
+        private final BukkitTask lookTask;
 
-        if (mirror){
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, true);
-            return;
+        private RuntimeDisplay(Location location, PacketNpc packetNpc, Entity entity, BukkitTask lookTask) {
+            this.location = location;
+            this.packetNpc = packetNpc;
+            this.entity = entity;
+            this.lookTask = lookTask;
         }
-        if (etype != null) {
-            createEntityNPC(EntityType.valueOf(etype), loc);
-        }else if (skinvalue != null && skinsign != null) {
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, false);
-        }
-    }
 
-    public static void spawnShopKeeperNPCForPreview(Player p, Location loc, String skin) {
-        CosmeticsPlugin plugin = CosmeticsPlugin.getInstance();
-        ConfigManager config = ConfigUtils.getShopKeeperSkins();
-        String key = CosmeticsType.ShopKeeperSkins.getSectionKey();
-        String skinvalue = config.getString(key + "." + skin + ".skin-value");
-        String skinsign = config.getString(key + "." + skin + ".skin-sign");
-        String etype = config.getString(key + "." + skin + ".entity-type");
-        boolean mirror = config.getBoolean(key + "." + skin + ".mirror");
-
-        if (mirror){
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, true, 5);
-            return;
+        private void spawnFor(Player player) {
+            if (packetNpc == null || player == null || !Objects.equals(player.getWorld(), location.getWorld())) {
+                return;
+            }
+            packetNpc.spawn(player);
         }
-        if (etype != null) {
-            createEntityNPC(p, EntityType.valueOf(etype), loc, 5);
-        }else if (skinvalue != null && skinsign != null) {
-            createShopKeeperNPC(p, loc, skinvalue, skinsign, false, 5);
-        }
-    }
 
-    private static boolean getLookClose() {
-        return ConfigUtils.getMainConfig().getBoolean("settings.shopkeeper_skins.look_close");
+        private void destroy() {
+            if (lookTask != null) {
+                lookTask.cancel();
+            }
+
+            if (packetNpc != null) {
+                CosmeticsPlugin.getInstance().getPacketNpcManager().destroy(packetNpc);
+            }
+
+            if (entity != null && !entity.isDead()) {
+                CosmeticsPlugin.getInstance().getEntityPlayerHashMap().remove(entity.getEntityId());
+                entity.remove();
+            }
+        }
     }
 }

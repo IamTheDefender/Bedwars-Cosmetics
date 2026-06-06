@@ -1,0 +1,6 @@
+rootProject.name = 'BedWars-Cosmetics'
+
+include 'cosmetic-api'
+include 'cosmetic-plugin'
+include 'versionsupport_1_8_R3'
+include 'versionsupport_1_20'

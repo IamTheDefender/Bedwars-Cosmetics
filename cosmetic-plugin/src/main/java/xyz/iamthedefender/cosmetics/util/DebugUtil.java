@@ -5,7 +5,7 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 public class DebugUtil {
 
     public static void addMessage(Object message){
-        if (CosmeticsPlugin.getInstance().getConfig().getBoolean("Debug")) {
+        if (StartupUtils.isDebugEnabled()) {
             CosmeticsPlugin.getInstance().getLogger().info("DEBUG: " + message);
         }
     }

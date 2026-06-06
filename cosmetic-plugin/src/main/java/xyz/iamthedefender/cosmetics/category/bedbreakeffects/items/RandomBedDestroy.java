@@ -5,7 +5,8 @@ import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.BedDestroy;
 import xyz.iamthedefender.cosmetics.api.handler.ITeamHandler;
@@ -54,8 +55,8 @@ public class RandomBedDestroy extends BedDestroy {
     @Override
     public void execute(Player player, Location bedLocation, ITeamHandler victimTeam) {
             List<BedDestroy> bedDestroys = new ArrayList<>();
-            for (BedDestroy bedDestroy : StartupUtils.bedDestroyList) {
-                if (player.hasPermission(CosmeticsType.BedBreakEffects.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
+            for (BedDestroy bedDestroy : CosmeticRegistry.getByCategory(CosmeticType.BED_DESTROY)) {
+                if (player.hasPermission(CosmeticType.BED_DESTROY.getPermissionFormat() + "." + bedDestroy.getIdentifier())){
                     bedDestroys.add(bedDestroy);
                 }
             }

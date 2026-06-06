@@ -14,14 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Getter
 public abstract class CosmeticPreview {
 
-    private final CosmeticsType type;
+    private final CosmeticType<?> type;
     private final Map<Player, List<ItemStack>> inventoryStorage;
     private final Map<Player, Location> originalLocations;
     private final Map<Player, Runnable> onEnd;
     private final Map<Player, org.bukkit.scheduler.BukkitTask> activeTasks;
     private final Set<Player> programmaticClose;
 
-    public CosmeticPreview(CosmeticsType type) {
+    public CosmeticPreview(CosmeticType<?> type) {
         this.type = type;
         inventoryStorage = new ConcurrentHashMap<>();
         originalLocations = new ConcurrentHashMap<>();

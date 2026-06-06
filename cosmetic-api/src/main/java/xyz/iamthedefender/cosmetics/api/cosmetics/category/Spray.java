@@ -6,10 +6,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.*;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
@@ -18,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
 
@@ -47,16 +43,12 @@ public abstract class Spray extends Cosmetics {
             get(type).setItemStack(configPath + "item", getItem());
         }
 
-        // save to language file
-        saveIfNotExistsLang("cosmetics." + configPath + "name", getDisplayName());
-        // Format the lore
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8Sprays", ""));
         finalLore.addAll(getLore());
         finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
-
-        saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        Utility.getApi().getSprayList().add(this);
+        ConfigUtils.saveCosmeticDisplayDefaults(type, configPath, getDisplayName(), finalLore);
+        CosmeticRegistry.register(CosmeticType.SPRAYS, this);
     }
 
     /**
@@ -70,11 +62,15 @@ public abstract class Spray extends Cosmetics {
 
         switch (fields){
             case NAME:
-                return Utility.getMSGLang(p, "cosmetics." + configPath + "name");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayName(
+                        configPath, Utility.getMSGLang(p, "cosmetics." + configPath + "name")
+                ).value(p);
             case PRICE:
                 return config.getInt(configPath + "price");
             case LORE:
-                return Utility.getListLang(p, "cosmetics." + configPath + "lore");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayLore(
+                        configPath, Utility.getListLang(p, "cosmetics." + configPath + "lore")
+                ).list(p);
             case RARITY:
                 return RarityType.valueOf(config.getString(configPath + "rarity"));
             case ITEM_STACK:
@@ -113,7 +109,7 @@ public abstract class Spray extends Cosmetics {
     }
 
     @Override
-    public CosmeticsType getCosmeticType() {
-        return CosmeticsType.Sprays;
+    public CosmeticType<?> getCosmeticType() {
+        return CosmeticType.SPRAYS;
     }
 }

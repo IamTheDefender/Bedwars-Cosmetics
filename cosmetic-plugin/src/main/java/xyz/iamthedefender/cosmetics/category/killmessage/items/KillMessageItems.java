@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.KillMessage;
 import xyz.iamthedefender.cosmetics.util.StringUtils;
@@ -15,13 +15,13 @@ import java.util.List;
 public class KillMessageItems {
 
     public static void registerConfigItems(){
-        ConfigurationSection section = CosmeticsType.KillMessages.getConfig().getYml().getConfigurationSection(CosmeticsType.KillMessages.getSectionKey());
+        ConfigurationSection section = CosmeticType.KILL_MESSAGES.getConfig().getYml().getConfigurationSection(CosmeticType.KILL_MESSAGES.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.KillMessages.getConfig();
+        ConfigManager config = CosmeticType.KILL_MESSAGES.getConfig();
 
         for(String id : section.getKeys(false)){
             try {
-                String path = CosmeticsType.KillMessages.getSectionKey() + "." + id + ".";
+                String path = CosmeticType.KILL_MESSAGES.getSectionKey() + "." + id + ".";
                 KillMessage killMessage = new KillMessage() {
                     // Do nothing because API currently doesn't support it
                     @Override

@@ -11,6 +11,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapView;
+import org.bukkit.metadata.FixedMetadataValue;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
@@ -18,12 +19,14 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.category.Spray;
 import xyz.iamthedefender.cosmetics.api.handler.IArenaHandler;
 import xyz.iamthedefender.cosmetics.api.particle.ParticleWrapper;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
+import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.category.sprays.preview.SprayPreview;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 import xyz.iamthedefender.cosmetics.util.FileUtil;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import java.util.logging.Logger;
 
 public class SpraysUtil
 {
+    public static final String SPRAY_FRAME_METADATA = "SPRAY_ITEM_FRAME";
     public static HashMap<String, Long> cooldown = new HashMap<>();
 
     /**
@@ -50,7 +54,7 @@ public class SpraysUtil
                 long cooldownEndTime = SpraysUtil.cooldown.get(player.getName());
                 if (cooldownEndTime > System.currentTimeMillis() && cooldownEndTime != 0) {
                     player.playSound(player.getLocation(), XSound.ENTITY_VILLAGER_NO.parseSound(), 1.0f, 1.0f);
-                    player.sendMessage(ColorUtil.translate(Utility.getMSGLang(player, "cosmetics.spray-msg")));
+                    player.sendMessage(Messages.SPRAY_COOLDOWN.value(player));
                     return;
                 }
                 SpraysUtil.cooldown.remove(player.getName());
@@ -80,7 +84,7 @@ public class SpraysUtil
             }
 
 
-            File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + CosmeticsPlugin.getInstance().getConfig().getString("Spray-Dir") + "/" + sprayFile);
+            File file = new File(CosmeticsPlugin.getInstance().getHandler().getAddonPath() + "/" + StartupUtils.getSprayDirectory() + "/" + sprayFile);
             if (!renderer.load(file)) {
                 player.sendMessage(ColorUtil.translate("&cLooks like there's an error rendering the Spray, contact the admin!"));
                 Logger.getLogger("Minecraft").log(Level.SEVERE, "Could not load the File for the " + selectedSpray.getIdentifier() + ". Check if the File in Sprays.yml is valid: " + file.getPath());
@@ -99,6 +103,7 @@ public class SpraysUtil
      * @param view The map view to render.
      */
     private static void addRendererAndShowSpray(Player player, ItemFrame itemFrame, CustomRenderer renderer, MapView view, boolean isPreview) {
+        markSprayFrame(itemFrame);
         ItemStack map = CosmeticsPlugin.getInstance().getApi().getVersionSupport().applyRenderer(renderer, view);
         itemFrame.setItem(map);
         itemFrame.setRotation(Rotation.NONE);
@@ -126,6 +131,14 @@ public class SpraysUtil
                 .stream()
                 .filter(entity -> entity.getType() == EntityType.ARMOR_STAND && entity.hasMetadata("HOLO_ITEM_FRAME"))
                 .forEach(Entity::remove);
+    }
+
+    public static void markSprayFrame(ItemFrame itemFrame) {
+        itemFrame.setMetadata(SPRAY_FRAME_METADATA, new FixedMetadataValue(CosmeticsPlugin.getInstance(), true));
+    }
+
+    public static boolean isSprayFrame(Entity entity) {
+        return entity instanceof ItemFrame && entity.hasMetadata(SPRAY_FRAME_METADATA);
     }
 
 }

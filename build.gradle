@@ -1,0 +1,56 @@
+plugins {
+    id 'com.gradleup.shadow' version '8.3.5' apply false
+}
+
+group = 'xyz.iamthedefender'
+version = '2.0.0'
+
+ext {
+    lombokVersion = '1.18.38'
+}
+
+allprojects {
+    group = rootProject.group
+    version = rootProject.version
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://repo.codemc.io/repository/maven-releases/' }
+        maven { url = 'https://repo.codemc.io/repository/maven-snapshots/' }
+        maven { url = 'https://repo.codemc.io/repository/nms/' }
+        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://maven.citizensnpcs.co/repo' }
+        maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        maven { url = 'https://maven.enginehub.org/repo/' }
+        maven { url = 'https://repo.alessiodp.com/releases/' }
+        maven { url = 'https://repo.aikar.co/content/groups/aikar/' }
+        maven { url = 'https://repo.screamingsandals.org/public/' }
+    }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+
+    java {
+        withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.compilerArgs += ['-parameters']
+    }
+
+    dependencies {
+        compileOnly "org.projectlombok:lombok:${rootProject.lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok:${rootProject.lombokVersion}"
+        compileOnly 'org.jetbrains:annotations:24.1.0'
+        compileOnly 'com.github.cryptomorin:XSeries:11.3.0'
+        compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
+        compileOnly 'me.clip:placeholderapi:2.11.6'
+        compileOnly 'com.zaxxer:HikariCP:5.1.0'
+        compileOnly 'org.slf4j:slf4j-api:2.0.7'
+        compileOnly 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
+    }
+}
+

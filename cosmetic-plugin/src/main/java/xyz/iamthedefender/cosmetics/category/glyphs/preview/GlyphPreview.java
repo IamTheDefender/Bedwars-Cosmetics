@@ -1,8 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.glyphs.preview;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
@@ -14,12 +11,13 @@ import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.category.glyphs.util.GlyphUtil;
 import xyz.iamthedefender.cosmetics.category.glyphs.util.ImageParticles;
+import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,7 +31,7 @@ import java.util.logging.Logger;
 public class GlyphPreview extends CosmeticPreview {
 
     public GlyphPreview() {
-        super(CosmeticsType.Glyphs);
+        super(CosmeticType.GLYPHS);
     }
 
     @Override
@@ -50,17 +48,11 @@ public class GlyphPreview extends CosmeticPreview {
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 80, 2));
 
         sendGlyphParticles(player, previewLocation, selected.getIdentifier());
-
-        PacketContainer cameraPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        cameraPacket.getIntegers().write(0, as.getEntityId());
-
-        PacketContainer resetPacket = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.CAMERA);
-        resetPacket.getIntegers().write(0, player.getEntityId());
         
         
         Run.delayed(() -> {
             if (player.isOnline() && !as.isDead()) {
-                CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, cameraPacket);
+                PacketEventsBridge.sendCamera(player, as.getEntityId());
             }
         }, 2L);
 
@@ -68,7 +60,7 @@ public class GlyphPreview extends CosmeticPreview {
         setOnEnd(player, () -> {
             if (!as.isDead()) as.remove();
 
-            CosmeticsPlugin.getInstance().getProtocolManager().sendServerPacket(player, resetPacket);
+            PacketEventsBridge.sendCamera(player, player.getEntityId());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
         });
     }
@@ -76,7 +68,7 @@ public class GlyphPreview extends CosmeticPreview {
     private void sendGlyphParticles(Player player, Location location, String selected) {
         ConfigManager config = ConfigUtils.getGlyphs();
 
-        String glyphFile = config.getString(CosmeticsType.Glyphs.getSectionKey() + "." + selected + ".file");
+        String glyphFile = config.getString(CosmeticType.GLYPHS.getSectionKey() + "." + selected + ".file");
 
         if (glyphFile == null) {
             player.sendMessage(ColorUtil.translate("&cLooks like the glyphFile is null? Contact a developer!"));

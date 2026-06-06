@@ -4,7 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ProjectileTrail;
 import xyz.iamthedefender.cosmetics.util.StringUtils;
@@ -14,11 +14,11 @@ import java.util.List;
 public class ProjectileTrailItems {
 
     public void registerConfigItems(){
-        ConfigurationSection section = CosmeticsType.ProjectileTrails.getConfig().getYml().getConfigurationSection(CosmeticsType.ProjectileTrails.getSectionKey());
+        ConfigurationSection section = CosmeticType.PROJECTILE_TRAILS.getConfig().getYml().getConfigurationSection(CosmeticType.PROJECTILE_TRAILS.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.ProjectileTrails.getConfig();
+        ConfigManager config = CosmeticType.PROJECTILE_TRAILS.getConfig();
         for(String id : section.getKeys(false)){
-            String path = CosmeticsType.ProjectileTrails.getSectionKey() + "." + id + ".";
+            String path = CosmeticType.PROJECTILE_TRAILS.getSectionKey() + "." + id + ".";
             ProjectileTrail trails = new ProjectileTrail() {
                 @Override
                 public ItemStack getItem() {

@@ -72,7 +72,7 @@ public abstract class Cosmetics {
 
     /**
      * Get the type of this cosmetic.
-     * @return the {@link CosmeticsType} of this cosmetic.
+     * @return the {@link CosmeticType} of this cosmetic.
      */
-    public abstract CosmeticsType getCosmeticType();
+    public abstract CosmeticType<?> getCosmeticType();
 }

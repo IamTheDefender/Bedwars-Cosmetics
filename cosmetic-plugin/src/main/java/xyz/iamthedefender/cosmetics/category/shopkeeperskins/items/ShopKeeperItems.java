@@ -5,7 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.ShopKeeperSkin;
@@ -20,11 +21,11 @@ import java.util.Random;
 public class ShopKeeperItems {
 
     public void registerItems() {
-        ConfigurationSection section = CosmeticsType.ShopKeeperSkins.getConfig().getYml().getConfigurationSection(CosmeticsType.ShopKeeperSkins.getSectionKey());
+        ConfigurationSection section = CosmeticType.SHOPKEEPER_SKINS.getConfig().getYml().getConfigurationSection(CosmeticType.SHOPKEEPER_SKINS.getSectionKey());
         if (section == null) return;
-        ConfigManager config = CosmeticsType.ShopKeeperSkins.getConfig();
+        ConfigManager config = CosmeticType.SHOPKEEPER_SKINS.getConfig();
         for (String id : section.getKeys(false)) {
-            String path = CosmeticsType.ShopKeeperSkins.getSectionKey() + "." + id + ".";
+            String path = CosmeticType.SHOPKEEPER_SKINS.getSectionKey() + "." + id + ".";
             ShopKeeperSkin shopKeeperSkin = new ShopKeeperSkin() {
                 @Override
                 public ItemStack getItem() {
@@ -68,8 +69,8 @@ public class ShopKeeperItems {
                 public void execute(Player player, List<Location> spawnLocations) {
                     if (getField(FieldsType.RARITY, player) == RarityType.RANDOM) {
                         List<ShopKeeperSkin> shopKeeperSkins = new ArrayList<>();
-                        for (ShopKeeperSkin shopKeeperSkin : StartupUtils.shopKeeperSkinList) {
-                            if (player.hasPermission(CosmeticsType.ShopKeeperSkins.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
+                        for (ShopKeeperSkin shopKeeperSkin : CosmeticRegistry.getByCategory(CosmeticType.SHOPKEEPER_SKINS)) {
+                            if (player.hasPermission(CosmeticType.SHOPKEEPER_SKINS.getPermissionFormat() + "." + shopKeeperSkin.getIdentifier())) {
                                 shopKeeperSkins.add(shopKeeperSkin);
                             }
                         }

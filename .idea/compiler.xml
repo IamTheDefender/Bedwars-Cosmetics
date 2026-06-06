@@ -2,19 +2,38 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
-        <module name="cosmetic-api" />
-        <module name="cosmetic-plugin" />
-        <module name="versionsupport_1_8_R3" />
-        <module name="versionsupport_1_20" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="BedWars-Cosmetics.versionsupport_1_8_R3.main" />
+        <module name="BedWars-Cosmetics.cosmetic-api.main" />
+        <module name="BedWars-Cosmetics.cosmetic-plugin.main" />
+        <module name="BedWars-Cosmetics.versionsupport_1_20.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="11">
+      <module name="cosmetic-api" target="11" />
+      <module name="cosmetic-plugin" target="11" />
+      <module name="versionsupport_1_20" target="17" />
+      <module name="versionsupport_1_8_R3" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BedWars-Cosmetics.cosmetic-api" options="-parameters" />
+      <module name="BedWars-Cosmetics.cosmetic-api.main" options="-parameters" />
+      <module name="BedWars-Cosmetics.cosmetic-api.test" options="-parameters" />
+      <module name="BedWars-Cosmetics.cosmetic-plugin" options="-parameters" />
+      <module name="BedWars-Cosmetics.cosmetic-plugin.main" options="-parameters" />
+      <module name="BedWars-Cosmetics.cosmetic-plugin.test" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_20" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_20.main" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_20.test" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_8_R3" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_8_R3.main" options="-parameters" />
+      <module name="BedWars-Cosmetics.versionsupport_1_8_R3.test" options="-parameters" />
       <module name="cosmetic-plugin" options="-parameters" />
     </option>
   </component>

@@ -1,6 +1,5 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.items;
 
-import com.comphenix.protocol.scheduler.Task;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.VictoryDance;
 import xyz.iamthedefender.cosmetics.api.util.Run;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandler1058;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.AbstractShopKeeperSkin;
 import xyz.iamthedefender.cosmetics.category.victorydance.util.UsefulUtilsVD;
 
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class AnvilRainDance extends VictoryDance {
     @Override
     public void execute(Player winner) {
         addTask(winner, Run.every((r) -> {
-            if(!ShopKeeperHandler1058.arenas.containsKey(winner.getWorld().getName())) {
+            if(!AbstractShopKeeperSkin.arenas.containsKey(winner.getWorld().getName())) {
                 r.cancel();
                 return;
             }
@@ -74,3 +73,4 @@ public class AnvilRainDance extends VictoryDance {
     }
 
 }
+

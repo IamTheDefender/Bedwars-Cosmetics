@@ -1,56 +1,97 @@
-Debug: false
-BackItemInCosmeticsMenu: true
-Final-Kill-Suffix: "&b&lFINAL KILL!"
-Spray-Dir: "Sprays"
-settings:
-  shopkeeper_skins:
-    look_close: false
+debug:
+  enabled: false
 
-mysql:
-  enable: false
-  host: "localhost"
-  port: 3306
-  database: "name"
-  username: "root"
-  password: "none"
-  useSSL: false
-  maxpoolsize: 50
-  maxlifetime: 1024
-cosmetic-preview:
-  cosmetic-location:
-    world:
-    x:
-    y:
-    z:
-    yaw:
-    pitch:
-  player-location:
-    world:
-    x:
-    y:
-    z:
-    yaw:
-    pitch:
-bed-break-effects:
-  enabled: true
-death-cries:
-  enabled: true
-final-kill-effects:
-  enabled: true
-glyphs:
-  enabled: true
-island-toppers:
-  enabled: true
-  order: true
-kill-messages:
-  enabled: true
-projectile-trails:
-  enabled: true
-shopkeeper-skins:
-  enabled: true
-sprays:
-  enabled: true
-victory-dances:
-  enabled: true
-wood-skins:
-  enabled: true
+storage:
+  sprays:
+    directory: "Sprays"
+
+database:
+  type: "SQLITE"
+  mysql:
+    enabled: false
+    host: "localhost"
+    port: 3306
+    database: "name"
+    username: "root"
+    password: "none"
+    use-ssl: false
+    max-pool-size: 50
+    max-lifetime: 1024
+  mariadb:
+    host: "localhost"
+    port: 3306
+    database: "name"
+    username: "root"
+    password: "none"
+    use-ssl: false
+    max-pool-size: 50
+    max-lifetime: 1024
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "name"
+    username: "postgres"
+    password: "none"
+    use-ssl: false
+    max-pool-size: 50
+    max-lifetime: 1024
+  mongodb:
+    uri: "mongodb://localhost:27017"
+    database: "bwcosmetics"
+  redis:
+    host: "localhost"
+    port: 6379
+    password: ""
+    database: 0
+    max-pool-size: 50
+
+preview:
+  locations:
+    cosmetic:
+      world:
+      x:
+      y:
+      z:
+      yaw:
+      pitch:
+    player:
+      world:
+      x:
+      y:
+      z:
+      yaw:
+      pitch:
+
+menus:
+  category:
+    navigation:
+      back:
+        enabled: true
+
+features:
+  bed-break-effects:
+    enabled: true
+  death-cries:
+    enabled: true
+  final-kill-effects:
+    enabled: true
+  glyphs:
+    enabled: true
+  island-toppers:
+    enabled: true
+    use-team-order: true
+  kill-messages:
+    enabled: true
+  projectile-trails:
+    enabled: true
+  packet-npcs:
+    shopkeeper-entities: true
+  shopkeeper-skins:
+    enabled: true
+    look-close: false
+  sprays:
+    enabled: true
+  victory-dances:
+    enabled: true
+  wood-skins:
+    enabled: true

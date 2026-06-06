@@ -2,6 +2,7 @@ package xyz.iamthedefender.cosmetics.category.woodskin.items;
 
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.inventory.ItemStack;
+import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.WoodSkin;
 
@@ -45,6 +46,7 @@ public class OakPlank extends WoodSkin {
 
     @Override
     public ItemStack woodSkin() {
+        CosmeticsPlugin.getInstance().getLogger().info("XMaterial.OAK_PLANKS.parseItem(): " + XMaterial.OAK_PLANKS.parseItem());
         return XMaterial.OAK_PLANKS.parseItem();
     }
 }

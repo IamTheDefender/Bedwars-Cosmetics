@@ -10,20 +10,13 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
-import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.FieldsType;
-import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.*;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigType;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-import static xyz.iamthedefender.cosmetics.api.util.Utility.saveIfNotExistsLang;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.get;
 import static xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils.saveIfNotFound;
 
@@ -57,16 +50,12 @@ public abstract class VictoryDance extends Cosmetics {
             get(type).setItemStack(configPath + "item", getItem());
         }
 
-        // save to language file
-        saveIfNotExistsLang("cosmetics." + configPath + "name", getDisplayName());
-        // Format the lore
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8Victory Dance", ""));
         finalLore.addAll(getLore());
         finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
-
-        saveIfNotExistsLang("cosmetics." + configPath + "lore", finalLore);
-        Utility.getApi().getVictoryDanceList().add(this);
+        ConfigUtils.saveCosmeticDisplayDefaults(type, configPath, getDisplayName(), finalLore);
+        CosmeticRegistry.register(CosmeticType.VICTORY_DANCES, this);
 
         if(this instanceof Listener) {
             Utility.getPlugin().getServer().getPluginManager().registerEvents((Listener) this, Utility.getPlugin());
@@ -84,11 +73,15 @@ public abstract class VictoryDance extends Cosmetics {
 
         switch (fields){
             case NAME:
-                return Utility.getMSGLang(p, "cosmetics." + configPath + "name");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayName(
+                        configPath, Utility.getMSGLang(p, "cosmetics." + configPath + "name")
+                ).value(p);
             case PRICE:
                 return config.getInt(configPath + "price");
             case LORE:
-                return Utility.getListLang(p, "cosmetics." + configPath + "lore");
+                return xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayLore(
+                        configPath, Utility.getListLang(p, "cosmetics." + configPath + "lore")
+                ).list(p);
             case RARITY:
                 String rarity = config.getString(configPath + "rarity");
                 if (rarity == null) return getRarity();
@@ -112,11 +105,15 @@ public abstract class VictoryDance extends Cosmetics {
 
         if (entities.containsKey(winner)) {
             entities.get(winner).forEach((e) -> {
-				var passengers = e.getPassengers();
-				if (passengers != null)
-					passengers.forEach(Entity::remove);
+				try {
+                    List<Entity> passengers = e.getPassengers();
+                    if (passengers != null)
+                        passengers.forEach(Entity::remove);
+                }catch (NoSuchMethodError methodError) {
+                    Optional.of(e.getPassenger()).ifPresent(Entity::remove);
+                }
 
-				var vehicle = e.getVehicle();
+				Entity vehicle = e.getVehicle();
 				if (vehicle != null)
 					vehicle.remove();
 
@@ -148,15 +145,14 @@ public abstract class VictoryDance extends Cosmetics {
         }catch (Exception exception){
             exception.printStackTrace();
             Bukkit.getLogger().severe("There was an error with cosmetics addon config file!");
-            Bukkit.getLogger().severe("Server will restart to fix this bug!");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
+            Bukkit.getLogger().severe("Falling back to the first registered victory dance.");
         }
-        // This will never return null!
-        return null;
+
+        return CosmeticRegistry.getByCategory(CosmeticType.VICTORY_DANCES).stream().findFirst().orElseThrow();
     }
 
     @Override
-    public CosmeticsType getCosmeticType() {
-        return CosmeticsType.VictoryDances;
+    public CosmeticType<?> getCosmeticType() {
+        return CosmeticType.VICTORY_DANCES;
     }
 }

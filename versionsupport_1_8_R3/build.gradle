@@ -1,0 +1,15 @@
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 11
+}
+
+dependencies {
+    compileOnly project(':cosmetic-api')
+    compileOnly 'org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT'
+    compileOnly('com.sk89q.worldedit:worldedit-bukkit:6.1.4-SNAPSHOT') {
+        exclude group: 'org.bukkit', module: 'bukkit'
+    }
+    compileOnly 'com.github.retrooper:packetevents-spigot:2.12.1'
+}

@@ -67,18 +67,16 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
     @Override
     public boolean isValidParticle(String name) {
-
         try {
             Particle.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
             return false;
         }
-
         return true;
     }
 
     private PlayerProfile getProfile(String url) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID()); // Get a new player profile
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
         PlayerTextures textures = profile.getTextures();
         URL urlObject;
         try {
@@ -93,8 +91,6 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
     private URL getUrlFromBase64(String base64) throws MalformedURLException {
         String decoded = new String(Base64.getDecoder().decode(base64));
-        // We simply remove the "beginning" and "ending" part of the JSON, so we're left with only the URL. You could use a proper
-        // JSON parser for this, but that's not worth it. The String will always start exactly with this stuff anyway
         return new URL(decoded.substring("{\"textures\":{\"SKIN\":{\"url\":\"".length(), decoded.length() - "\"}}}".length()));
     }
 
@@ -116,37 +112,54 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle) {
+        Particle bukkitParticle = resolveBukkitParticle(particle);
+        if (bukkitParticle == null) return;
         if (player != null) {
-            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, 1);
+            player.spawnParticle(bukkitParticle, location, 1);
             return;
         }
-        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, 1);
+        location.getWorld().spawnParticle(bukkitParticle, location, 1);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count) {
+        Particle bukkitParticle = resolveBukkitParticle(particle);
+        if (bukkitParticle == null) return;
         if (player != null) {
-            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count);
+            player.spawnParticle(bukkitParticle, location, count);
             return;
         }
-        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count);
+        location.getWorld().spawnParticle(bukkitParticle, location, count);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count, float speed) {
+        Particle bukkitParticle = resolveBukkitParticle(particle);
+        if (bukkitParticle == null) return;
         if (player != null) {
-            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, 0, 0, 0, speed);
+            player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
             return;
         }
-        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, 0, 0, 0, speed);
+        location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
     }
 
     @Override
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count, float speed, Vector offset) {
+        Particle bukkitParticle = resolveBukkitParticle(particle);
+        if (bukkitParticle == null) return;
         if (player != null) {
-            player.spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
+            player.spawnParticle(bukkitParticle, location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
             return;
         }
-        location.getWorld().spawnParticle(particle.getNewWrapperParticle().getParticle(), location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
+        location.getWorld().spawnParticle(bukkitParticle, location, count, offset.getX(), offset.getY(), offset.getZ(), speed);
+    }
+
+    private Particle resolveBukkitParticle(ParticleWrapper particleWrapper) {
+        String name = particleWrapper.getParticleType().getName().getKey().toUpperCase();
+        try {
+            return Particle.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

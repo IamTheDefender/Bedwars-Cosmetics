@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticPreview;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.menu.SystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
 import xyz.iamthedefender.cosmetics.api.util.Run;
@@ -20,7 +20,7 @@ public class KillMessagePreview extends CosmeticPreview {
 
 
     public KillMessagePreview() {
-        super(CosmeticsType.KillMessages);
+        super(CosmeticType.KILL_MESSAGES);
     }
 
     @Override

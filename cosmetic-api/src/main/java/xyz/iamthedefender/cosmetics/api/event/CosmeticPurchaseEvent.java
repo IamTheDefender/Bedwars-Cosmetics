@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticsType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 
 public class CosmeticPurchaseEvent extends Event implements Cancellable {
     private boolean isCancelled;
@@ -24,12 +24,12 @@ public class CosmeticPurchaseEvent extends Event implements Cancellable {
      * -- GETTER --
      *  Get the category of the cosmetic.
      *
-     * @return CosmeticsType
+     * @return CosmeticType
      */
     @Getter
-    private final CosmeticsType category;
+    private final CosmeticType<?> category;
 
-    public CosmeticPurchaseEvent(Player p, CosmeticsType category){
+    public CosmeticPurchaseEvent(Player p, CosmeticType<?> category){
         this.isCancelled = false;
         this.player = p;
         this.category = category;

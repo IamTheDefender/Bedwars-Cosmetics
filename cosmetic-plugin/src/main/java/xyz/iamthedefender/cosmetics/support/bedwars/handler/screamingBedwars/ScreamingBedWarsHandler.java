@@ -12,16 +12,17 @@ import org.screamingsandals.bedwars.game.Game;
 import org.screamingsandals.bedwars.game.GameStore;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
-import xyz.iamthedefender.cosmetics.category.bedbreakeffects.BedDestroySBW;
-import xyz.iamthedefender.cosmetics.category.deathcries.DeathCrySBW;
-import xyz.iamthedefender.cosmetics.category.finalkilleffects.FinalKillHandlerSBW;
-import xyz.iamthedefender.cosmetics.category.islandtoppers.IslandTopperHandlerSBW;
-import xyz.iamthedefender.cosmetics.category.killmessage.KillMessagesSBW;
-import xyz.iamthedefender.cosmetics.category.projectiletrails.ProjectileHandler;
-import xyz.iamthedefender.cosmetics.category.shopkeeperskins.ShopKeeperHandlerSBW;
-import xyz.iamthedefender.cosmetics.category.sprays.SprayHandlerSBW;
-import xyz.iamthedefender.cosmetics.category.victorydance.VictoryDanceSBW;
-import xyz.iamthedefender.cosmetics.category.woodskin.WoodSkinSBW;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.handler.BedDestroySBW;
+import xyz.iamthedefender.cosmetics.category.deathcries.handler.DeathCrySBW;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.handler.IslandTopperHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.killmessage.handler.KillMessagesSBW;
+import xyz.iamthedefender.cosmetics.category.projectiletrails.handler.ProjectileHandler;
+import xyz.iamthedefender.cosmetics.category.shopkeeperskins.handler.ShopKeeperHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.sprays.handler.SprayHandlerSBW;
+import xyz.iamthedefender.cosmetics.category.sprays.SprayProtectionListener;
+import xyz.iamthedefender.cosmetics.category.victorydance.handler.VictoryDanceSBW;
+import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinSBW;
 import xyz.iamthedefender.cosmetics.support.language.LanguageImpl;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
@@ -44,6 +45,7 @@ public class ScreamingBedWarsHandler implements IHandler {
         StartupUtils.registerListeners(
                 new WoodSkinSBW(),
                 new VictoryDanceSBW(),
+                new SprayProtectionListener(),
                 new SprayHandlerSBW(),
                 new ShopKeeperHandlerSBW(),
                 new KillMessagesSBW(),
@@ -203,3 +205,4 @@ public class ScreamingBedWarsHandler implements IHandler {
         return HandlerType.MULTIARENA;
     }
 }
+
