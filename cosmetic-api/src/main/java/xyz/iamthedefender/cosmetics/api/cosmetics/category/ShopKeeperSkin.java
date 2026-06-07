@@ -1,5 +1,6 @@
 package xyz.iamthedefender.cosmetics.api.cosmetics.category;
 
+import com.cryptomorin.xseries.XEntityType;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,28 +31,28 @@ public abstract class ShopKeeperSkin extends Cosmetics {
      * This method should be called when the plugin is enabled.
      */
     @Override
-    public void register(){
+    public void register() {
         // save to config
         String configPath = category + "." + getIdentifier() + ".";
         saveIfNotFound(type, configPath + "price", getPrice());
-         saveIfNotFound(type, configPath + "rarity", getRarity().toString());
+        saveIfNotFound(type, configPath + "rarity", getRarity().toString());
         if (!XMaterial.matchXMaterial(getItem()).isSupported()) {
             Bukkit.getLogger().severe("The item is not supported! (Information: Category name is " + category + " and item name is " + getIdentifier());
             return;
         }
-        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())){
+        if (XMaterial.matchXMaterial(getItem()).isSimilar(XMaterial.PLAYER_HEAD.parseItem())) {
             get(type).setItemStack(configPath + "item", getItem(), base64());
-        }else{
+        } else {
             get(type).setItemStack(configPath + "item", getItem());
         }
 
         List<String> finalLore = new ArrayList<>();
         finalLore.addAll(Arrays.asList("&8ShopKeeper Skins", ""));
         finalLore.addAll(getLore());
-        if (getRarity() != RarityType.NONE){
-            finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "" ,"&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
-        }else{
-            finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}","&7Cost: &6{cost}", "", "{status}"));
+        if (getRarity() != RarityType.NONE) {
+            finalLore.addAll(Arrays.asList("", "&eRight-Click to preview!", "", "&7Rarity: {rarity}", "&7Cost: &6{cost}", "", "{status}"));
+        } else {
+            finalLore.addAll(Arrays.asList("", "&7Rarity: {rarity}", "&7Cost: &6{cost}", "", "{status}"));
         }
 
         ConfigUtils.saveCosmeticDisplayDefaults(type, configPath, getDisplayName(), finalLore);
@@ -60,8 +61,9 @@ public abstract class ShopKeeperSkin extends Cosmetics {
 
     /**
      * Get the topper's field
+     *
      * @param fields the field to get
-     * @param p the player to get the field
+     * @param p      the player to get the field
      * @return the field
      */
     public <T> T getField(FieldsType field, Player p) {
@@ -88,6 +90,14 @@ public abstract class ShopKeeperSkin extends Cosmetics {
             case ITEM_STACK:
                 value = config.getItemStack(configPath + "item");
                 break;
+            case ENTITY_TYPE:
+                String raw = config.getString(configPath + field.path());
+
+                if (raw != null) {
+                    XEntityType xEntityType = XEntityType.valueOf(raw.toUpperCase());
+                    value = xEntityType.get();
+                }
+
             default:
                 value = config.get(configPath + field.path());
 
@@ -110,8 +120,8 @@ public abstract class ShopKeeperSkin extends Cosmetics {
     /**
      * Display the shopkeeper skin to the player
      *
-     * @param player the player to display the shopkeeper skin
-     * @param shopLocation the location of the shopkeeper
+     * @param player          the player to display the shopkeeper skin
+     * @param shopLocation    the location of the shopkeeper
      * @param upgradeLocation the location of the upgrade shopkeeper
      */
     public void execute(Player player, Location shopLocation, Location upgradeLocation) {
@@ -122,12 +132,13 @@ public abstract class ShopKeeperSkin extends Cosmetics {
 
     /**
      * Get the default shopkeeper skin
+     *
      * @param player the player to get the default shopkeeper skin
      * @return the default shopkeeper skin
      */
-    public static @NotNull ShopKeeperSkin getDefault(Player player){
-        for(ShopKeeperSkin shopKeeperSkin : Utility.getApi().getShopKeeperSkinList()){
-            if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE){
+    public static @NotNull ShopKeeperSkin getDefault(Player player) {
+        for (ShopKeeperSkin shopKeeperSkin : Utility.getApi().getShopKeeperSkinList()) {
+            if (shopKeeperSkin.getField(FieldsType.RARITY, player) == RarityType.NONE) {
                 return shopKeeperSkin;
             }
         }
