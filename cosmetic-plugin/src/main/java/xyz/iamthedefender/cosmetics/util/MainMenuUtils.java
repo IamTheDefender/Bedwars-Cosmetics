@@ -13,10 +13,7 @@ import xyz.iamthedefender.cosmetics.api.CosmeticsAPI;
 import xyz.iamthedefender.cosmetics.api.configuration.ConfigManager;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
-import xyz.iamthedefender.cosmetics.api.util.ColorUtil;
-import xyz.iamthedefender.cosmetics.api.util.Constants;
-import xyz.iamthedefender.cosmetics.api.util.Message;
-import xyz.iamthedefender.cosmetics.api.util.Messages;
+import xyz.iamthedefender.cosmetics.api.util.*;
 import xyz.iamthedefender.cosmetics.api.util.config.ConfigUtils;
 import xyz.iamthedefender.cosmetics.data.PlayerOwnedData;
 import xyz.iamthedefender.cosmetics.menu.CategoryMenu;
@@ -192,8 +189,8 @@ public class MainMenuUtils {
             SignGUI signGUI = SignGUI.builder()
                     .setLines("", "^^^^^^^^^", "Type search query", "above")
                     .setHandler((somePlayer, result) -> {
-                        new SearchResultsMenu(result.getLine(0), 1)
-                                .open(player);
+                        Run.sync(() -> new SearchResultsMenu(result.getLine(0), 1)
+                                .open(player));
 
                         return Collections.emptyList();
                     })

@@ -146,6 +146,7 @@ public class BedWarsCosmeticsCommand extends BaseCommand {
     }
 
     @Subcommand("testvd")
+    @Private
     public void testVd(Player player, String id) {
         VictoryDance victoryDance = CosmeticRegistry.getById(CosmeticType.VICTORY_DANCES, id);
 
