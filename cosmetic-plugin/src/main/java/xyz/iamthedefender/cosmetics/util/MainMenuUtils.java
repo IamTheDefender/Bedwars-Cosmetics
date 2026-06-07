@@ -2,6 +2,7 @@
 
 package xyz.iamthedefender.cosmetics.util;
 
+import com.cryptomorin.xseries.XEntityType;
 import de.rapha149.signgui.SignGUI;
 import de.rapha149.signgui.exception.SignGUIVersionException;
 import me.clip.placeholderapi.PlaceholderAPI;

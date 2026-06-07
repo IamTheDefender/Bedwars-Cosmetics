@@ -369,6 +369,13 @@ public class StartupUtils {
         new YeeHawDance().register();
         new GuardiansDance().register();
         new MeteorShowerDance().register();
+//        new ChickenRiderDance().register();
+//        new GhastRiderDance().register();
+//        new SuperSheepDance().register();
+//        new BlizzardDance().register();
+//        new SwarmDance().register();
+//        new ExplodingBunniesDance().register();
+//        new PuppyPartyDance().register();
 
         // Wood Skins
         new OakPlank().register();
