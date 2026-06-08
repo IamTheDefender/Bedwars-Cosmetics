@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.iamthedefender.cosmetics.api.event.AbstractListener;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.category.projectiletrails.util.ProjectileEffectsUtil;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
@@ -17,15 +17,14 @@ public class AbstractProjectileTrail extends AbstractListener {
 
         Player shooter = (Player) event.getEntity().getShooter();
         event.getEntity().setMetadata("shooter", new FixedMetadataValue(plugin, shooter.getName()));
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (event.getEntity() == null || event.getEntity().isOnGround() || event.getEntity().isDead()) {
-                    cancel();
-                    return;
-                }
-                ProjectileEffectsUtil.sendEffect(event.getEntity(), shooter);
+
+        Run.every((r) -> {
+            if (event.getEntity() == null || event.getEntity().isOnGround() || event.getEntity().isDead()) {
+                r.cancel();
+                return;
             }
-        }.runTaskTimer(plugin, 0, 1);
+
+            ProjectileEffectsUtil.sendEffect(event.getEntity(), shooter);
+        }, 1L);
     }
 }

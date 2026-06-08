@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 import xyz.iamthedefender.cosmetics.api.versionsupport.IVersionSupport;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Getter
@@ -31,10 +33,18 @@ public class ParticleWrapper {
         return Utility.getApi().getVersionSupport();
     }
 
+    private static final Map<String, String> remapper = new ConcurrentHashMap<>(Map.of(
+            "DRIP_WATER", "DRIPPING_WATER"
+    ));
+
     public static @NotNull Optional<ParticleWrapper> getParticle(@NotNull String name) {
         Objects.requireNonNull(name, "The particle name cannot be null!");
 
         name = name.toLowerCase();
+
+        if (remapper.containsKey(name.toUpperCase())) {
+            name = remapper.get(name.toUpperCase()).toLowerCase();
+        }
 
         try {
             ParticleType<?> type = ParticleTypes.getByName(name);

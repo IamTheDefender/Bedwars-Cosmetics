@@ -18,4 +18,6 @@ public enum RarityType {
     public ChatColor getChatColor() {
         return this.color;
     }
+
+
 }
