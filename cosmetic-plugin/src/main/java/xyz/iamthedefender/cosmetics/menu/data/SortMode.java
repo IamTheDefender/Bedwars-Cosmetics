@@ -1,4 +1,4 @@
-package xyz.iamthedefender.cosmetics.menu;
+package xyz.iamthedefender.cosmetics.menu.data;
 
 import lombok.Getter;
 

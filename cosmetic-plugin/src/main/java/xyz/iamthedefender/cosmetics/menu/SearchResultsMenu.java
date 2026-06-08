@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import xyz.iamthedefender.cosmetics.api.menu.impl.ChestSystemGui;
 import xyz.iamthedefender.cosmetics.api.util.ItemBuilder;
 import xyz.iamthedefender.cosmetics.api.util.Messages;
+import xyz.iamthedefender.cosmetics.menu.data.CosmeticMenuItemData;
+import xyz.iamthedefender.cosmetics.menu.data.CosmeticMenuSupport;
 import xyz.iamthedefender.cosmetics.util.MainMenuUtils;
 
 import java.util.ArrayList;

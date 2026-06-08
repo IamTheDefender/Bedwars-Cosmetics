@@ -126,7 +126,7 @@ public class MainMenuUtils {
             return lores.stream()
                     .map(s -> {
                         for (Map.Entry<String, CosmeticType> entry : SELECTED_PLACEHOLDERS.entrySet())
-                            s = s.replace(entry.getKey(), "&a" + StringUtils.replaceHyphensAndCaptalizeFirstLetter(api.getSelectedCosmetic(p, entry.getValue())));
+                            s = s.replace(entry.getKey(), "&a" + Messages.cosmeticDisplayName(entry.getValue(), entry.getKey(), p));
                         for (Map.Entry<String, Function<PlayerOwnedData, String>> entry : OWNED_PLACEHOLDERS.entrySet())
                             s = s.replace(entry.getKey(), entry.getValue().apply(owned));
                         return s;

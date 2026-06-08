@@ -1,5 +1,9 @@
 package xyz.iamthedefender.cosmetics.api.util;
 
+import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+
 import java.util.List;
 
 public class Messages {
@@ -59,5 +63,15 @@ public class Messages {
 
     public static Message mainMenuItemLore(String key, List<String> defaultValue) {
         return of("main-menu." + key + ".lore", defaultValue);
+    }
+
+    public static Message cosmeticDisplayName(CosmeticType<?> cosmeticType, String id, Player player) {
+        String path = cosmeticType.getSectionKey() + "." + id + ".";
+
+        return Messages.cosmeticDisplayName(path, Utility.getMSGLang(player, "cosmetics." + path + "name"));
+    }
+
+    public static Message cosmeticDisplayName(CosmeticType<?> cosmeticType, Cosmetics cosmetics, Player player) {
+        return cosmeticDisplayName(cosmeticType, cosmetics.getIdentifier(), player);
     }
 }

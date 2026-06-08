@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.database.PlayerCosmeticsData;
-import xyz.iamthedefender.cosmetics.menu.SortMode;
+import xyz.iamthedefender.cosmetics.menu.data.SortMode;
 import xyz.iamthedefender.cosmetics.util.DebugUtil;
 
 import java.util.Map;
