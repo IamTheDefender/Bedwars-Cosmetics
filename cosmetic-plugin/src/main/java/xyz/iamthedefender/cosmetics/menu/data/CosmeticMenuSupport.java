@@ -100,7 +100,7 @@ public final class CosmeticMenuSupport {
                 formattedName,
                 price,
                 getItemStatus(player, type, id, price),
-                rarity.getChatColor() + rarity.toString()
+                rarity.getChatColor() + Messages.createRarityName(rarity).value(player)
         );
 
         if (includeCategoryLore) {

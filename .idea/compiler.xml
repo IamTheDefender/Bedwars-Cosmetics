@@ -2,6 +2,15 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cosmetic-api" />
+        <module name="cosmetic-plugin" />
+        <module name="versionsupport_1_8_R3" />
+        <module name="versionsupport_1_20" />
+      </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
@@ -13,12 +22,6 @@
         <module name="BedWars-Cosmetics.versionsupport_1_20.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="11">
-      <module name="cosmetic-api" target="11" />
-      <module name="cosmetic-plugin" target="11" />
-      <module name="versionsupport_1_20" target="17" />
-      <module name="versionsupport_1_8_R3" target="11" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

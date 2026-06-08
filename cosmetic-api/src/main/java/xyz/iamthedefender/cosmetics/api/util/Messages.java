@@ -3,6 +3,7 @@ package xyz.iamthedefender.cosmetics.api.util;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
+import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 
 import java.util.List;
 
@@ -73,5 +74,9 @@ public class Messages {
 
     public static Message cosmeticDisplayName(CosmeticType<?> cosmeticType, Cosmetics cosmetics, Player player) {
         return cosmeticDisplayName(cosmeticType, cosmetics.getIdentifier(), player);
+    }
+
+    public static Message createRarityName(RarityType rarityType) {
+        return of("rarity." + rarityType.name().toLowerCase(), rarityType.name());
     }
 }
