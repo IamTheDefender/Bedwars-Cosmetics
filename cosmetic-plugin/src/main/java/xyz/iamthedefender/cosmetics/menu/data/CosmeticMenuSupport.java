@@ -105,7 +105,7 @@ public final class CosmeticMenuSupport {
 
         if (includeCategoryLore) {
             List<String> loreWithCategory = new ArrayList<>();
-            loreWithCategory.add("&8Category: &7" + categoryName);
+            loreWithCategory.add(Messages.CATEGORY.value(player) + categoryName);
             loreWithCategory.add("");
             loreWithCategory.addAll(formattedLore);
             formattedLore = loreWithCategory;

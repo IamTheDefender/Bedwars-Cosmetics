@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
+import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.category.bedbreakeffects.handler.BedDestroyHandler2023;
 import xyz.iamthedefender.cosmetics.category.deathcries.handler.DeathCryHandler2023;
 import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillEffectHandler2023;
@@ -146,7 +147,13 @@ public class BW2023Handler implements IHandler {
 
             @Override
             public void saveIfNotExists(String path, Object data) {
-                Language.saveIfNotExists(path, data);
+                Run.async(() -> {
+                    try {
+                        Language.saveIfNotExists(path, data);
+                    }catch (NullPointerException ignored) {
+                        // apparently custom closed-source forks such as "Carbon" cause a NPE here, I do not know why or how, I do not have access to those forks.
+                    }
+                });
             }
         };
     }

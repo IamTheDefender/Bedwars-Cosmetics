@@ -5,7 +5,11 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
 
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Messages {
 
@@ -46,6 +50,14 @@ public class Messages {
 
     public static final Message ERROR_NO_COSMETIC_FOUND = of("error.no-cosmetic-found", "No cosmetic found with that ID and category!");
 
+    public static final Message CATEGORY = of("menu.category", "&8Category: &7");
+    public static final Message SEARCH_QUERY = of("menu.search-query-text", List.of(
+            "",
+            "^^^^^^^^^",
+            "Type search query",
+            "above"
+    ));
+
     public static Message of(String path, Object defaultValue) {
         return new Message(path, defaultValue);
     }
@@ -78,5 +90,20 @@ public class Messages {
 
     public static Message createRarityName(RarityType rarityType) {
         return of("rarity." + rarityType.name().toLowerCase(), rarityType.name());
+    }
+
+
+    public static List<Message> getAll() {
+        return Arrays.stream(Messages.class.getDeclaredFields())
+                .filter(f -> Modifier.isStatic(f.getModifiers()) && f.getType() == Message.class)
+                .map(f -> {
+                    try {
+                        return (Message) f.get(null);
+                    } catch (IllegalAccessException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

@@ -119,14 +119,13 @@ public class MainMenuUtils {
     );
 
     public static List<String> formatLore(List<String> lores, Player p) {
-        CosmeticsAPI api = CosmeticsPlugin.getInstance().getApi();
         PlayerOwnedData owned = CosmeticsPlugin.getInstance().getPlayerManager().getPlayerOwnedData(p.getUniqueId());
 
         try {
             return lores.stream()
                     .map(s -> {
                         for (Map.Entry<String, CosmeticType> entry : SELECTED_PLACEHOLDERS.entrySet())
-                            s = s.replace(entry.getKey(), "&a" + Messages.cosmeticDisplayName(entry.getValue(), entry.getKey(), p));
+                            s = s.replace(entry.getKey(), Messages.cosmeticDisplayName(entry.getValue(), entry.getKey(), p).value(p));
                         for (Map.Entry<String, Function<PlayerOwnedData, String>> entry : OWNED_PLACEHOLDERS.entrySet())
                             s = s.replace(entry.getKey(), entry.getValue().apply(owned));
                         return s;

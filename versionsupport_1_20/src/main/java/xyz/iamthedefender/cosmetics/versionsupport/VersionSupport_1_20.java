@@ -3,10 +3,8 @@ package xyz.iamthedefender.cosmetics.versionsupport;
 import com.cryptomorin.xseries.XMaterial;
 import com.cryptomorin.xseries.profiles.builder.XSkull;
 import com.cryptomorin.xseries.profiles.objects.Profileable;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import com.github.retrooper.packetevents.protocol.particle.type.ParticleTypes;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -136,11 +134,24 @@ public class VersionSupport_1_20 implements IVersionSupport {
     public void displayParticle(Player player, Location location, ParticleWrapper particle, int count, float speed) {
         Particle bukkitParticle = resolveBukkitParticle(particle);
         if (bukkitParticle == null) return;
+
+
         if (player != null) {
-            player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+
+            if (bukkitParticle == Particle.BLOCK_DUST) {
+                player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
+            }else {
+                player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+            }
+
             return;
         }
-        location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+
+        if (bukkitParticle == Particle.BLOCK_DUST) {
+            location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
+        }else {
+            location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+        }
     }
 
     @Override

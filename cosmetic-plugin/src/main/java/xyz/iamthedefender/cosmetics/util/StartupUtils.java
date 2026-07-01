@@ -23,6 +23,7 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.category.Spray;
 import xyz.iamthedefender.cosmetics.api.database.DatabaseType;
 import xyz.iamthedefender.cosmetics.api.handler.IWorldEditHandler;
+import xyz.iamthedefender.cosmetics.api.util.Message;
 import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Run;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
@@ -261,12 +262,8 @@ public class StartupUtils {
         Messages.of("no-coins", mainConfig.getString("messages.cosmetics.no-coins", "&cYou don't have enough coins!")).saveIfMissing();
         Messages.of("spray-msg", mainConfig.getString("messages.cosmetics.spray-cooldown", "&cYou must wait 3 seconds between spray uses!")).saveIfMissing();
         Messages.of("final-kill-suffix", getString("messages.final-kill-suffix", "Final-Kill-Suffix", "&b&lFINAL KILL!")).saveIfMissing();
-        Messages.SEARCH_RESULTS_TITLE_FORMAT.saveIfMissing();
-        Messages.SEARCH_RESULTS_EMPTY_QUERY_LABEL.saveIfMissing();
-        Messages.SEARCH_RESULTS_SEARCH_AGAIN_NAME.saveIfMissing();
-        Messages.SEARCH_RESULTS_SEARCH_AGAIN_LORE.saveIfMissing();
-        Messages.SEARCH_RESULTS_NO_RESULTS_NAME.saveIfMissing();
-        Messages.SEARCH_RESULTS_NO_RESULTS_LORE.saveIfMissing();
+
+        Messages.getAll().forEach(Message::saveIfMissing);
     }
 
     /**

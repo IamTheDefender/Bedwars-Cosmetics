@@ -4,6 +4,8 @@ import org.bukkit.ChatColor;
 import xyz.iamthedefender.cosmetics.api.util.Messages;
 import xyz.iamthedefender.cosmetics.api.util.Utility;
 
+import java.util.Objects;
+
 public enum RarityType {
     LEGENDARY(ChatColor.GOLD),
     EPIC(ChatColor.DARK_PURPLE),
@@ -22,8 +24,8 @@ public enum RarityType {
 
         if (storedColor != null) {
             try {
-                return ChatColor.valueOf(storedColor);
-            } catch (IllegalArgumentException e) {
+                return Objects.requireNonNull(ChatColor.getByChar(storedColor.replace(ChatColor.COLOR_CHAR + "", "")));
+            } catch (NullPointerException e) {
                 Utility.getPlugin().getLogger().warning("Failed to parse chat color " + storedColor + " for rarity: " + name());
                 return color;
             }

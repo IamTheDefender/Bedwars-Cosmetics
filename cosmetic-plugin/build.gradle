@@ -38,7 +38,7 @@ dependencies {
             'lib/bedwars2023-1.0.jar',
             'lib/proxy-plugin-1.2.4.jar',
             'lib/proxy-plugin-1.0-SNAPSHOT (1).jar',
-            'lib/BedWars-0.2.41-SNAPSHOT-259.jar'
+            'lib/BedWars-0.2.42.1.jar'
     )
 }
 
