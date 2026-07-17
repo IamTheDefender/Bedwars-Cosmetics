@@ -37,10 +37,11 @@ public class DeathCrySBW implements Listener {
                 } catch (NoSuchElementException exception){
                     exception.printStackTrace();
                     Bukkit.getLogger().severe(deathCry.getIdentifier() + "Death cry has invalid sound!");
-                }finally {
+                } finally {
                     try {
-                        event.setPlaySound(false);
-                    }catch (Throwable throwable) {
+                        // Reflective call — method exists only on ScreamingBedWars 0.2.41+
+                        event.getClass().getMethod("setPlaySound", boolean.class).invoke(event, false);
+                    } catch (Throwable throwable) {
                         CosmeticsPlugin.getInstance().getLogger().severe("Failed to disable default sounds from ScreamingBedWars, please make sure you are using ScreamingBedWars 0.2.41-SNAPSHOT or higher!");
                     }
                 }

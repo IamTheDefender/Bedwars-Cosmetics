@@ -43,13 +43,71 @@ public enum CosmeticsType {
         return configManager;
     }
 
+    /**
+     * Resolves a Main-Menu config key (e.g. {@code Victory-Dances}, {@code Bed-Destroys})
+     * or an enum/section name to a {@link CosmeticsType}.
+     * <p>
+     * Earlier versions only compared the raw key to {@link #name()}, so hyphenated
+     * Main-Menu entries never opened a category menu.
+     */
     public static CosmeticsType fromName(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+
+        // Exact Main-Menu.yml keys used by openMenus(...)
+        switch (name) {
+            case "Sprays":
+                return Sprays;
+            case "Projectile-Trails":
+                return ProjectileTrails;
+            case "FinalKill-Effects":
+                return FinalKillEffects;
+            case "Kill-Messages":
+                return KillMessages;
+            case "Glyphs":
+                return Glyphs;
+            case "Bed-Destroys":
+                return BedBreakEffects;
+            case "WoodSkins":
+            case "Wood-Skins":
+                return WoodSkins;
+            case "Victory-Dances":
+                return VictoryDances;
+            case "Island-Toppers":
+            case "IslandToppers":
+                return IslandToppers;
+            case "ShopKeeperSkins":
+                return ShopKeeperSkins;
+            case "Death-Cries":
+                return DeathCries;
+            default:
+                break;
+        }
+
+        String compact = name.replace("-", "").replace("_", "");
+        String normalized = normalizeKey(name);
+
         for (CosmeticsType type : values()) {
-            if (type.name().replace("-", "").replace("_", "").equalsIgnoreCase(name)) {
+            if (type.name().equalsIgnoreCase(name) || type.name().equalsIgnoreCase(compact)) {
+                return type;
+            }
+            if (normalizeKey(type.name()).equals(normalized)
+                    || normalizeKey(type.sectionKey).equals(normalized)
+                    || normalizeKey(type.formatedName).equals(normalized)) {
                 return type;
             }
         }
         return null;
+    }
+
+    private static String normalizeKey(String s) {
+        String out = s.toLowerCase().replaceAll("[^a-z0-9]", "");
+        // Bed-Destroys -> beddestroy, death-cry -> deathcry (singularize trailing s only)
+        if (out.endsWith("s") && out.length() > 1) {
+            out = out.substring(0, out.length() - 1);
+        }
+        return out;
     }
 
 }
