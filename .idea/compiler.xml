@@ -16,9 +16,9 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
+        <module name="xyz.iamthedefender.BedWars-Cosmetics.cosmetic-plugin.main" />
         <module name="BedWars-Cosmetics.versionsupport_1_8_R3.main" />
         <module name="BedWars-Cosmetics.cosmetic-api.main" />
-        <module name="BedWars-Cosmetics.cosmetic-plugin.main" />
         <module name="BedWars-Cosmetics.versionsupport_1_20.main" />
       </profile>
     </annotationProcessing>
@@ -38,6 +38,7 @@
       <module name="BedWars-Cosmetics.versionsupport_1_8_R3.main" options="-parameters" />
       <module name="BedWars-Cosmetics.versionsupport_1_8_R3.test" options="-parameters" />
       <module name="cosmetic-plugin" options="-parameters" />
+      <module name="xyz.iamthedefender.BedWars-Cosmetics.cosmetic-plugin.main" options="-parameters" />
     </option>
   </component>
 </project>

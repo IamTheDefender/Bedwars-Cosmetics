@@ -147,13 +147,14 @@ public class BW2023Handler implements IHandler {
 
             @Override
             public void saveIfNotExists(String path, Object data) {
-                Run.async(() -> {
-                    try {
-                        Language.saveIfNotExists(path, data);
-                    }catch (NullPointerException ignored) {
-                        // apparently custom closed-source forks such as "Carbon" cause a NPE here, I do not know why or how, I do not have access to those forks.
-                    }
-                });
+                Language.saveIfNotExists(path, data);
+
+                Language russian = Language.getLanguages().stream().filter(lang -> lang.getIso().contains("ru"))
+                        .findAny().orElse(null);
+
+                if (russian != null && russian.getYml().get(path) == null && StartupUtils.CACHED_RU_TRANSLATIONS.contains(path)) {
+                    russian.getYml().set(path, StartupUtils.CACHED_RU_TRANSLATIONS.get(path));
+                }
             }
         };
     }

@@ -13,6 +13,8 @@ import net.byteflux.libby.Library;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -75,6 +77,21 @@ public class StartupUtils {
 
     public static boolean BW2023 = Bukkit.getPluginManager().getPlugin("BedWars2023") != null ||
             Bukkit.getPluginManager().getPlugin("BWProxy2023") != null;
+
+    public static YamlConfiguration CACHED_RU_TRANSLATIONS = new YamlConfiguration();
+
+    static {
+        InputStream inputStream = CosmeticsPlugin.getInstance().getResource("language/russian.yml");
+
+        if (inputStream != null) {
+            try {
+                CACHED_RU_TRANSLATIONS.load(new InputStreamReader(inputStream));
+            } catch (IOException | InvalidConfigurationException e) {
+                CosmeticsPlugin.getInstance().getLogger().warning("Failed to load russian.yml. This does not affect gameplay but Russian translations will not auto generate!");
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Register events and handler

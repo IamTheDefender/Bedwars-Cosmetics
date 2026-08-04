@@ -40,6 +40,8 @@ dependencies {
             'lib/proxy-plugin-1.0-SNAPSHOT (1).jar',
             'lib/BedWars-0.2.42.1.jar'
     )
+
+    compileOnly 'de.marcely.bedwars:API:5.5.8'
 }
 
 tasks.named('jar') {
