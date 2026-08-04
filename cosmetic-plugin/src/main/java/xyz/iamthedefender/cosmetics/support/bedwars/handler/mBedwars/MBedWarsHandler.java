@@ -15,7 +15,14 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.bedwars.Main;
 import xyz.iamthedefender.cosmetics.CosmeticsPlugin;
 import xyz.iamthedefender.cosmetics.api.handler.*;
+import xyz.iamthedefender.cosmetics.category.bedbreakeffects.handler.BedDestroyMBW;
+import xyz.iamthedefender.cosmetics.category.deathcries.handler.DeathCryMBW;
+import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillHandlerMBW;
+import xyz.iamthedefender.cosmetics.category.glyphs.handler.GlyphHandlerMBW;
+import xyz.iamthedefender.cosmetics.category.islandtoppers.handler.IslandTopperHandlerMBW;
+import xyz.iamthedefender.cosmetics.category.killmessage.handler.KillMessagesMBW;
 import xyz.iamthedefender.cosmetics.support.language.LanguageImpl;
+import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +39,15 @@ public class MBedWarsHandler implements IHandler {
         addon = new MBedWarsAddon();
         addon.register();
 
-        //TODO: register events
+        StartupUtils.registerListeners(
+                new BedDestroyMBW(),
+                new DeathCryMBW(),
+                new FinalKillHandlerMBW(),
+                new GlyphHandlerMBW(),
+                new IslandTopperHandlerMBW(),
+                new KillMessagesMBW()
+                // more to come
+        );
     }
 
     @Override

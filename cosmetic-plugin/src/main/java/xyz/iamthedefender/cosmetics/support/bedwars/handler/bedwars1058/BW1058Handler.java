@@ -1,8 +1,8 @@
 package xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.server.ServerType;
-import com.tomkeuper.bedwars.api.language.Language;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,7 +23,6 @@ import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinHandler105
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
