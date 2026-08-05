@@ -21,6 +21,9 @@ import xyz.iamthedefender.cosmetics.category.finalkilleffects.handler.FinalKillH
 import xyz.iamthedefender.cosmetics.category.glyphs.handler.GlyphHandlerMBW;
 import xyz.iamthedefender.cosmetics.category.islandtoppers.handler.IslandTopperHandlerMBW;
 import xyz.iamthedefender.cosmetics.category.killmessage.handler.KillMessagesMBW;
+import xyz.iamthedefender.cosmetics.category.sprays.handler.SprayHandlerMBW;
+import xyz.iamthedefender.cosmetics.category.victorydance.handler.VictoryDanceMBW;
+import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinMBW;
 import xyz.iamthedefender.cosmetics.support.language.LanguageImpl;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
@@ -45,7 +48,10 @@ public class MBedWarsHandler implements IHandler {
                 new FinalKillHandlerMBW(),
                 new GlyphHandlerMBW(),
                 new IslandTopperHandlerMBW(),
-                new KillMessagesMBW()
+                new KillMessagesMBW(),
+                new SprayHandlerMBW(),
+                new VictoryDanceMBW(),
+                new WoodSkinMBW()
                 // more to come
         );
     }

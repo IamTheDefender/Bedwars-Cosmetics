@@ -1,30 +1,30 @@
 package xyz.iamthedefender.cosmetics.category.victorydance.handler;
 
+import de.marcely.bedwars.api.event.arena.RoundEndEvent;
+import de.marcely.bedwars.api.event.player.PlayerQuitArenaEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsGameEndingEvent;
-import org.screamingsandals.bedwars.api.events.BedwarsPlayerLeaveEvent;
 import xyz.iamthedefender.cosmetics.category.victorydance.AbstractVictoryDance;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VictoryDanceSBW extends AbstractVictoryDance {
+public class VictoryDanceMBW extends AbstractVictoryDance {
 
     @EventHandler
-    public void onGameEnd(BedwarsGameEndingEvent e) {
+    public void onGameEnd(RoundEndEvent e) {
 
-        if (e.getWinningTeam() == null) return;
+        if (e.getWinnerTeam() == null) return;
 
-        for (UUID uuid : e.getWinningTeam().getConnectedPlayers().stream().map(Player::getUniqueId).collect(Collectors.toList())) {
+        for (UUID uuid : e.getArena().getPlayersInTeam(e.getWinnerTeam()).stream().map(Player::getUniqueId).collect(Collectors.toList())) {
             execute(Bukkit.getPlayer(uuid));
         }
     }
 
     @EventHandler
-    public void onPlayerLeaveArena(BedwarsPlayerLeaveEvent event) {
+    public void onPlayerLeaveArena(PlayerQuitArenaEvent event) {
         Player player = event.getPlayer();
 
         stopExecution(player);
@@ -38,4 +38,3 @@ public class VictoryDanceSBW extends AbstractVictoryDance {
     }
 
 }
-
