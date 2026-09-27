@@ -1,6 +1,7 @@
 package xyz.iamthedefender.cosmetics.support.bedwars.handler.bedwars1058;
 
 import com.andrei1058.bedwars.api.BedWars;
+import com.andrei1058.bedwars.api.configuration.ConfigManager;
 import com.andrei1058.bedwars.api.language.Language;
 import com.andrei1058.bedwars.api.server.ServerType;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import xyz.iamthedefender.cosmetics.category.sprays.handler.SpraysHandler1058;
 import xyz.iamthedefender.cosmetics.category.victorydance.handler.VictoryDanceHandler1058;
 import xyz.iamthedefender.cosmetics.category.woodskin.handler.WoodSkinHandler1058;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
+import xyz.iamthedefender.cosmetics.util.SyncQueue;
 
 import java.io.File;
 import java.util.Arrays;
@@ -140,14 +142,23 @@ public class BW1058Handler implements IHandler {
 
             @Override
             public void saveIfNotExists(String path, Object data) {
-                Language.saveIfNotExists(path, data);
+                for (Language language : Language.getLanguages()) {
+                    if (language.getIso().contains("ru")) {
+                        if (language.getYml() != null && language.getYml().get(path) == null && StartupUtils.CACHED_RU_TRANSLATIONS.contains(path)) {
+                            language.getYml().set(path, StartupUtils.CACHED_RU_TRANSLATIONS.get(path));
+                            continue;
+                        }
+                    }
 
-                Language russian = Language.getLanguages().stream().filter(lang -> lang.getIso().contains("ru"))
-                        .findAny().orElse(null);
+                    if (language.getYml() != null && language.getYml().get(path) == null) {
+                        language.getYml().set(path, data);
+                    }
 
-                if (russian != null && russian.getYml().get(path) == null && StartupUtils.CACHED_RU_TRANSLATIONS.contains(path)) {
-                    russian.getYml().set(path, StartupUtils.CACHED_RU_TRANSLATIONS.get(path));
                 }
+
+                SyncQueue.add(() -> Language.getLanguages().forEach(ConfigManager::save));
+
+                SyncQueue.start(10);
             }
         };
     }

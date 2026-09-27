@@ -40,7 +40,7 @@ public class Message {
         }
 
         if (found == null) {
-            found = String.valueOf(defaultValue);
+            found = defaultValue != null ? String.valueOf(defaultValue) : "";
         }
 
         if (player != null && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

@@ -3,6 +3,7 @@ package xyz.iamthedefender.cosmetics.category.sprays.preview;
 import com.cryptomorin.xseries.XSound;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -23,8 +24,6 @@ import xyz.iamthedefender.cosmetics.util.EntityUtil;
 import xyz.iamthedefender.cosmetics.support.protocol.PacketEventsBridge;
 
 public class SprayPreview extends CosmeticPreview {
-
-    private ItemFrame frame;
 
     public SprayPreview() {
         super(CosmeticType.SPRAYS);
@@ -56,52 +55,63 @@ public class SprayPreview extends CosmeticPreview {
 
         player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 80, 2));
 
-        sendFrame(player, selected, previewLocation);
-        
+        Runnable frameCleanup = sendFrame(player, selected, previewLocation);
+
         Run.delayed(() -> {
             if (player.isOnline() && !as.isDead()) {
                 PacketEventsBridge.sendCamera(player, as.getEntityId());
             }
         }, 2L);
 
-
         setOnEnd(player, () -> {
             if (!as.isDead()) as.remove();
 
-            if (frame != null && !frame.isDead()) {
-                frame.setItem(new ItemStack(Material.AIR));
-                frame.remove();
-            }
+            frameCleanup.run();
+
             PacketEventsBridge.sendCamera(player, player.getEntityId());
             player.removePotionEffect(PotionEffectType.INVISIBILITY);
         });
     }
 
-    public void sendFrame(Player player, Cosmetics selected, Location previewLocation) {
+    public Runnable sendFrame(Player player, Cosmetics selected, Location previewLocation) {
         Location loc = previewLocation.clone();
         loc.setPitch(0);
-        
+
         BlockFace face = getCardinalDirection(loc);
-        
+
         BlockFace opposite = face.getOppositeFace();
         Location supportBlock = loc.clone().add(opposite.getModX(), opposite.getModY(), opposite.getModZ());
-        supportBlock.getBlock().setType(Material.BARRIER);
-        
-        frame = (ItemFrame) loc.getWorld().spawnEntity(loc, EntityType.ITEM_FRAME);
+        Block block = supportBlock.getBlock();
+        Material oldType = block.getType();
+
+        block.setType(Material.BARRIER);
+
+        final ItemFrame frame = (ItemFrame) loc.getWorld().spawnEntity(loc, EntityType.ITEM_FRAME);
         EntityUtil.entityForPlayerOnly(frame, player);
         frame.setFacingDirection(face, true);
         SpraysUtil.spawnSprays(player, frame, true, (Spray) selected);
 
         XSound.ENTITY_SILVERFISH_HURT.play(player, 10f, 10f);
 
+        Runnable restoreBlock = () -> {
+            if (block.getType() == Material.BARRIER) {
+                block.setType(oldType);
+            }
+        };
+
         Run.every((r) -> {
-            if(frame == null || frame.isDead() || !frame.isValid()){
-                if (supportBlock.getBlock().getType() == Material.BARRIER) {
-                    supportBlock.getBlock().setType(Material.AIR);
-                }
+            if (frame.isDead() || !frame.isValid()) {
+                restoreBlock.run();
                 r.cancel();
             }
         }, 10L);
+
+        return () -> {
+            if (!frame.isDead()) {
+                frame.remove();
+            }
+            restoreBlock.run();
+        };
     }
 
     public static BlockFace getCardinalDirection(Location location) {

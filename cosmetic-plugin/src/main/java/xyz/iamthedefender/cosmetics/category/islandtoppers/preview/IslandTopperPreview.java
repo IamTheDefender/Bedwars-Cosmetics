@@ -53,6 +53,22 @@ public class IslandTopperPreview {
 
         Location beforeLocation = player.getLocation().clone();
         Inventory playerInv = player.getInventory();
+
+        Location cosmeticLocation = null, playerLocation = null;
+
+        try {
+            cosmeticLocation = getCosmeticLocation();
+            playerLocation = getPlayerLocation();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            player.sendMessage(ColorUtil.translate("&cEither Preview location or Player location is not set! Contact the admin."));
+        }
+
+        if (cosmeticLocation == null || playerLocation == null) {
+            gui.open(player);
+            return;
+        }
+
         if (!inventories.containsKey(playerUUID)) inventories.put(playerUUID, new HashMap<>());
 
         Map<Integer, ItemStack> items = inventories.get(playerUUID);
@@ -67,17 +83,6 @@ public class IslandTopperPreview {
 
         playerInv.clear();
         player.closeInventory();
-        Location cosmeticLocation = null, playerLocation = null;
-
-        try {
-            cosmeticLocation = getCosmeticLocation();
-            playerLocation = getPlayerLocation();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            player.sendMessage(ColorUtil.translate("&cEither Preview location or Player location is not set! Contact the admin."));
-        }
-
-        if (cosmeticLocation == null || playerLocation == null) return;
 
         final Location finalPlayerLocation = playerLocation;
         final Location finalCosmeticLocation = cosmeticLocation;
@@ -115,7 +120,11 @@ public class IslandTopperPreview {
                 playerInv.setItem(entry.getKey(), entry.getValue());
             }
 
-            gui.open(player);
+            inventories.remove(playerUUID);
+
+            if (player.isOnline()) {
+                gui.open(player);
+            }
         }, 5 * 20L);
     }
 
@@ -183,7 +192,7 @@ public class IslandTopperPreview {
 
                 index++;
             }
-        }.runTaskTimerAsynchronously(CosmeticsPlugin.getInstance(), 0L, 0L);
+        }.runTaskTimer(CosmeticsPlugin.getInstance(), 0L, 0L);
     }
 
     private String rpGetPlayerDirection(Player playerSelf) {

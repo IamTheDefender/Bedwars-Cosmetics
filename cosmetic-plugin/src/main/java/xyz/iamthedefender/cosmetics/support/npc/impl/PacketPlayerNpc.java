@@ -27,6 +27,7 @@ public class PacketPlayerNpc extends PacketNpc {
 
     private final NPC nativeNpc;
     private final Set<UUID> confirmedSkinViewers = ConcurrentHashMap.newKeySet();
+    private final Map<UUID, org.bukkit.scheduler.BukkitTask> pendingTabHideTasks = new ConcurrentHashMap<>();
     private final boolean keepTabListed;
 
     public PacketPlayerNpc(int entityId, UserProfile profile, Location location, List<EntityData<?>> metadata) {
@@ -57,7 +58,6 @@ public class PacketPlayerNpc extends PacketNpc {
             return;
         }
 
-        nativeNpc.spawn(PacketEvents.getAPI().getPlayerManager().getChannel(player));
         sendSkinSequence(player);
 
         sendMetadata(player);
@@ -74,10 +74,8 @@ public class PacketPlayerNpc extends PacketNpc {
             return;
         }
 
-        nativeNpc.spawn(PacketEvents.getAPI().getPlayerManager().getChannel(player));
         sendSkinSequence(player);
 
-      //  sendMetadata(player);
         sendEquipment(player);
         sendHeadRotation(player);
 
@@ -92,6 +90,11 @@ public class PacketPlayerNpc extends PacketNpc {
     public void refreshSkin(Player player) {
         if (keepTabListed) {
             return;
+        }
+
+        org.bukkit.scheduler.BukkitTask pendingHide = pendingTabHideTasks.remove(player.getUniqueId());
+        if (pendingHide != null) {
+            pendingHide.cancel();
         }
 
         PacketEventsBridge.sendPacket(player, buildShowTabListPacket());
@@ -115,6 +118,10 @@ public class PacketPlayerNpc extends PacketNpc {
         }
 
         confirmedSkinViewers.remove(player.getUniqueId());
+        org.bukkit.scheduler.BukkitTask pendingHide = pendingTabHideTasks.remove(player.getUniqueId());
+        if (pendingHide != null) {
+            pendingHide.cancel();
+        }
         PacketEventsBridge.sendPacket(player, buildHideNameTagPacket());
         PacketEventsBridge.sendPacket(player, buildHideTabListPacket());
         nativeNpc.despawn(PacketEvents.getAPI().getPlayerManager().getChannel(player));
@@ -132,15 +139,17 @@ public class PacketPlayerNpc extends PacketNpc {
 
         nativeNpc.spawn(channel);
 
-        Run.delayed(() -> {
+        if (keepTabListed) {
+            return;
+        }
+
+        pendingTabHideTasks.put(player.getUniqueId(), Run.delayed(() -> {
+            pendingTabHideTasks.remove(player.getUniqueId());
             if (!getViewers().contains(player.getUniqueId()) || !player.isOnline()) {
                 return;
             }
-            if (keepTabListed) {
-                return;
-            }
             PacketEventsBridge.sendPacket(player, buildHideTabListPacket());
-        }, 15L);
+        }, 15L));
     }
 
     public void swingArm(Player player) {

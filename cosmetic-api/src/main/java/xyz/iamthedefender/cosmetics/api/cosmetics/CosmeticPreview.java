@@ -45,7 +45,13 @@ public abstract class CosmeticPreview {
         programmaticClose.remove(player);
         if (onEnd.containsKey(player)) {
             Runnable runnable = onEnd.remove(player);
-            if (runnable != null) runnable.run();
+            if (runnable != null) {
+                try {
+                    runnable.run();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         }
         
         
@@ -82,7 +88,13 @@ public abstract class CosmeticPreview {
         if (activeTasks.containsKey(player)) {
             activeTasks.remove(player).cancel();
             Runnable runnable = onEnd.remove(player);
-            if (runnable != null) runnable.run();
+            if (runnable != null) {
+                try {
+                    runnable.run();
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
         }
 
         if (!originalLocations.containsKey(player)) {

@@ -154,7 +154,7 @@ public class BwcAPI implements CosmeticsAPI {
                 return def != null ? def.getIdentifier() : "oak-plank";
             }
         }
-        return value;
+        return (value == null || value.isEmpty()) ? "none" : value;
     }
 
     /**

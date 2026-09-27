@@ -93,8 +93,11 @@ public class FinalKillEffectPreview extends CosmeticPreview {
         victimNpc.spawnWithVisibleTabName(player);
 
         Run.delayed(() -> {
+            if (!player.isOnline() || cleaned.get()) {
+                return;
+            }
             BukkitTask movementTask = Run.every(task -> {
-                if (manager.destroyed(victimNpc)) {
+                if (manager.destroyed(victimNpc) || manager.destroyed(killerNpc)) {
                     task.cancel();
                     return;
                 }
@@ -113,6 +116,9 @@ public class FinalKillEffectPreview extends CosmeticPreview {
             }, 1L);
 
             Run.delayed(() -> {
+                if (!player.isOnline() || cleaned.get()) {
+                    return;
+                }
                 cleaned.set(true);
 
                 movementTask.cancel();
@@ -124,6 +130,7 @@ public class FinalKillEffectPreview extends CosmeticPreview {
         }, 20L);
 
         return () -> {
+            cleaned.set(true);
             manager.destroy(killerNpc);
             manager.destroy(victimNpc);
         };

@@ -69,7 +69,7 @@ public abstract class ShopKeeperSkin extends Cosmetics {
     public <T> T getField(FieldsType field, Player p) {
         String configPath = category + "." + getIdentifier() + ".";
 
-        Object value;
+        Object value = null;
         switch (field) {
             case NAME:
                 value = xyz.iamthedefender.cosmetics.api.util.Messages.cosmeticDisplayName(
@@ -94,9 +94,20 @@ public abstract class ShopKeeperSkin extends Cosmetics {
                 String raw = config.getString(configPath + field.path());
 
                 if (raw != null) {
-                    XEntityType xEntityType = XEntityType.valueOf(raw.toUpperCase());
-                    value = xEntityType.get();
+                    try {
+                        XEntityType xEntityType = XEntityType.valueOf(raw.toUpperCase());
+                        value = xEntityType.get();
+                    } catch (IllegalArgumentException e) {
+                        try {
+                            String mapped = raw.equalsIgnoreCase("PIG_ZOMBIE") ? "ZOMBIFIED_PIGLIN" : raw;
+                            XEntityType xEntityType = XEntityType.valueOf(mapped.toUpperCase());
+                            value = xEntityType.get();
+                        } catch (IllegalArgumentException e2) {
+                            value = null;
+                        }
+                    }
                 }
+                break;
 
             default:
                 value = config.get(configPath + field.path());

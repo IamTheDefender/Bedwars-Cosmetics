@@ -7,7 +7,6 @@ import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.protocol.player.TextureProperty;
 import com.github.retrooper.packetevents.protocol.player.UserProfile;
 import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
-import io.github.retrooper.packetevents.util.SpigotConversionUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -131,7 +130,7 @@ public class PacketNpcManager {
     }
 
     private List<EntityData<?>> copyMetadata(Player player) {
-        return cloneMetadata(SpigotConversionUtil.getEntityMetadata(player));
+        return cloneMetadata(EntityMetadataUtil.getEntityMetadata(player));
     }
 
     private List<EntityData<?>> cloneMetadata(List<EntityData<?>> source) {

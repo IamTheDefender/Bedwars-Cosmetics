@@ -38,7 +38,7 @@ public class MainMenuUtils {
         List<String> pts = Arrays.asList("&7Change your projectile particle", "&7trail effects.", "", "&7Unlocked:&a {ownedpt}", "&7Currently Selected:", "{projectile}", "", "&eClick to view.");
         saveMainMenuItemDefaults(config, "Projectile-Trails", "&aProjectile Trails", pts);
 
-        List<String> finalke = Arrays.asList("&7A selection of various effects", "&7to chosse from that will trigger", "&7whenever you final kill an", "&7enemy!", "", "&7Unlocked:&a {ownedfinalkill}", "&7Currently Selected:", "&a" + "{finalkill}", "", "&eClick to view.");
+        List<String> finalke = Arrays.asList("&7A selection of various effects", "&7to chosse from that will trigger", "&7whenever you final kill an", "&7enemy!", "", "&7Unlocked:&a {ownedfinalkill}", "&7Currently Selected:", "{finalkill}", "", "&eClick to view.");
         saveMainMenuItemDefaults(config, "FinalKill-Effects", "&aFinal Kill Effects", finalke);
 
         List<String> km = Arrays.asList("&7Select a Kill Message package to", "&7replace chat messages when you", "&7kill players.", "", "&7Unlocked:&a {ownedkm}", "&7Currently Selected:", "{killmsg}", "", "&eClick to view.");
@@ -56,7 +56,7 @@ public class MainMenuUtils {
         List<String> vd = Arrays.asList("&7Celebrate by gloating and", "&7showing off to other players", "&7whenever you win!", "", "&7Unlocked:&a {ownedvd}", "&7Currently Selected:", "{victory}", "", "&eClick to view.");
         saveMainMenuItemDefaults(config, "Victory-Dances", "&aVictory Dances", vd);
 
-        List<String> islandtoppers = Arrays.asList("&7Select an Island Topper to", "&7decorate your island with! In", "&7Doubles and Teams Mode a random", "&7player's choice from each team is choosen.", "", "&7Unlocked:&a {ownedit}", "&7Currently Selected:", "&a{islandtopper}", "", "&eClick to select.");
+        List<String> islandtoppers = Arrays.asList("&7Select an Island Topper to", "&7decorate your island with! In", "&7Doubles and Teams Mode a random", "&7player's choice from each team is choosen.", "", "&7Unlocked:&a {ownedit}", "&7Currently Selected:", "{islandtopper}", "", "&eClick to select.");
         saveMainMenuItemDefaults(config, "Island-Toppers", "&aIsland Toppers", islandtoppers);
 
         List<String> shopkeepers = Arrays.asList("&7Select from various ShopKeeper", "&7skin, which will replace how the", "&7ShopKeeper look in-game! In", "&7Doubles and Teams Mode a random", "&7player's choice from each team", "&7is choosen.", "", "&7Unlocked:&a {ownedshopkeeper}", "&7Currently Selected:", "{shopkeeper}", "", "&eClick to view.");
@@ -90,7 +90,7 @@ public class MainMenuUtils {
                 : lore).saveIfMissing();
     }
 
-    private static final Map<String, CosmeticType> SELECTED_PLACEHOLDERS = Map.ofEntries(
+    private static final Map<String, CosmeticType<?>> SELECTED_PLACEHOLDERS = Map.ofEntries(
             Map.entry("{islandtopper}", CosmeticType.ISLAND_TOPPERS),
             Map.entry("{spray}", CosmeticType.SPRAYS),
             Map.entry("{killmsg}", CosmeticType.KILL_MESSAGES),
@@ -124,8 +124,12 @@ public class MainMenuUtils {
         try {
             return lores.stream()
                     .map(s -> {
-                        for (Map.Entry<String, CosmeticType> entry : SELECTED_PLACEHOLDERS.entrySet())
-                            s = s.replace(entry.getKey(), Messages.cosmeticDisplayName(entry.getValue(), entry.getKey(), p).value(p));
+                        for (Map.Entry<String, CosmeticType<?>> entry : SELECTED_PLACEHOLDERS.entrySet()) {
+                            String selectedId = CosmeticsPlugin.getInstance().getApi().getSelectedCosmetic(p, entry.getValue());
+                            String displayName = Messages.cosmeticDisplayName(entry.getValue(), selectedId, p).value(p);
+                            s = s.replace(entry.getKey(), displayName != null ? displayName : "&cNone");
+                        }
+
                         for (Map.Entry<String, Function<PlayerOwnedData, String>> entry : OWNED_PLACEHOLDERS.entrySet())
                             s = s.replace(entry.getKey(), entry.getValue().apply(owned));
                         return s;

@@ -194,7 +194,7 @@ public abstract class PacketNpc {
     }
 
     private List<EntityData<?>> copyMetadata(Player player) {
-        return cloneMetadata(SpigotConversionUtil.getEntityMetadata(player));
+        return cloneMetadata(EntityMetadataUtil.getEntityMetadata(player));
     }
 
     private List<EntityData<?>> cloneMetadata(List<EntityData<?>> source) {

@@ -11,12 +11,24 @@ import xyz.iamthedefender.cosmetics.api.cosmetics.category.DeathCry;
 import xyz.iamthedefender.cosmetics.api.event.AbstractListener;
 import xyz.iamthedefender.cosmetics.util.StartupUtils;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AbstractDeathCry extends AbstractListener {
 
+    private static final long DEATH_COOLDOWN_MS = 3000;
+    private final Map<UUID, Long> recentDeaths = new ConcurrentHashMap<>();
+
     public void execute(Player victim) {
         if (!StartupUtils.isCosmeticEnabled(CosmeticType.DEATH_CRIES)) return;
+
+        UUID victimId = victim.getUniqueId();
+        long now = System.currentTimeMillis();
+        Long last = recentDeaths.get(victimId);
+        if (last != null && (now - last) < DEATH_COOLDOWN_MS) return;
+        recentDeaths.put(victimId, now);
 
         DeathCry deathCry = getSelectedCosmetic(victim, CosmeticType.DEATH_CRIES);
 

@@ -1,9 +1,11 @@
 package xyz.iamthedefender.cosmetics.api.util;
 
 import org.bukkit.entity.Player;
+import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticRegistry;
 import xyz.iamthedefender.cosmetics.api.cosmetics.CosmeticType;
 import xyz.iamthedefender.cosmetics.api.cosmetics.Cosmetics;
 import xyz.iamthedefender.cosmetics.api.cosmetics.RarityType;
+import xyz.iamthedefender.cosmetics.api.cosmetics.category.WoodSkin;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -63,11 +65,11 @@ public class Messages {
     }
 
     public static Message cosmeticDisplayName(String configPath, String defaultValue) {
-        return of(configPath + "name", defaultValue);
+        return of(configPath + "name", defaultValue != null ? defaultValue : "&cNone");
     }
 
     public static Message cosmeticDisplayLore(String configPath, List<String> defaultValue) {
-        return of(configPath + "lore", defaultValue);
+        return of(configPath + "lore", defaultValue != null ? defaultValue : List.of());
     }
 
     public static Message mainMenuItemName(String key, String defaultValue) {
@@ -79,12 +81,44 @@ public class Messages {
     }
 
     public static Message cosmeticDisplayName(CosmeticType<?> cosmeticType, String id, Player player) {
-        String path = cosmeticType.getSectionKey() + "." + id + ".";
+        if (cosmeticType == null) {
+            return of("none", "&cNone");
+        }
+        if (id == null || id.isEmpty()) {
+            if (cosmeticType == CosmeticType.WOOD_SKINS) {
+                WoodSkin def = WoodSkin.getDefault(player);
+                id = def != null ? def.getIdentifier() : "oak-plank";
+            } else {
+                id = "none";
+            }
+        }
 
-        return Messages.cosmeticDisplayName(path, Utility.getMSGLang(player, "cosmetics." + path + "name"));
+        String path = cosmeticType.getSectionKey() + "." + id + ".";
+        String fallback = null;
+        if (cosmeticType.getConfig() != null) {
+            fallback = cosmeticType.getConfig().getString(path + "display.name");
+            if (fallback == null) {
+                fallback = cosmeticType.getConfig().getString(path + "name");
+            }
+        }
+        if (fallback == null) {
+            Cosmetics cosmetic = CosmeticRegistry.getById(cosmeticType, id, Cosmetics.class).orElse(null);
+            if (cosmetic != null) {
+                fallback = cosmetic.getDisplayName();
+            }
+        }
+        if (fallback == null) {
+            fallback = id.equalsIgnoreCase("none") ? "&cNone" : id;
+        }
+
+        String msgLang = Utility.getMSGLang(player, "cosmetics." + path + "name");
+        return Messages.cosmeticDisplayName(path, msgLang != null ? msgLang : fallback);
     }
 
     public static Message cosmeticDisplayName(CosmeticType<?> cosmeticType, Cosmetics cosmetics, Player player) {
+        if (cosmetics == null) {
+            return cosmeticDisplayName(cosmeticType, (String) null, player);
+        }
         return cosmeticDisplayName(cosmeticType, cosmetics.getIdentifier(), player);
     }
 

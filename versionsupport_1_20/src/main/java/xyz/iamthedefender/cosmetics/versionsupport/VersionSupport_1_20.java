@@ -137,20 +137,19 @@ public class VersionSupport_1_20 implements IVersionSupport {
 
 
         if (player != null) {
-
-            if (bukkitParticle == Particle.BLOCK_DUST) {
-                player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
-            }else {
+            try {
                 player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+            } catch (IllegalArgumentException e) {
+                player.spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
             }
 
             return;
         }
 
-        if (bukkitParticle == Particle.BLOCK_DUST) {
-            location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
-        }else {
+        try {
             location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed);
+        } catch (IllegalArgumentException e) {
+            location.getWorld().spawnParticle(bukkitParticle, location, count, 0, 0, 0, speed, Material.STONE.createBlockData());
         }
     }
 

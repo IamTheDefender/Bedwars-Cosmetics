@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SkinFovTracker extends BukkitRunnable {
 
-    private static final double FIELD_OF_VIEW_DEGREES = 180;
+    private static final double FIELD_OF_VIEW_DEGREES = 90;
     private static final double DEFAULT_VIEW_DISTANCE = 80;
 
     private final Map<Integer, PacketPlayerNpc> trackedNpcs = new ConcurrentHashMap<>();
