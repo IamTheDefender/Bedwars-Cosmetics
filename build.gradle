@@ -3,7 +3,9 @@ plugins {
 }
 
 group = 'xyz.iamthedefender'
-version = '2.0.0'
+
+def baseVersion = '2.0.0'
+version = "${baseVersion}${getBuildSuffix()}"
 
 ext {
     lombokVersion = '1.18.38'
@@ -53,5 +55,32 @@ subprojects {
         compileOnly 'org.slf4j:slf4j-api:2.0.7'
         compileOnly 'co.aikar:acf-paper:0.5.1-SNAPSHOT'
     }
+}
+
+def getGitCommit() {
+    try {
+        def proc = 'git rev-parse --short HEAD'.execute()
+        proc.waitFor()
+        return proc.exitValue() == 0 ? proc.text.trim() : null
+    } catch (Exception e) {
+        return null
+    }
+}
+
+def isExactTag() {
+    try {
+        def proc = 'git describe --tags --exact-match HEAD'.execute()
+        proc.waitFor()
+        return proc.exitValue() == 0
+    } catch (Exception e) {
+        return false
+    }
+}
+
+def getBuildSuffix() {
+    def commit = getGitCommit()
+    if (commit == null) return ''
+    if (isExactTag()) return ''
+    return "-${commit}"
 }
 

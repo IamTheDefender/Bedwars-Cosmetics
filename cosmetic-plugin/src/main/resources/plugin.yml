@@ -1,5 +1,5 @@
 name: BedWarsCosmetics
-version: '2.0.0'
+version: '${version}'
 main: xyz.iamthedefender.cosmetics.CosmeticsPlugin
 prefix: BedWarsCosmetics
 softdepend: [ BedWars1058, BedWars2023, BedwarsProxy, WorldEdit, FastAsyncWorldEdit, BedWars, MBedwars, packetevents]

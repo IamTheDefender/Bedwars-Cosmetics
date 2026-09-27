@@ -9,6 +9,12 @@ tasks.withType(JavaCompile).configureEach {
     options.release = 11
 }
 
+processResources {
+    filesMatching('plugin.yml') {
+        expand(project.properties)
+    }
+}
+
 def versionSupport120Jar = project(':versionsupport_1_20').tasks.named('jar')
 
 dependencies {
