@@ -107,7 +107,7 @@ public class GlyphPreview extends CosmeticPreview {
         long time = getEndDelay() / perIteration;
         AtomicLong counter = new AtomicLong(time);
 
-        Run.everyAsync((r) -> {
+        Run.every((r) -> {
             if (counter.decrementAndGet() < 0) r.cancel();
 
             for (Location spot : particles.keySet()) {

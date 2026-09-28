@@ -15,15 +15,21 @@ public final class EntityMetadataUtil {
         List<EntityData<?>> result = new ArrayList<>();
         try {
             Object nmsEntity = player.getClass().getMethod("getHandle").invoke(player);
-            Object dataWatcher = nmsEntity.getClass().getMethod("getDataWatcher").invoke(nmsEntity);
-            Object rawItems = dataWatcher.getClass().getMethod("c").invoke(dataWatcher);
+
+            Object dataWatcher = resolveMethodCall(nmsEntity, "getDataWatcher", "getEntityData", "al", "ah");
+            if (dataWatcher == null) return result;
+
+            Object rawItems = resolveMethodCall(dataWatcher, "c", "getNonDefaultValues", "getAll", "d");
+            if (rawItems == null) rawItems = resolveMethodCall(dataWatcher, "b", "getAllWatched");
 
             if (rawItems instanceof Iterable) {
                 for (Object item : (Iterable<?>) rawItems) {
                     if (item == null) continue;
                     try {
-                        int index = (int) item.getClass().getMethod("a").invoke(item);
-                        Object value = item.getClass().getMethod("b").invoke(item);
+                        int index = resolveIntMethodCall(item, "a", "id", "getId");
+                        if (index == 0) continue;
+
+                        Object value = resolveMethodCall(item, "b", "value", "getValue");
                         if (value == null) continue;
 
                         EntityDataType<?> type = resolveType(value);
@@ -38,6 +44,26 @@ public final class EntityMetadataUtil {
         }
 
         return result;
+    }
+
+    private static Object resolveMethodCall(Object obj, String... methodNames) {
+        for (String name : methodNames) {
+            try {
+                return obj.getClass().getMethod(name).invoke(obj);
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    private static int resolveIntMethodCall(Object obj, String... methodNames) {
+        for (String name : methodNames) {
+            try {
+                return (int) obj.getClass().getMethod(name).invoke(obj);
+            } catch (Exception ignored) {
+            }
+        }
+        return -1;
     }
 
     private static EntityDataType<?> resolveType(Object value) {

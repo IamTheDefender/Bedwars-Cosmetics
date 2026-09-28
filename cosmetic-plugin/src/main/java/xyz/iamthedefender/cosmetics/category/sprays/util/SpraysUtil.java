@@ -104,9 +104,12 @@ public class SpraysUtil
      */
     private static void addRendererAndShowSpray(Player player, ItemFrame itemFrame, CustomRenderer renderer, MapView view, boolean isPreview) {
         markSprayFrame(itemFrame);
-        ItemStack map = CosmeticsPlugin.getInstance().getApi().getVersionSupport().applyRenderer(renderer, view);
+ItemStack map = CosmeticsPlugin.getInstance().getApi().getVersionSupport().applyRenderer(renderer, view);
         itemFrame.setItem(map);
-        itemFrame.setRotation(Rotation.NONE);
+        try {
+            itemFrame.setRotation(Rotation.NONE);
+        } catch (NoSuchMethodError ignored) {
+        }
 
         if(isPreview){
             itemFrame.setFacingDirection(SprayPreview.getCardinalDirection(player.getLocation()).getOppositeFace());

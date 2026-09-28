@@ -88,7 +88,11 @@ public class SprayPreview extends CosmeticPreview {
 
         final ItemFrame frame = (ItemFrame) loc.getWorld().spawnEntity(loc, EntityType.ITEM_FRAME);
         EntityUtil.entityForPlayerOnly(frame, player);
-        frame.setFacingDirection(face, true);
+        try {
+            frame.setFacingDirection(face, true);
+        } catch (NoSuchMethodError e) {
+            frame.setFacingDirection(face);
+        }
         SpraysUtil.spawnSprays(player, frame, true, (Spray) selected);
 
         XSound.ENTITY_SILVERFISH_HURT.play(player, 10f, 10f);
