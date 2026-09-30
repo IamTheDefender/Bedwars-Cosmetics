@@ -24,6 +24,11 @@ public enum RarityType {
             try {
                 return ChatColor.valueOf(storedColor.toUpperCase());
             } catch (IllegalArgumentException e) {
+                for (ChatColor chatColor : ChatColor.values()) {
+                    if (chatColor.toString().equals(storedColor)) {
+                        return chatColor;
+                    }
+                }
                 Utility.getPlugin().getLogger().warning("Failed to parse chat color " + storedColor + " for rarity: " + name());
                 return color;
             }
